@@ -57,6 +57,7 @@ function RootLayoutNav() {
               paddingTop:
                 Platform.OS === "android" ? StatusBar.currentHeight : 0,
             }}
+            className="*:!font-[Inter]"
           >
             <Stack>
               <Stack.Screen name="index" options={{ headerShown: false }} />
