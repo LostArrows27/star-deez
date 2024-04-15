@@ -7,6 +7,8 @@ import { TamaguiProvider, Theme } from "tamagui";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import appConfig from "@/tamagui.config";
 import { Platform, SafeAreaView, StatusBar } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Drawer } from "expo-router/drawer";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,25 +51,25 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <TamaguiProvider config={appConfig}>
-      <Theme name={"green"}>
-        <AuthProvider>
-          <SafeAreaView
-            style={{
-              flex: 1,
-              paddingTop:
-                Platform.OS === "android" ? StatusBar.currentHeight : 0,
-            }}
-            className="*:!font-[Inter]"
-          >
-            <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(home)" options={{ headerShown: false }} />
-              <Stack.Screen name="cart" options={{ presentation: "modal" }} />
-            </Stack>
-          </SafeAreaView>
-        </AuthProvider>
-      </Theme>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Theme name={"green"}>
+          <AuthProvider>
+            <SafeAreaView
+              style={{
+                flex: 1,
+              }}
+              className="*:!font-[Inter]"
+            >
+              <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(home)" options={{ headerShown: false }} />
+                <Stack.Screen name="cart" options={{ presentation: "modal" }} />
+              </Stack>
+            </SafeAreaView>
+          </AuthProvider>
+        </Theme>
+      </GestureHandlerRootView>
     </TamaguiProvider>
   );
 }
