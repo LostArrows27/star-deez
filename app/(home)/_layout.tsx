@@ -29,7 +29,10 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
       }}
     >
-      <Tabs.Screen name="index" options={{ href: null }} />
+      <Tabs.Screen
+        name="index"
+        options={{ href: null, headerShown: false, headerTitle: "" }}
+      />
 
       {/* <Tabs.Screen
         name="menu"

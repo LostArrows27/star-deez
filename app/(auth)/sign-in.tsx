@@ -4,10 +4,9 @@ import Button from "../../components/button";
 import Colors from "../../constants/Colors";
 import { Link, Stack } from "expo-router";
 import { supabase } from "@/lib/supabase";
-import { LabelDemo } from "@/components/test_tamagui";
 
 const SignInScreen = () => {
-  return <LabelDemo />;
+  return <Text>test</Text>;
 };
 
 export default SignInScreen;
