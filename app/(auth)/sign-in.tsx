@@ -1,7 +1,16 @@
 import { View } from "react-native";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, H2, Image, Input, Separator, Spinner, Text } from "tamagui";
+import {
+  Button,
+  H2,
+  Image,
+  Input,
+  Separator,
+  Spinner,
+  Text,
+  Theme,
+} from "tamagui";
 import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -11,7 +20,6 @@ import { Link } from "expo-router";
 import { useAlertError } from "@/hooks/alertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { ToastViewport, useToastController } from "@tamagui/toast";
-import CustomToast from "@/components/toast-custom";
 type tSignInSchema = z.infer<typeof SignInSchema>;
 
 const SignInScreen = () => {
@@ -119,15 +127,27 @@ const SignInScreen = () => {
           )}
         </View>
         <Link href={"/forgot-password" as any}>
-          <Text color={"$color8"}>Forgot your password?</Text>
+          <Text>Forgot your password?</Text>
         </Link>
         <Link href={"/sign-up"}>
-          <Text color={"$color8"}>Doesn't have an account yet?</Text>
+          <View className="flex-row items-center gap-[6px] ">
+            <View>
+              <Text>Doesn't have an account yet?</Text>
+            </View>
+            <View>
+              <Text color={"$green9"}>Sign Up</Text>
+            </View>
+          </View>
         </Link>
         <Form.Trigger marginTop="$3.5" asChild disabled={isSubmitting}>
           <Button
-            theme={"active"}
+            themeInverse
             width={"100%"}
+            backgroundColor={"$green9"}
+            color={"white"}
+            pressStyle={{
+              backgroundColor: "$green8",
+            }}
             icon={isSubmitting ? () => <Spinner /> : undefined}
           >
             Sign In
