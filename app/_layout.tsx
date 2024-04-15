@@ -56,6 +56,7 @@ function RootLayoutNav() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Theme name={"green"}>
           <AuthProvider>
+            <ModalProviders />
             <ToastProvider burntOptions={{ from: "bottom" }}>
               <SafeAreaView
                 style={{

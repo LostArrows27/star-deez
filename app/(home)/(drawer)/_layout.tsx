@@ -1,7 +1,6 @@
-import { router, Tabs } from "expo-router";
+import { Redirect, router, Tabs } from "expo-router";
 import { Text, ToastAndroid } from "react-native";
 
-import { useAuth } from "@/hooks/auth/useAuth";
 import { cn } from "@/lib/utils";
 import { Avatar } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,14 +10,7 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 
 export default function TabLayout() {
-  const { session } = useAuth();
-
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
-
-  // TODO: adjust this
-  // if (!session) {
-  //   return <Redirect href={"/"} />;
-  // }
 
   return (
     <Tabs

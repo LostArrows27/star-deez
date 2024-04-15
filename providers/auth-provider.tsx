@@ -27,9 +27,9 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     fetchSession();
     supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        router.push("/dashboard");
+        router.push("/(home)/(drawer)/newfeed");
       } else {
-        router.push("/");
+        router.push("/(auth)/sign-in");
       }
       setSession(session);
     });

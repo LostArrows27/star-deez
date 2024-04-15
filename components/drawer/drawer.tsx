@@ -8,6 +8,7 @@ import {
 } from "@expo/vector-icons";
 import { router, usePathname } from "expo-router";
 import { Image, Separator } from "tamagui";
+import { supabase } from "@/lib/supabase";
 
 export const DrawerContainer = (props: any) => {
   const pathname = usePathname();
@@ -78,6 +79,21 @@ export const DrawerContainer = (props: any) => {
         labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
         style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
         onPress={() => {}}
+      />
+      <DrawerItem
+        icon={({ color, size }) => (
+          <Feather
+            name="log-in"
+            size={24}
+            color={pathname == "/settings" ? "#fff" : "#000"}
+          />
+        )}
+        label={"Settings"}
+        labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
+        style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
+        onPress={() => {
+          supabase.auth.signOut();
+        }}
       />
     </DrawerContentScrollView>
   );

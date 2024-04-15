@@ -19,10 +19,6 @@ const index = () => {
     return <ActivityIndicator />;
   }
 
-  if (!session) {
-    return <Redirect href={"/(home)/(drawer)/newfeed"} />;
-  }
-
   return (
     <SafeAreaView
       style={{

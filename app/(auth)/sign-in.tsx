@@ -49,7 +49,7 @@ const SignInScreen = () => {
     }
   }
   return (
-    <View className="h-screen justify-center items-center bg-white">
+    <View className="items-center justify-center h-screen bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
       <Text>Sign in to start studying today</Text>
 
@@ -83,7 +83,7 @@ const SignInScreen = () => {
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View className="relative justify-center  ">
+              <View className=" relative justify-center">
                 <Input
                   secureTextEntry={!showPassword}
                   onBlur={onBlur}
@@ -118,7 +118,7 @@ const SignInScreen = () => {
             <Text color="red">{errors.password.message}</Text>
           )}
         </View>
-        <Link href={"/forgot-password"}>
+        <Link href={"/forgot-password" as any}>
           <Text color={"$color8"}>Forgot your password?</Text>
         </Link>
         <Link href={"/sign-up"}>
