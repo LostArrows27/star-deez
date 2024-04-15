@@ -49,7 +49,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <TamaguiProvider config={appConfig}>
-      <Theme name={"blue"}>
+      <Theme name={"green"}>
         <AuthProvider>
           <SafeAreaView
             style={{

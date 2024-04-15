@@ -30,12 +30,12 @@ const index = () => {
           dotStyle={{
             marginLeft: 10,
             marginRight: 10,
-            backgroundColor: "rgb(160,204,251)",
+            backgroundColor: "rgba(38,170,115, 0.3)",
           }}
           activeDotStyle={{
             marginLeft: 10,
             marginRight: 10,
-            backgroundColor: "rgb(0,123,255)",
+            backgroundColor: "rgb(38,170,115)",
           }}
         >
           <Banner
@@ -61,7 +61,7 @@ const index = () => {
             router.push("/sign-up");
           }}
           themeInverse
-          backgroundColor={"$blue9Light"}
+          backgroundColor={"$green9Light"}
           size={"$4"}
         >
           Sign Up
@@ -77,7 +77,7 @@ const index = () => {
               <Text>Already have an account?</Text>
             </View>
             <View>
-              <Text className=" text-blue-500">Log In</Text>
+              <Text className=" text-emerald-600">Log In</Text>
             </View>
           </View>
         </Button>
