@@ -1,80 +1,181 @@
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { View } from "react-native";
 import React, { useState } from "react";
-import Button from "../../components/button";
-import Colors from "../../constants/Colors";
-import { Link, Stack } from "expo-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, H2, Image, Input, Separator, Spinner, Text } from "tamagui";
+import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { z } from "zod";
+import { SignUpSchema } from "@/schema/auth";
+import { Link } from "expo-router";
+import { useAlertError } from "@/hooks/alertError";
+import { Eye, EyeOff } from "@tamagui/lucide-icons";
+import { useToastController } from "@tamagui/toast";
 
+type tSignUpSchema = z.infer<typeof SignUpSchema>;
 const SignUpScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function signUpWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    control,
+  } = useForm<tSignUpSchema>({
+    resolver: zodResolver(SignUpSchema),
+  });
+  const toast = useToastController();
+  const [showPassword, setShowPassword] = useState(false);
+  const { onOpen } = useAlertError();
+  async function onSubmit(values: tSignUpSchema) {
+    const { error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+    });
+    if (error) {
+      onOpen(error.message);
+      return;
+    } else {
+      toast.show("Sign up succesfully!", {
+        message: "Welcome to Star Deez!",
+        native: false,
+      });
+      reset();
+    }
   }
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: "Sign up" }} />
+    <View className="h-screen justify-center items-center bg-white">
+      <H2 color={"$color8"}>Star Deez</H2>
+      <Text>Sign up to start studying today</Text>
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        width={"100%"}
+        alignItems="center"
+        gap="$2"
+        padding="$6"
+      >
+        <View className="gap-y-2 w-full">
+          <Text>Email</Text>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+                size="$4"
+                borderWidth={2}
+              />
+            )}
+            name="email"
+          />
+          {errors.email && <Text color="red">{errors.email.message}</Text>}
+        </View>
+        <View className="gap-y-2 w-full my-2 ">
+          <Text>Password</Text>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View className="relative justify-center  ">
+                <Input
+                  secureTextEntry={!showPassword}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                  size="$4"
+                  borderWidth={2}
+                />
+                {showPassword ? (
+                  <EyeOff
+                    position="absolute"
+                    right={10}
+                    onPress={() => {
+                      setShowPassword(false);
+                    }}
+                  />
+                ) : (
+                  <Eye
+                    position="absolute"
+                    onPress={() => {
+                      setShowPassword(true);
+                    }}
+                    right={10}
+                  />
+                )}
+              </View>
+            )}
+            name="password"
+          />
+          {errors.password && (
+            <Text color="red">{errors.password.message}</Text>
+          )}
+        </View>
+        <View className="gap-y-2 w-full mb-4">
+          <Text>Password confirm</Text>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                secureTextEntry={!showPassword}
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+                size="$4"
+                borderWidth={2}
+              />
+            )}
+            name="confirmPassword"
+          />
+          {errors.password && (
+            <Text color="red">{errors.password.message}</Text>
+          )}
+        </View>
+        <Link href={"/sign-in"}>
+          <Text color={"$color8"}>Already have an account?</Text>
+        </Link>
 
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="jon@gmail.com"
-        style={styles.input}
-      />
+        <Form.Trigger marginTop="$3.5" asChild disabled={isSubmitting}>
+          <Button
+            theme={"active"}
+            width={"100%"}
+            icon={isSubmitting ? () => <Spinner /> : undefined}
+          >
+            Sign Up
+          </Button>
+        </Form.Trigger>
+        <View className="flex-row">
+          <Separator
+            marginVertical={10}
+            width={"100%"}
+            borderColor={"$color6"}
+          />
+          <Text marginHorizontal="$3">or</Text>
+          <Separator
+            marginVertical={10}
+            width={"100%"}
+            borderColor={"$color6"}
+          />
+        </View>
 
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder=""
-        style={styles.input}
-        secureTextEntry
-      />
-
-      <Button
-        onPress={signUpWithEmail}
-        disabled={loading}
-        text={loading ? "Creating account..." : "Create account"}
-      />
-      <Link href="/sign-in" style={styles.textButton}>
-        Sign in
-      </Link>
+        <Button
+          variant="outlined"
+          width={"100%"}
+          marginBottom="$8"
+          icon={
+            <Image
+              source={{
+                uri: require("@/assets/images/icons/google.png"),
+                width: 24,
+                height: 24,
+              }}
+            />
+          }
+        >
+          Continue with Google
+        </Button>
+      </Form>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    justifyContent: "center",
-    flex: 1,
-  },
-  label: {
-    color: "gray",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "gray",
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 20,
-    backgroundColor: "white",
-    borderRadius: 5,
-  },
-  textButton: {
-    alignSelf: "center",
-    fontWeight: "bold",
-    color: Colors.light.tint,
-    marginVertical: 10,
-  },
-});
 
 export default SignUpScreen;

@@ -30,10 +30,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="dashboard"
         options={{ href: null, headerShown: false, headerTitle: "" }}
       />
-
+      
       {/* <Tabs.Screen
         name="menu"
         options={{
