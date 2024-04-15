@@ -8,5 +8,17 @@ export default function AuthLayout() {
     return <Redirect href={"/"} />;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="sign-up"
+        options={{
+          headerStyle: {
+            backgroundColor: "rgb(0,123,255)",
+            
+          },
+        }}
+      />
+    </Stack>
+  );
 }
