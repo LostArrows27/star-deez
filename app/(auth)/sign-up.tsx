@@ -8,7 +8,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { SignUpSchema } from "@/schema/auth";
 import { Link } from "expo-router";
-import { useAlertError } from "@/hooks/alertError";
+import { useAlertError } from "@/hooks/useAlertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
 

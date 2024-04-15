@@ -13,7 +13,7 @@ import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
 type tSignInSchema = z.infer<typeof SignInSchema>;
 
-const SignInScreen = () => {
+const BasicInformation = () => {
   const {
     register,
     handleSubmit,
@@ -166,4 +166,4 @@ const SignInScreen = () => {
   );
 };
 
-export default SignInScreen;
+export default BasicInformation;

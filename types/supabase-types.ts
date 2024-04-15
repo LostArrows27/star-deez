@@ -9,7 +9,65 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar: string
+          bio: string | null
+          college: string | null
+          created_at: string
+          dob: string
+          email: string
+          first_name: string
+          gender: Database["public"]["Enums"]["gender"]
+          high_school: string | null
+          id: string
+          job: string | null
+          last_name: string
+          phone: string | null
+          role: string | null
+        }
+        Insert: {
+          avatar: string
+          bio?: string | null
+          college?: string | null
+          created_at?: string
+          dob: string
+          email: string
+          first_name: string
+          gender?: Database["public"]["Enums"]["gender"]
+          high_school?: string | null
+          id: string
+          job?: string | null
+          last_name: string
+          phone?: string | null
+          role?: string | null
+        }
+        Update: {
+          avatar?: string
+          bio?: string | null
+          college?: string | null
+          created_at?: string
+          dob?: string
+          email?: string
+          first_name?: string
+          gender?: Database["public"]["Enums"]["gender"]
+          high_school?: string | null
+          id?: string
+          job?: string | null
+          last_name?: string
+          phone?: string | null
+          role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +76,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      gender: "male" | "female" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
