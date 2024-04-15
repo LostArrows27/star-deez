@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
+import { router } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type AuthData = {
@@ -25,6 +26,11 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
     fetchSession();
     supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        router.push("/(home)/(drawer)/newfeed");
+      } else {
+        router.push("/(auth)/sign-in");
+      }
       setSession(session);
     });
   }, []);

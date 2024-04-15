@@ -22,9 +22,8 @@ const Banner = ({
         className=" object-cover object-center"
       />
       <View className="w-full h-4 bg-[rgb(247,247,247)] pb-6"></View>
-
       <View className=" items-center w-full gap-6 pt-12">
-        <Text className="text-2xl font-bold tracking-widest text-center text-blue-600 uppercase">
+        <Text className="text-emerald-600 text-2xl font-bold tracking-widest text-center uppercase">
           {heading}
         </Text>
         <Text className="px-4 text-2xl leading-relaxed tracking-wider text-center text-gray-500">

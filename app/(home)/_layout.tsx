@@ -1,22 +1,12 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Redirect, Tabs } from "expo-router";
-import { Pressable, useColorScheme } from "react-native";
-
-import Colors from "../../constants/Colors";
+import React, { useEffect } from "react";
+import { Drawer } from "expo-router/drawer";
+import { DrawerContainer } from "@/components/drawer/drawer";
 import { useAuth } from "@/hooks/auth/useAuth";
+import { Redirect } from "expo-router";
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={20} style={{ marginBottom: -3 }} {...props} />;
-}
+// NOTE: drawer container
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function Layout() {
   const { session } = useAuth();
 
   if (!session) {
@@ -24,42 +14,9 @@ export default function TabLayout() {
   }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{ href: null, headerShown: false, headerTitle: "" }}
-      />
-
-      {/* <Tabs.Screen
-        name="menu"
-        options={{
-          title: "Menu",
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="cutlery" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="orders"
-        options={{
-          title: "Orders",
-          headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
-        }}
-      />
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-        }}
-      /> */}
-    </Tabs>
+    <Drawer
+      drawerContent={(props) => <DrawerContainer {...props} />}
+      screenOptions={{ headerShown: false }}
+    ></Drawer>
   );
 }
