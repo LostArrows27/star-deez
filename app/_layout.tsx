@@ -1,18 +1,12 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useColorScheme } from "@/components/useColorScheme";
 import "@/css/global.css";
 import AuthProvider from "@/providers/auth-provider";
 import { TamaguiProvider, Theme } from "tamagui";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import appConfig from "@/tamagui.config";
+import { Platform, SafeAreaView, StatusBar } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -53,22 +47,26 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
   return (
-    <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-      <TamaguiProvider config={appConfig}>
-        <Theme name={"blue_active"}>
-          <AuthProvider>
+    <TamaguiProvider config={appConfig}>
+      <Theme name={"blue"}>
+        <AuthProvider>
+          <SafeAreaView
+            style={{
+              flex: 1,
+              paddingTop:
+                Platform.OS === "android" ? StatusBar.currentHeight : 0,
+            }}
+          >
             <Stack>
-              {/* <Stack.Screen name="(admin)" options={{ headerShown: false }} /> */}
-              {/* <Stack.Screen name="(user)" options={{ headerShown: false }} /> */}
+              <Stack.Screen name="index" options={{ headerShown: false }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(user)" options={{ headerShown: false }} />
+              <Stack.Screen name="(home)" options={{ headerShown: false }} />
               <Stack.Screen name="cart" options={{ presentation: "modal" }} />
             </Stack>
-          </AuthProvider>
-        </Theme>
-      </TamaguiProvider>
-    </ThemeProvider>
+          </SafeAreaView>
+        </AuthProvider>
+      </Theme>
+    </TamaguiProvider>
   );
 }
