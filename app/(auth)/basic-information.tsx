@@ -6,12 +6,18 @@ import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
-import { SignInSchema } from "@/schema/auth";
-import { Link } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
-import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
-type tSignInSchema = z.infer<typeof SignInSchema>;
+import { BasicInformationSchema } from "@/schema/basic-information";
+import { SelectTama } from "@/components/ui/select";
+import DateTimePicker from "@/components/ui/date-picker";
+import AvatarPicker from "@/components/avatar-picker";
+import { ImagePickerResult } from "expo-image-picker";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { Gender } from "@/types/supabase-util-types";
+import { decode } from "base64-arraybuffer";
+import { router } from "expo-router";
+type tBasicInformation = z.infer<typeof BasicInformationSchema>;
 
 const BasicInformation = () => {
   const {
@@ -21,36 +27,88 @@ const BasicInformation = () => {
     getValues,
     control,
     reset,
-  } = useForm<tSignInSchema>({
-    resolver: zodResolver(SignInSchema),
+  } = useForm<tBasicInformation>({
+    resolver: zodResolver(BasicInformationSchema),
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToastController();
+  const [avatar, setAvatar] = useState<ImagePickerResult | null>(null);
   const { onOpen } = useAlertError();
+  const { user, userDetails, setUserDetails } = useAuth();
+  if (!user) {
+    router.push("/(auth)/sign-in");
+  }
+  if (userDetails) {
+    router.push("/(home)/(drawer)/newfeed");
+  }
   const [serverError, setServerError] = useState<string | null>(null);
-  async function onSubmit(values: tSignInSchema) {
-    // const res = await axios.post('/api/auth/sign-in', values);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
-
-    if (error) {
-      onOpen(error.message);
+  async function onSubmit(values: tBasicInformation) {
+    if (!user) {
+      onOpen("User not found");
       return;
-    } else {
-      toast.show("Login success!", {
-        message: "Welcome back!",
-        native: false,
-      });
-      reset();
+    }
+    //upload avatar
+    if (!avatar) {
+      onOpen("Please upload your avatar");
+      return;
+    }
+  
+
+    if (!avatar.canceled) {
+      const ext = avatar.assets[0].uri.split(".").pop();
+      const fileName = `${user.id}/avatar`;
+      const { data, error } = await supabase.storage
+        .from("profiles")
+        .upload(
+          fileName,
+          decode(avatar.assets[0].base64 || avatar.assets[0].uri),
+          {
+            contentType: `image/png`,
+          }
+        );
+
+      if (error || !data) {
+        onOpen(error.message);
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("profiles").getPublicUrl(data.path);
+
+      const { data: profile, error: uploadProfileError } = await supabase
+        .from("profiles")
+        .upsert({
+          id: user.id,
+          first_name: values.firstName.trim(),
+          last_name: values.lastName.trim(),
+          dob: values.dob.toDateString(),
+          email: user.email as string,
+          gender: values.gender as Gender,
+          avatar: publicUrl,
+        })
+        .select("*")
+        .single();
+      if (uploadProfileError) {
+        onOpen(uploadProfileError.message);
+        return;
+      } else {
+        toast.show("Success!!", {
+          message: "Profile has been created!",
+          native: false,
+        });
+        setUserDetails(profile);
+        reset();
+        router.push("/(home)/(drawer)/newfeed");
+      }
     }
   }
+
   return (
     <View className="h-screen justify-center items-center bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
-      <Text>Sign in to start studying today</Text>
+      <Text>Provide us some information about you</Text>
 
       <Form
         onSubmit={handleSubmit(onSubmit)}
@@ -60,7 +118,6 @@ const BasicInformation = () => {
         padding="$6"
       >
         <View className="gap-y-2 w-full">
-          <Text>Email</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -69,70 +126,101 @@ const BasicInformation = () => {
                 onChangeText={(value) => onChange(value)}
                 value={value}
                 size="$4"
+                placeholder="First Name"
                 borderWidth={2}
               />
             )}
-            name="email"
+            name="firstName"
           />
 
-          {errors.email && <Text color="red">{errors.email.message}</Text>}
+          {errors.firstName && (
+            <Text color="red">{errors.firstName.message}</Text>
+          )}
         </View>
-        <View className="gap-y-2 w-full mt-2 mb-4">
-          <Text>Password</Text>
+        <View className="gap-y-2 w-full mt-2 ">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View className="relative justify-center  ">
-                <Input
-                  secureTextEntry={!showPassword}
-                  onBlur={onBlur}
-                  onChangeText={(value) => onChange(value)}
-                  value={value}
-                  size="$4"
-                  borderWidth={2}
-                />
-                {showPassword ? (
-                  <EyeOff
-                    position="absolute"
-                    right={10}
-                    onPress={() => {
-                      setShowPassword(false);
-                    }}
-                  />
-                ) : (
-                  <Eye
-                    position="absolute"
-                    onPress={() => {
-                      setShowPassword(true);
-                    }}
-                    right={10}
-                  />
-                )}
-              </View>
+              <Input
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+                placeholder="Last Name"
+                size="$4"
+                borderWidth={2}
+              />
             )}
-            name="password"
+            name="lastName"
           />
 
-          {errors.password && (
-            <Text color="red">{errors.password.message}</Text>
+          {errors.lastName && (
+            <Text color="red">{errors.lastName.message}</Text>
           )}
         </View>
-        <Link href={"/forgot-password"}>
-          <Text color={"$color8"}>Forgot your password?</Text>
-        </Link>
-        <Link href={"/sign-up"}>
-          <Text color={"$color8"}>Doesn't have an account yet?</Text>
-        </Link>
+        <View className="gap-y-2 w-full mt-2 ">
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <SelectTama
+                setVal={onChange}
+                val={value}
+                items={[
+                  {
+                    value: "female",
+                    label: "Female",
+                  },
+                  {
+                    value: "male",
+                    label: "Male",
+                  },
+                  {
+                    value: "other",
+                    label: "Other",
+                  },
+                ]}
+              />
+            )}
+            name="gender"
+          />
+
+          {errors.gender && <Text color="red">{errors.gender.message}</Text>}
+        </View>
+        <View className="gap-y-2 w-full mt-2 ">
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <DateTimePicker
+                type="date"
+                accentColor="green"
+                textColor="green"
+                onConfirm={onChange}
+                placeholder="Date of Birth"
+                date={value}
+                buttonTextColorIOS="green"
+              />
+            )}
+            name="dob"
+          />
+
+          {errors.dob && <Text color="red">{errors.dob.message}</Text>}
+        </View>
+
+        <AvatarPicker setImage={setAvatar} />
         <Form.Trigger marginTop="$3.5" asChild disabled={isSubmitting}>
           <Button
-            theme={"active"}
+            themeInverse
+            backgroundColor={"$green9"}
+            pressStyle={{
+              backgroundColor: "$green8",
+            }}
             width={"100%"}
+            color={"white"}
             icon={isSubmitting ? () => <Spinner /> : undefined}
           >
-            Sign In
+            Confirm
           </Button>
         </Form.Trigger>
-        <View className="flex-row">
+        {/* <View className="flex-row">
           <Separator
             marginVertical={10}
             width={"100%"}
@@ -160,7 +248,7 @@ const BasicInformation = () => {
           }
         >
           Sign In with Google
-        </Button>
+        </Button> */}
       </Form>
     </View>
   );

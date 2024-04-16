@@ -1,15 +1,13 @@
 import * as z from "zod";
 export const BasicInformationSchema = z
   .object({
-    id: z.string(),
-    avatar: z.any(),
     firstName: z.string({
       required_error: 'Nhập tên của bạn.'
     }),
     lastName: z.string({
       required_error: 'Nhập họ của bạn.'
     }),
-    dob: z.string({
+    dob: z.date({
       required_error: 'Nhập ngày sinh của bạn.'
     }).refine((data) => {
       const date = new Date(data);

@@ -1,13 +1,22 @@
 import { View } from "react-native";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, H2, Image, Input, Separator, Spinner, Text } from "tamagui";
+import {
+  Button,
+  H2,
+  Image,
+  Input,
+  Separator,
+  Spinner,
+  Text,
+  Theme,
+} from "tamagui";
 import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { SignInSchema } from "@/schema/auth";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
@@ -27,6 +36,7 @@ const SignInScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToastController();
   const { onOpen } = useAlertError();
+  
   const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(values: tSignInSchema) {
     // const res = await axios.post('/api/auth/sign-in', values);
@@ -44,11 +54,13 @@ const SignInScreen = () => {
         message: "Welcome back!",
         native: false,
       });
+
       reset();
+      router.push("/(home)/(drawer)/newfeed");
     }
   }
   return (
-    <View className="h-screen justify-center items-center bg-white">
+    <View className="items-center justify-center h-screen bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
       <Text>Sign in to start studying today</Text>
 
@@ -82,7 +94,7 @@ const SignInScreen = () => {
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View className="relative justify-center  ">
+              <View className=" relative justify-center">
                 <Input
                   secureTextEntry={!showPassword}
                   onBlur={onBlur}
@@ -117,16 +129,28 @@ const SignInScreen = () => {
             <Text color="red">{errors.password.message}</Text>
           )}
         </View>
-        <Link href={"/forgot-password"}>
-          <Text color={"$color8"}>Forgot your password?</Text>
+        <Link href={"/forgot-password" as any}>
+          <Text>Forgot your password?</Text>
         </Link>
         <Link href={"/sign-up"}>
-          <Text color={"$color8"}>Doesn't have an account yet?</Text>
+          <View className="flex-row items-center gap-[6px] ">
+            <View>
+              <Text>Doesn't have an account yet?</Text>
+            </View>
+            <View>
+              <Text color={"$green9"}>Sign Up</Text>
+            </View>
+          </View>
         </Link>
         <Form.Trigger marginTop="$3.5" asChild disabled={isSubmitting}>
           <Button
-            theme={"active"}
+            themeInverse
             width={"100%"}
+            backgroundColor={"$green9"}
+            color={"white"}
+            pressStyle={{
+              backgroundColor: "$green8",
+            }}
             icon={isSubmitting ? () => <Spinner /> : undefined}
           >
             Sign In

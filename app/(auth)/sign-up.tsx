@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { SignUpSchema } from "@/schema/auth";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
@@ -39,12 +39,14 @@ const SignUpScreen = () => {
         message: "Welcome to Star Deez!",
         native: false,
       });
+   
       reset();
+      router.push("/(auth)/basic-information");
     }
   }
 
   return (
-    <View className="h-screen justify-center items-center bg-white">
+    <View className="items-center justify-center h-screen bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
       <Text>Sign up to start studying today</Text>
       <Form
@@ -71,12 +73,12 @@ const SignUpScreen = () => {
           />
           {errors.email && <Text color="red">{errors.email.message}</Text>}
         </View>
-        <View className="gap-y-2 w-full my-2 ">
+        <View className="gap-y-2 w-full my-2">
           <Text>Password</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View className="relative justify-center  ">
+              <View className=" relative justify-center">
                 <Input
                   secureTextEntry={!showPassword}
                   onBlur={onBlur}
@@ -131,13 +133,25 @@ const SignUpScreen = () => {
           )}
         </View>
         <Link href={"/sign-in"}>
-          <Text color={"$color8"}>Already have an account?</Text>
+          <View className="flex-row items-center gap-[6px]">
+            <View>
+              <Text>Already have an account?</Text>
+            </View>
+            <View>
+              <Text color={"$green9"}>Log In</Text>
+            </View>
+          </View>
         </Link>
 
         <Form.Trigger marginTop="$3.5" asChild disabled={isSubmitting}>
           <Button
-            theme={"active"}
+            themeInverse
+            backgroundColor={"$green9"}
+            pressStyle={{
+              backgroundColor: "$green8",
+            }}
             width={"100%"}
+            color={"white"}
             icon={isSubmitting ? () => <Spinner /> : undefined}
           >
             Sign Up
