@@ -1,12 +1,8 @@
 import { useAuth } from "@/hooks/auth/useAuth";
-import { Redirect, Stack } from "expo-router";
+import { Redirect, router, Stack, usePathname } from "expo-router";
+import { Text } from "tamagui";
 
 export default function AuthLayout() {
-  const { session } = useAuth();
-
-  if (session) {
-    return <Redirect href={"/"} />;
-  }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -15,7 +11,6 @@ export default function AuthLayout() {
         options={{
           headerStyle: {
             backgroundColor: "rgb(0,123,255)",
-            
           },
         }}
       />

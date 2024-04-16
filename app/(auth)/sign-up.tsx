@@ -7,8 +7,8 @@ import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { SignUpSchema } from "@/schema/auth";
-import { Link } from "expo-router";
-import { useAlertError } from "@/hooks/alertError";
+import { Link, router } from "expo-router";
+import { useAlertError } from "@/hooks/useAlertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
 
@@ -39,7 +39,9 @@ const SignUpScreen = () => {
         message: "Welcome to Star Deez!",
         native: false,
       });
+   
       reset();
+      router.push("/(auth)/basic-information");
     }
   }
 

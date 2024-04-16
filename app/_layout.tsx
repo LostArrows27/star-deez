@@ -11,7 +11,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import ModalProviders from "@/providers/modal-provider";
 import { ToastProvider, ToastViewport } from "@tamagui/toast";
-import CustomToast from "@/components/toast-custom";
+import CustomToast from "@/components/ui/toast-custom";
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,

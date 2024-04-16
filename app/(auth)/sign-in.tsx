@@ -16,10 +16,10 @@ import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { SignInSchema } from "@/schema/auth";
-import { Link } from "expo-router";
-import { useAlertError } from "@/hooks/alertError";
+import { Link, router } from "expo-router";
+import { useAlertError } from "@/hooks/useAlertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
-import { ToastViewport, useToastController } from "@tamagui/toast";
+import { useToastController } from "@tamagui/toast";
 type tSignInSchema = z.infer<typeof SignInSchema>;
 
 const SignInScreen = () => {
@@ -36,6 +36,7 @@ const SignInScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToastController();
   const { onOpen } = useAlertError();
+  
   const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(values: tSignInSchema) {
     // const res = await axios.post('/api/auth/sign-in', values);
@@ -53,7 +54,9 @@ const SignInScreen = () => {
         message: "Welcome back!",
         native: false,
       });
+
       reset();
+      router.push("/(home)/(drawer)/newfeed");
     }
   }
   return (
