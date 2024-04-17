@@ -42,6 +42,14 @@ export default function TabLayout() {
           </Avatar>
         ),
         headerShadowVisible: true,
+        headerStyle: {
+          // add shadow
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+        },
         tabBarActiveTintColor: "rgb(38,170,115)",
         tabBarStyle: {
           height: 70,
@@ -76,7 +84,7 @@ export default function TabLayout() {
         name="newfeed"
         options={{
           title: "Home",
-          headerTintColor: "text-[rgb(5,150,105)]",
+
           lazy: false,
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
@@ -91,7 +99,7 @@ export default function TabLayout() {
         name="tracking"
         options={{
           lazy: false,
-          headerTintColor: "text-[rgb(5,150,105)]",
+
           title: "Tracking",
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
@@ -107,7 +115,7 @@ export default function TabLayout() {
         options={{
           lazy: false,
           title: "Statistics",
-          headerTintColor: "text-[rgb(5,150,105)]",
+
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "stats-chart" : "stats-chart-outline"}
@@ -122,7 +130,7 @@ export default function TabLayout() {
         name="notification"
         options={{
           lazy: false,
-          headerTintColor: "text-[rgb(5,150,105)]",
+
           title: "Notification",
           tabBarIcon: ({ color, focused }) => (
             <Octicons

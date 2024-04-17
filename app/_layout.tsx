@@ -84,10 +84,6 @@ function RootLayoutNav() {
                       name="(home)"
                       options={{ headerShown: false }}
                     />
-                    <Stack.Screen
-                      name="cart"
-                      options={{ presentation: "modal" }}
-                    />
                   </Stack>
                 )}
               </SafeAreaView>
