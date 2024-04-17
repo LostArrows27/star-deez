@@ -62,7 +62,7 @@ function RootLayoutNav() {
                 style={{
                   flex: 1,
                 }}
-                className="*:!font-[Inter]"
+                className="*:!font-[Inter] text-em"
               >
                 <Stack>
                   <Stack.Screen name="index" options={{ headerShown: false }} />

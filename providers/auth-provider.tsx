@@ -29,7 +29,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       if (session) {
         router.push("/(home)/(drawer)/newfeed");
       } else {
-        router.push("/(auth)/sign-in");
+        router.push("/");
       }
       setSession(session);
     });

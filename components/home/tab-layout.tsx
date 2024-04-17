@@ -8,7 +8,6 @@ const TabLayout = () => {
           headerShown: false,
           contentStyle: {
             backgroundColor: "white",
-            padding: 20,
           },
         }}
         name="index"

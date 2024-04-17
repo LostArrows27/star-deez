@@ -43,7 +43,7 @@ export default function TabLayout() {
         },
         tabBarLabel: ({ children, focused }) => (
           <Text
-            className={cn("text-xs tracking-widest", {
+            className={cn("text-xs font-[Inter] tracking-widest", {
               "text-[rgb(38,170,115)] font-medium": focused,
             })}
           >
@@ -56,6 +56,7 @@ export default function TabLayout() {
         name="newfeed"
         options={{
           title: "Home",
+          headerTintColor: "text-[rgb(5,150,105)]",
           lazy: false,
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
@@ -67,10 +68,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="post"
+        name="tracking"
         options={{
           lazy: false,
-          title: "Post",
+          headerTintColor: "text-[rgb(5,150,105)]",
+          title: "Tracking",
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? "pencil-plus" : "pencil-plus-outline"}
@@ -85,6 +87,7 @@ export default function TabLayout() {
         options={{
           lazy: false,
           title: "Statistics",
+          headerTintColor: "text-[rgb(5,150,105)]",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "stats-chart" : "stats-chart-outline"}
@@ -99,6 +102,7 @@ export default function TabLayout() {
         name="notification"
         options={{
           lazy: false,
+          headerTintColor: "text-[rgb(5,150,105)]",
           title: "Notification",
           tabBarIcon: ({ color, focused }) => (
             <Octicons

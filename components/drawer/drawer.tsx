@@ -88,7 +88,7 @@ export const DrawerContainer = (props: any) => {
             color={pathname == "/settings" ? "#fff" : "#000"}
           />
         )}
-        label={"Settings"}
+        label={"Log out"}
         labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
         style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
         onPress={() => {
