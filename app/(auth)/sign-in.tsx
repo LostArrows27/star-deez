@@ -36,7 +36,7 @@ const SignInScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToastController();
   const { onOpen } = useAlertError();
-  
+
   const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(values: tSignInSchema) {
     // const res = await axios.post('/api/auth/sign-in', values);
@@ -56,7 +56,6 @@ const SignInScreen = () => {
       });
 
       reset();
-      router.push("/(home)/(drawer)/newfeed");
     }
   }
   return (

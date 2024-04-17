@@ -9,22 +9,31 @@ import {
 import { router, usePathname } from "expo-router";
 import { Image, Separator } from "tamagui";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/hooks/auth/useAuth";
+import StyledText from "../styled-text";
 
 export const DrawerContainer = (props: any) => {
   const pathname = usePathname();
 
+  const { userDetails } = useAuth();
+
   return (
     <DrawerContentScrollView {...props}>
-      <View className="flex flex-row items-center w-full gap-5 pt-4 pl-4 pr-8">
+      <View className="flex flex-row items-start w-full gap-5 pt-4 pl-4 pr-8">
         <Image
-          source={{ uri: require("@/assets/images/header/placeholder.jpg") }}
+          source={{
+            uri: userDetails
+              ? userDetails.avatar
+              : require("@/assets/images/header/placeholder.jpg"),
+          }}
           width={60}
           height={60}
           borderRadius={9999}
         />
         <View className="">
-          <Text className="mb-1 text-2xl font-bold">Thanh Dung</Text>
-          <Text className="w-full">21020268@gmail.com</Text>
+          <Text className="mb-1 text-2xl font-bold">
+            {userDetails?.first_name + " " + userDetails?.last_name}
+          </Text>
         </View>
       </View>
       <Separator marginVertical={15} />
@@ -88,7 +97,7 @@ export const DrawerContainer = (props: any) => {
             color={pathname == "/settings" ? "#fff" : "#000"}
           />
         )}
-        label={"Settings"}
+        label={"Log out"}
         labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
         style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
         onPress={() => {

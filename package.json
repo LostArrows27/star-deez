@@ -30,6 +30,7 @@
     "base64-arraybuffer": "^1.0.2",
     "burnt": "^0.12.2",
     "clsx": "^2.1.0",
+    "date-fns": "^3.6.0",
     "expo": "~50.0.14",
     "expo-font": "~11.10.3",
     "expo-image-picker": "~14.7.1",

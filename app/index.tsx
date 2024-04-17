@@ -1,5 +1,4 @@
 import React from "react";
-import { useAuth } from "@/hooks/auth/useAuth";
 import {
   ActivityIndicator,
   Platform,
@@ -11,26 +10,10 @@ import Swiper from "react-native-swiper";
 import Banner from "@/components/introduction/banner";
 import { Button } from "tamagui";
 import { Redirect, router } from "expo-router";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const index = () => {
-  const { session, loading, userDetails } = useAuth();
-
-  if (loading) {
-    return (
-      <View className="h-screen justify-center items-center">
-        <ActivityIndicator size={"large"} />
-      </View>
-    );
-  }
-  // if (session) {
-  //   if (userDetails) {
-  //     router.push("/(home)/(drawer)/newfeed");
-  //   } else {
-  //     router.push("/(auth)/basic-information");
-  //   }
-
-  //   return <></>;
-  // }
+  const { loading } = useAuth();
 
   return (
     <SafeAreaView

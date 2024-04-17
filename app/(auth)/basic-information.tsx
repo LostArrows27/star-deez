@@ -36,12 +36,7 @@ const BasicInformation = () => {
   const [avatar, setAvatar] = useState<ImagePickerResult | null>(null);
   const { onOpen } = useAlertError();
   const { user, userDetails, setUserDetails } = useAuth();
-  if (!user) {
-    router.push("/(auth)/sign-in");
-  }
-  if (userDetails) {
-    router.push("/(home)/(drawer)/newfeed");
-  }
+
   const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(values: tBasicInformation) {
     if (!user) {
@@ -53,7 +48,6 @@ const BasicInformation = () => {
       onOpen("Please upload your avatar");
       return;
     }
-  
 
     if (!avatar.canceled) {
       const ext = avatar.assets[0].uri.split(".").pop();
@@ -106,7 +100,7 @@ const BasicInformation = () => {
   }
 
   return (
-    <View className="h-screen justify-center items-center bg-white">
+    <View className="items-center justify-center h-screen bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
       <Text>Provide us some information about you</Text>
 
@@ -137,7 +131,7 @@ const BasicInformation = () => {
             <Text color="red">{errors.firstName.message}</Text>
           )}
         </View>
-        <View className="gap-y-2 w-full mt-2 ">
+        <View className="gap-y-2  w-full mt-2">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -157,7 +151,7 @@ const BasicInformation = () => {
             <Text color="red">{errors.lastName.message}</Text>
           )}
         </View>
-        <View className="gap-y-2 w-full mt-2 ">
+        <View className="gap-y-2  w-full mt-2">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -185,7 +179,7 @@ const BasicInformation = () => {
 
           {errors.gender && <Text color="red">{errors.gender.message}</Text>}
         </View>
-        <View className="gap-y-2 w-full mt-2 ">
+        <View className="gap-y-2  w-full mt-2">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (

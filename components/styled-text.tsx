@@ -1,5 +1,5 @@
-import { Text, TextProps } from './Themed';
+import { Text } from "tamagui";
 
-export function MonoText(props: TextProps) {
-  return <Text {...props} style={[props.style, { fontFamily: 'SpaceMono' }]} />;
-}
+const StyledText = Text;
+
+export default StyledText;

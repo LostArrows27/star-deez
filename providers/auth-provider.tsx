@@ -1,8 +1,11 @@
+import { authRoute, unverifiedRoute, verifedRoute } from "@/constants/Route";
 import { supabase } from "@/lib/supabase";
 import { Profile } from "@/types/supabase-util-types";
 import { Session, User } from "@supabase/supabase-js";
-import { router, usePathname } from "expo-router";
+import { Redirect, router, usePathname } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 type AuthData = {
   session: Session | null;
@@ -20,62 +23,64 @@ export const AuthContext = createContext<AuthData>({
   setUserDetails: () => {},
 });
 
-const AuthProvider = ({ children }: PropsWithChildren) => {
+const AuthProvider = ({
+  children,
+  loading,
+  setLoading,
+}: {
+  children: React.ReactNode;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [userDetails, setUserDetails] = useState<Profile | null>(null);
   const getUserDetails = (id: string) =>
     supabase.from("profiles").select("*").eq("id", id).maybeSingle();
 
   const pathname = usePathname();
+
   // middleware custome
   useEffect(() => {
-    if (session) {
-      if (userDetails) {
-        if (
-          pathname === "/sign-in" ||
-          pathname === "/sign-up" ||
-          pathname === "/forgot-password" ||
-          pathname === "/"
-        ) {
-          router.push("/(home)/(drawer)/newfeed");
-        }
-      } else {
-        if (pathname !== "/basic-information") {
-          router.push("/(auth)/basic-information");
-        }
-      }
-    } else {
-      if (
-        pathname !== "/sign-in" &&
-        pathname !== "/sign-up" &&
-        pathname !== "/forgot-password" &&
-        pathname !== "/"
-      ) {
-        router.push("/");
-      }
-    }
-  }, [pathname, session, userDetails]);
+    if (loading) return;
+
+    if (!session && authRoute.includes(pathname)) return;
+
+    if (!session) return router.push("/");
+
+    if (session && !userDetails && unverifiedRoute.includes(pathname)) return;
+
+    if (session && !userDetails) return router.push("/basic-information");
+
+    if (session && userDetails && verifedRoute.includes(pathname)) return;
+
+    if (session && userDetails) return router.push("/(home)/(drawer)/newfeed");
+  }, [pathname, session?.access_token]);
 
   useEffect(() => {
-    const { data: res } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        (async () => {
+    const { data: res } = supabase.auth.onAuthStateChange(
+      async (_event, sessionChange) => {
+        if (sessionChange) {
+          setLoading(true);
           const { data: userData, error } = await getUserDetails(
-            session.user.id
+            sessionChange.user.id
           );
+          setLoading(false);
           if (error || !userData) {
-            return;
+            setUserDetails(null);
           } else {
             setUserDetails(userData);
           }
-        })();
+        }
+        if (!sessionChange) {
+          setUserDetails(null);
+        }
+        setUser(sessionChange?.user ? sessionChange.user : null);
+        setSession(sessionChange);
+
+        setLoading(false);
       }
-      setUser(session?.user ? session.user : null);
-      setSession(session);
-      setLoading(false);
-    });
+    );
     return () => {
       res.subscription.unsubscribe();
     };
