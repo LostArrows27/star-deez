@@ -1,12 +1,12 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "@/css/global.css";
 import AuthProvider from "@/providers/auth-provider";
 import { TamaguiProvider, Theme } from "tamagui";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import appConfig from "@/tamagui.config";
-import { Platform, SafeAreaView, StatusBar } from "react-native";
+import { SafeAreaView, View, Text, ActivityIndicator } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import ModalProviders from "@/providers/modal-provider";
@@ -51,11 +51,13 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const [loading, setLoading] = useState(true);
+
   return (
     <TamaguiProvider config={appConfig}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Theme name={"green"}>
-          <AuthProvider>
+          <AuthProvider loading={loading} setLoading={setLoading}>
             <ModalProviders />
             <ToastProvider burntOptions={{ from: "bottom" }}>
               <SafeAreaView
@@ -64,21 +66,30 @@ function RootLayoutNav() {
                 }}
                 className="*:!font-[Inter] text-em"
               >
-                <Stack>
-                  <Stack.Screen name="index" options={{ headerShown: false }} />
-                  <Stack.Screen
-                    name="(auth)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="(home)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="cart"
-                    options={{ presentation: "modal" }}
-                  />
-                </Stack>
+                {loading ? (
+                  <View className="items-center justify-center h-screen">
+                    <ActivityIndicator size={"large"} />
+                  </View>
+                ) : (
+                  <Stack>
+                    <Stack.Screen
+                      name="index"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="(auth)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="(home)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="cart"
+                      options={{ presentation: "modal" }}
+                    />
+                  </Stack>
+                )}
               </SafeAreaView>
 
               <CustomToast />

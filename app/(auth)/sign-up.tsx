@@ -39,9 +39,8 @@ const SignUpScreen = () => {
         message: "Welcome to Star Deez!",
         native: false,
       });
-   
+
       reset();
-      router.push("/(auth)/basic-information");
     }
   }
 

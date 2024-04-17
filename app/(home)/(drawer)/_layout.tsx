@@ -8,10 +8,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 export default function TabLayout() {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
-  
+
+  const { userDetails } = useAuth();
 
   return (
     <Tabs
@@ -29,7 +31,11 @@ export default function TabLayout() {
             size="$2.5"
           >
             <Avatar.Image
-              src={require("@/assets/images/header/placeholder.jpg")}
+              src={
+                userDetails
+                  ? userDetails.avatar
+                  : require("@/assets/images/header/placeholder.jpg")
+              }
             />
             <Avatar.Fallback bc="$green9" />
           </Avatar>
