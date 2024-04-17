@@ -11,6 +11,7 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 
 export default function TabLayout() {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
+  
 
   return (
     <Tabs

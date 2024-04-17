@@ -1,4 +1,4 @@
-import { AlertError } from "@/components/alert";
+import { AlertError } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 
 export default function ModalProviders() {

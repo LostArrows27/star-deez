@@ -1,4 +1,4 @@
-import { alertError, useAlertError } from "@/hooks/alertError";
+import { alertError, useAlertError } from "@/hooks/useAlertError";
 import { AlertDialog, Button, XStack, YStack } from "tamagui";
 
 export function AlertError() {

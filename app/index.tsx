@@ -13,11 +13,24 @@ import { Button } from "tamagui";
 import { Redirect, router } from "expo-router";
 
 const index = () => {
-  const { session, loading } = useAuth();
+  const { session, loading, userDetails } = useAuth();
 
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+      <View className="h-screen justify-center items-center">
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
   }
+  // if (session) {
+  //   if (userDetails) {
+  //     router.push("/(home)/(drawer)/newfeed");
+  //   } else {
+  //     router.push("/(auth)/basic-information");
+  //   }
+
+  //   return <></>;
+  // }
 
   return (
     <SafeAreaView
