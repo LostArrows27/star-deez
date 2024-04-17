@@ -9,6 +9,7 @@ import { Octicons } from "@expo/vector-icons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { useAuth } from "@/hooks/auth/useAuth";
+import { CustomTabBarButton } from "@/components/home/tabbar-button";
 
 export default function TabLayout() {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
@@ -43,16 +44,28 @@ export default function TabLayout() {
         headerShadowVisible: true,
         tabBarActiveTintColor: "rgb(38,170,115)",
         tabBarStyle: {
-          height: 74,
-          paddingTop: 4,
-          paddingBottom: 8,
+          height: 70,
           gap: 1,
+          overflow: "hidden",
+          alignItems: "center",
         },
+        tabBarButton: (props) => (
+          <CustomTabBarButton
+            onPress={(e) => {
+              props.onPress?.(e);
+            }}
+          >
+            {props.children}
+          </CustomTabBarButton>
+        ),
         tabBarLabel: ({ children, focused }) => (
           <Text
-            className={cn("text-xs font-[Inter] tracking-widest", {
-              "text-[rgb(38,170,115)] font-medium": focused,
-            })}
+            className={cn(
+              "text-xs font-[Inter] transition-all -mt-5 text-transparent tracking-widest",
+              {
+                "text-[rgb(38,170,115)] mt-0 font-medium": focused,
+              }
+            )}
           >
             {children}
           </Text>
