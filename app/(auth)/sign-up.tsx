@@ -9,7 +9,7 @@ import { z } from "zod";
 import { SignUpSchema } from "@/schema/auth";
 import { Link, router } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
-import { Eye, EyeOff } from "@tamagui/lucide-icons";
+import { Eye, EyeOff, User } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
 
 type tSignUpSchema = z.infer<typeof SignUpSchema>;
@@ -175,13 +175,7 @@ const SignUpScreen = () => {
           width={"100%"}
           marginBottom="$8"
           icon={
-            <Image
-              source={{
-                uri: require("@/assets/images/icons/google.png"),
-                width: 24,
-                height: 24,
-              }}
-            />
+            <User size={24} color={"$color8"} style={{ marginRight: 10 }} />
           }
         >
           Continue with Google

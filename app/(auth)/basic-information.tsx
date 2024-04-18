@@ -214,35 +214,7 @@ const BasicInformation = () => {
             Confirm
           </Button>
         </Form.Trigger>
-        {/* <View className="flex-row">
-          <Separator
-            marginVertical={10}
-            width={"100%"}
-            borderColor={"$color6"}
-          />
-          <Text marginHorizontal="$3">or</Text>
-          <Separator
-            marginVertical={10}
-            width={"100%"}
-            borderColor={"$color6"}
-          />
-        </View>
-        <Button
-          variant="outlined"
-          width={"100%"}
-          marginBottom="$8"
-          icon={
-            <Image
-              source={{
-                uri: require("@/assets/images/icons/google.png"),
-                width: 24,
-                height: 24,
-              }}
-            />
-          }
-        >
-          Sign In with Google
-        </Button> */}
+
       </Form>
     </View>
   );

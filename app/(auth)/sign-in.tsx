@@ -11,6 +11,12 @@ import {
   Text,
   Theme,
 } from "tamagui";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
+
 import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -18,8 +24,9 @@ import { z } from "zod";
 import { SignInSchema } from "@/schema/auth";
 import { Link, router } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
-import { Eye, EyeOff } from "@tamagui/lucide-icons";
+import { Eye, EyeOff, User } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
+
 type tSignInSchema = z.infer<typeof SignInSchema>;
 
 const SignInScreen = () => {
@@ -33,6 +40,14 @@ const SignInScreen = () => {
   } = useForm<tSignInSchema>({
     resolver: zodResolver(SignInSchema),
   });
+  const configureGoogleSignIn = () => {
+    GoogleSignin.configure({
+      webClientId:
+        "176882292065-lklq72fjc38o666dem6v5vl192q0m2u5.apps.googleusercontent.com",
+      offlineAccess: true,
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+    });
+  };
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToastController();
   const { onOpen } = useAlertError();
@@ -58,6 +73,24 @@ const SignInScreen = () => {
       reset();
     }
   }
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+    } catch (error: any) {
+      console.log(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
   return (
     <View className="items-center justify-center h-screen bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
@@ -172,14 +205,9 @@ const SignInScreen = () => {
           variant="outlined"
           width={"100%"}
           marginBottom="$8"
+          onPress={signIn}
           icon={
-            <Image
-              source={{
-                uri: require("@/assets/images/icons/google.png"),
-                width: 24,
-                height: 24,
-              }}
-            />
+            <User size={24} color={"$color8"} style={{ marginRight: 10 }} />
           }
         >
           Sign In with Google

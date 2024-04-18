@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "176882292065",
+    "project_id": "star-deez",
+    "storage_bucket": "star-deez.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176882292065:android:86c8ae3a5e7dcdb61c6120",
+        "android_client_info": {
+          "package_name": "com.stardeez.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDTJR98RwB49TzlcJBbr-xogFGMSDsj2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
