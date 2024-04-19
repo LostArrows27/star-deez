@@ -84,6 +84,10 @@ function RootLayoutNav() {
                       name="(home)"
                       options={{ headerShown: false }}
                     />
+                    <Stack.Screen
+                      name="(modal)/tracking/create-document"
+                      options={{ headerShown: false }}
+                    />
                   </Stack>
                 )}
               </SafeAreaView>

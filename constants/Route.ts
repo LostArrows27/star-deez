@@ -9,7 +9,6 @@ const verifedRoute = [
   "/statistic",
   "/tracking",
   "/tracking/create-document",
-  "/tracking/search-document",
 ];
 
 // NOTE: log in with unverified information

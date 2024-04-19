@@ -2,6 +2,7 @@ import PickStatus from "@/components/home/tracking/create-document/pick-status";
 import PickUnit from "@/components/home/tracking/create-document/pick-unit";
 import UploadDocumentImage from "@/components/home/tracking/create-document/upload-document-image";
 import ModalWrapper from "@/components/modal/modal-wrapper";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { Text, View } from "react-native";
 import { Input, TextArea } from "tamagui";
 

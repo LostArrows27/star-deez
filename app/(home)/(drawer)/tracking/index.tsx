@@ -15,7 +15,7 @@ const Page = () => {
           marginVertical: 30,
         }}
       >
-        <Link asChild href={"/(modal)/tracking/search-document"}>
+        <Link asChild href={"/(modal)/tracking/create-document"}>
           <Button
             pressStyle={{
               backgroundColor: "$green2Light",

@@ -8,12 +8,16 @@ import { Newspaper } from "@tamagui/lucide-icons";
 import { useState } from "react";
 import { ActivityIndicator, FlatList, View, Text } from "react-native";
 import { Dialog, Button, Adapt, Sheet } from "tamagui"; //
+import CreateUnit from "./create-unit";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const PickUnit = () => {
   const { unit, setUnit } = useCreateDocument();
 
   const [units, setUnits] = useState<UnitRow[]>([]);
   const [open, setOpen] = useState(false);
+
+  const { userDetails } = useAuth();
 
   const { loading } = useGetInitData(async (user) => {
     const { data, error } = await supabase
@@ -85,6 +89,7 @@ const PickUnit = () => {
             </View>
           ) : (
             <View>
+              <CreateUnit userDetails={userDetails} setUnits={setUnits} />
               <FlatList
                 className="h-full"
                 showsVerticalScrollIndicator={false}
@@ -104,7 +109,7 @@ const PickUnit = () => {
                       setOpen(false);
                     }}
                     themeInverse
-                    backgroundColor={"$green7Dark"}
+                    backgroundColor={"$green9Dark"}
                   >
                     {data.item.name}
                   </Button>
