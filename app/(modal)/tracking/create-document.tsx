@@ -1,8 +1,10 @@
+import PickStatus from "@/components/home/tracking/create-document/pick-status";
+import PickUnit from "@/components/home/tracking/create-document/pick-unit";
+import UploadDocumentImage from "@/components/home/tracking/create-document/upload-document-image";
 import ModalWrapper from "@/components/modal/modal-wrapper";
 import { Text, View } from "react-native";
 import { Input, TextArea } from "tamagui";
 
-import { Image } from "tamagui";
 const CartScreen = () => {
   return (
     <ModalWrapper
@@ -13,14 +15,7 @@ const CartScreen = () => {
       }}
     >
       <View className="center gap-y-10 w-full">
-        <Image
-          source={{
-            uri: require("@/assets/images/post.png"),
-            width: 80,
-            height: 102,
-          }}
-          className="w-[50px] h-[150px] object-cover object-center"
-        />
+        <UploadDocumentImage />
         <Input
           height={"$5"}
           fontSize={"$5"}
@@ -30,11 +25,15 @@ const CartScreen = () => {
           fontWeight={"$15"}
         />
         <TextArea
-          height={"$6"}
-          fontSize={"$4"}
+          height={"$5"}
+          fontSize={"$5"}
           placeholder="Document description..."
           width={"100%"}
         />
+      </View>
+      <View className="gap-4 mt-6">
+        <PickStatus />
+        <PickUnit />
       </View>
     </ModalWrapper>
   );

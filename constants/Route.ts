@@ -8,8 +8,8 @@ const verifedRoute = [
   "/notification",
   "/statistic",
   "/tracking",
-  "/create-document",
-  "/search-document",
+  "/tracking/create-document",
+  "/tracking/search-document",
 ];
 
 // NOTE: log in with unverified information

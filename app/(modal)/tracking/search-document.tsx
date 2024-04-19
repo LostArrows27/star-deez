@@ -12,8 +12,8 @@ const CartScreen = () => {
         headerTitle: "Searching document",
       }}
     >
-      <Link asChild href={"/create-document"}>
-        <Button>Upload document</Button>
+      <Link asChild href={"/(modal)/tracking/create-document"}>
+        <Button>Upload documents</Button>
       </Link>
     </ModalWrapper>
   );
