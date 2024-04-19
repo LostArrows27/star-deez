@@ -60,7 +60,8 @@
     "tamagui": "^1.94.4",
     "zod": "^3.22.4",
     "zustand": "^4.5.2",
-    "expo-linear-gradient": "~12.7.2"
+    "expo-linear-gradient": "~12.7.2",
+    "react-uuid": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

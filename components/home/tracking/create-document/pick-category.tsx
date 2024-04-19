@@ -4,30 +4,31 @@ import {
 } from "@/hooks/modal/tracking/useCreateDocument";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { supabase } from "@/lib/supabase";
-import { Newspaper } from "@tamagui/lucide-icons";
+import { BookmarkCheck, Newspaper } from "@tamagui/lucide-icons";
 import { useState } from "react";
 import { ActivityIndicator, FlatList, View, Text } from "react-native";
 import { Dialog, Button, Adapt, Sheet } from "tamagui"; //
 import CreateUnit from "./create-unit";
 import { useAuth } from "@/hooks/auth/useAuth";
+import CreateCategory from "./create-category";
 
-const PickUnit = () => {
-  const { unit, setUnit } = useCreateDocument();
+const PickCategory = () => {
+  const { category, setCategory } = useCreateDocument();
 
-  const [units, setUnits] = useState<UnitRow[]>([]);
+  const [categories, setCategories] = useState<UnitRow[]>([]);
   const [open, setOpen] = useState(false);
 
   const { userDetails } = useAuth();
 
   const { loading } = useGetInitData(async (user) => {
     const { data, error } = await supabase
-      .from("unit")
+      .from("category")
       .select("*")
       .eq("user_id", user.id);
 
     if (error) return;
 
-    setUnits(
+    setCategories(
       data.map((unitData) => {
         return {
           id: unitData.id,
@@ -52,10 +53,10 @@ const PickUnit = () => {
           height={"$5"}
           fontSize={"$4"}
           justifyContent="flex-start"
-          icon={<Newspaper color={"$blue9Light"} />}
+          icon={<BookmarkCheck color={"$red9Light"} />}
           chromeless
         >
-          {unit ? unit.name : "Choose unit"}
+          {category ? category.name : "Choose category"}
         </Button>
       </Dialog.Trigger>
 
@@ -81,7 +82,7 @@ const PickUnit = () => {
         />
 
         <Dialog.Content key="content">
-          <Dialog.Title fontSize={"$8"}>Select document unit</Dialog.Title>
+          <Dialog.Title fontSize={"$8"}>Choose category</Dialog.Title>
 
           {loading ? (
             <View className="center flex-1 h-full">
@@ -89,11 +90,14 @@ const PickUnit = () => {
             </View>
           ) : (
             <View>
-              <CreateUnit userDetails={userDetails} setUnits={setUnits} />
+              <CreateCategory
+                userDetails={userDetails}
+                setUnits={setCategories}
+              />
               <FlatList
                 className="h-full"
                 showsVerticalScrollIndicator={false}
-                data={units}
+                data={categories}
                 keyExtractor={(item) => item.id}
                 renderItem={(data) => (
                   <Button
@@ -105,7 +109,7 @@ const PickUnit = () => {
                     fontSize={"$5"}
                     justifyContent="flex-start"
                     onPress={() => {
-                      setUnit(data.item);
+                      setCategory(data.item);
                       setOpen(false);
                     }}
                     themeInverse
@@ -123,4 +127,4 @@ const PickUnit = () => {
   );
 };
 
-export default PickUnit;
+export default PickCategory;

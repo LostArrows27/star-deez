@@ -38,10 +38,11 @@ const PickStatus = () => {
           height={"$5"}
           fontSize={"$4"}
           justifyContent="flex-start"
-          icon={convertStatusToIcon(status)}
+          icon={convertStatusToIcon(status || "learning")}
           chromeless
         >
-          {statusArr.find((data) => data.value === status)?.title}
+          {statusArr.find((data) => data.value === status)?.title ||
+            "Choose status"}
         </Button>
       </Dialog.Trigger>
 
