@@ -1,11 +1,11 @@
+import { statusArr } from "@/constants/Status";
 import { useFilterStatus } from "@/hooks/home/tracking/useFilterStatus";
 import { Check, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import { useMemo, useState } from "react";
-import type { FontSizeTokens, SelectProps } from "tamagui";
 import { Adapt, Select, Sheet, YStack, getFontSize } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 
-const items = [{ name: "Studying" }, { name: "Stand By" }, { name: "Done" }];
+// "standby" | "learning" | "finished
 
 export function SelectStatus() {
   const { status, setStatus } = useFilterStatus();
@@ -70,21 +70,17 @@ export function SelectStatus() {
             {/* for longer lists memoizing these is useful */}
             {useMemo(
               () =>
-                items.map((item, i) => {
+                statusArr.map((item, i) => {
                   return (
-                    <Select.Item
-                      index={i}
-                      key={item.name}
-                      value={item.name.toLowerCase()}
-                    >
-                      <Select.ItemText>{item.name}</Select.ItemText>
+                    <Select.Item index={i} key={item.value} value={item.value}>
+                      <Select.ItemText>{item.title}</Select.ItemText>
                       <Select.ItemIndicator marginLeft="auto">
                         <Check size={16} />
                       </Select.ItemIndicator>
                     </Select.Item>
                   );
                 }),
-              [items]
+              [statusArr]
             )}
           </Select.Group>
         </Select.Viewport>

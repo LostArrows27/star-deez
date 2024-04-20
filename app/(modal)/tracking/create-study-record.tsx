@@ -1,10 +1,18 @@
 import ModalWrapper from "@/components/modal/modal-wrapper";
 import { useAuth } from "@/hooks/auth/useAuth";
-import { useCreateDocument } from "@/hooks/modal/tracking/useCreateDocument";
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { Button, Image, Separator, TextArea, View as ViewTama } from "tamagui";
-import { toSlug } from "@/utils/convert-to-slug";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import {
+  Button,
+  Image,
+  Label,
+  Separator,
+  SizeTokens,
+  Switch,
+  TextArea,
+  View as ViewTama,
+  XStack,
+} from "tamagui";
 import { supabase } from "@/lib/supabase";
 import { decode } from "base64-arraybuffer";
 import { useToastController } from "@tamagui/toast";
@@ -13,57 +21,46 @@ import uuid from "react-uuid";
 import { Calendar, Camera, Clock, X } from "@tamagui/lucide-icons";
 import { useUploadStudyRecordImage } from "@/hooks/modal/tracking/useUploadStudyRecordImage";
 
-import StudyDurationPicker from "@/components/home/tracking/create-study-record/duration-picker";
-import StudyTimePicker from "@/components/home/tracking/create-study-record/study-time-picker";
+import StudyDurationPicker from "@/components/home/create-study-record/duration-picker";
+import StudyTimePicker from "@/components/home/create-study-record/study-time-picker";
+import DocumentPicker from "@/components/home/create-study-record/document-picker";
+import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
+import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
+import LearningAmountPicker from "@/components/home/create-study-record/learning-amount-picker";
 const CreateStudyRecord = () => {
-  const {
-    unit,
-    category,
-    status,
-    title,
-    description,
-    setDescription,
-    setTitle,
-    reset,
-  } = useCreateDocument();
-
   const [loading, setLoading] = useState(false);
 
   const { userDetails } = useAuth();
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
-  const [comment, setComment] = useState("");
-  const [learning, setLearning] = useState({
-    from: 0,
-    to: 0,
-  });
-  const [duration, setDuration] = useState(0); // minutes
+  const {
+    date,
+    setDate,
+    time,
+    setTime,
+    duration,
+    setDuration,
+    comment,
+    learning,
+    setLearning,
+    setComment,
+    reset,
+  } = useCreateStudyRecord();
   const { image, preview, removeImages, pickImages } =
     useUploadStudyRecordImage();
-
+  const { selectedDocument } = useCategorizedDocuments();
   const toast = useToastController();
-
+  const [publicS, setPublic] = useState(true);
   const canSubmit =
-    title &&
-    description &&
-    unit &&
-    unit.id &&
-    category &&
-    category.id &&
-    status;
+    date && time && learning.to !== 0 && duration && selectedDocument;
 
-  const handleCreateDocument = async () => {
+  const handleCreateStudyRecord = async () => {
     if (loading || !canSubmit || !userDetails) return;
-
     setLoading(true);
     const id = uuid();
-    const fileName = `${userDetails?.id}/${id}/${toSlug(title)}`;
-
+    const fileName = `${userDetails?.id}/${id}}`;
     let url: any = undefined;
-
     if (image && !image?.canceled) {
       const { data, error } = await supabase.storage
-        .from("document")
+        .from("study_record")
         .upload(
           fileName,
           decode(image.assets[0].base64 || image.assets[0].uri),
@@ -71,39 +68,37 @@ const CreateStudyRecord = () => {
             contentType: `image/png`,
           }
         );
-
       if (error || !data) {
         console.log("error", error);
       } else {
         const {
           data: { publicUrl },
-        } = supabase.storage.from("document").getPublicUrl(data.path);
-
+        } = supabase.storage.from("study_record").getPublicUrl(data.path);
         url = publicUrl;
       }
     }
-
-    const { data, error } = await supabase.from("document").insert([
+    const { data, error } = await supabase.from("study_records").insert([
       {
         id,
-        title,
-        description,
-        status,
-        unit_id: unit.id,
-        category_id: category.id,
+        document_id: selectedDocument ? selectedDocument.id : null,
+        comment,
+        duration,
+        image: url,
+        time: date.toLocaleDateString() + " " + time.toLocaleTimeString(),
         user_id: userDetails?.id,
-        cover: url,
+        begin_at: learning.from,
+        end_at: learning.to,
+        visibility: publicS ? "public" : "private",
       },
     ]);
-
     if (error) {
       console.log("error", error);
-      toast.show("Error creating document. ", { preset: "error" });
+      toast.show("Error creating study record. ", { preset: "error" });
     } else {
       reset();
       removeImages();
       toast.show("Success!!", {
-        message: "Document created successfully!",
+        message: "Study recorded successfully!",
         native: false,
       });
       router.replace("/tracking/");
@@ -123,10 +118,15 @@ const CreateStudyRecord = () => {
         },
         headerRight: () => (
           <Button
-            onPress={handleCreateDocument}
+            onPress={handleCreateStudyRecord}
             pressStyle={{
               backgroundColor: canSubmit ? "$green8Light" : "$gray10Dark",
             }}
+            iconAfter={
+              loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : undefined
+            }
             themeInverse
             fontSize={"$5"}
             padding={"$2 $2"}
@@ -138,86 +138,85 @@ const CreateStudyRecord = () => {
         ),
       }}
     >
-      <Text className="text-xl font-semibold mb-2">Detail</Text>
-      <ViewTama
-        width={"100%"}
-        backgroundColor={"$color4"}
-        rowGap="$2"
-        padding="$4"
-      >
-        <Separator backgroundColor={"$color8"} />
-        <StudyTimePicker
-          date={date}
-          time={time}
-          setDate={setDate}
-          setTime={setTime}
-        />
-        <StudyDurationPicker duration={duration} setDuration={setDuration} />
-        <View></View>
-      </ViewTama>
-      <Text className="text-xl font-semibold my-2">Comment</Text>
-      <ViewTama
-        width={"100%"}
-        backgroundColor={"$color4"}
-        gap="$2"
-        padding="$4"
-      >
-        <TextArea
-          onChangeText={setDescription}
-          value={description}
-          height={"$10"}
-          fontSize={"$5"}
-          placeholderTextColor={"$gray8"}
-          textAlignVertical="top"
-          placeholder="Comment..."
-          width={"100%"}
-        />
-        <Separator backgroundColor={"$color8"} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text className="text-xl font-semibold mb-2">Detail</Text>
         <ViewTama
-          aspectRatio={16 / 9}
           width={"100%"}
-          justifyContent="center"
-          alignItems="center"
-          borderWidth="$1"
-          borderColor={"$color8"}
-          borderStyle="dashed"
-          onPress={async () => {
-            await pickImages([16, 9]);
-          }}
+          backgroundColor={"$color4"}
+          rowGap="$2"
+          padding="$4"
         >
-          {preview ? (
-            <>
-              <Image
-                source={{
-                  uri: preview,
-                  width: 160,
-                  height: 90,
-                }}
-                borderRadius={8}
-                width="100%"
-                height="100%"
-                className=" object-cover object-center"
-                onPress={async () => {
-                  await pickImages([16, 9]);
-                }}
-              />
-              <View
-                onTouchStart={() => {
-                  removeImages();
-                }}
-                className="-top-2 -right-2 bg-rose-500 absolute flex items-center justify-center p-[2px] rounded-full shadow-md"
-              >
-                <X size={24} color={"white"} />
-              </View>
-            </>
-          ) : (
-            <>
-              <Camera color={"$color8"} />
-              <Text className=" font-semibold ">Select an Image</Text>
-            </>
-          )}
+          <DocumentPicker />
+          <Separator marginVertical={6} borderColor={"$color8"} />
+          <StudyTimePicker />
+          <StudyDurationPicker />
+          <LearningAmountPicker />
+          <SwitchWithLabel size="$2" checked={publicS} setChecked={setPublic} />
         </ViewTama>
-      </ViewTama>
+        <Text className="text-xl font-semibold my-2">Comment</Text>
+        <ViewTama
+          width={"100%"}
+          backgroundColor={"$color4"}
+          gap="$2"
+          padding="$4"
+        >
+          <TextArea
+            onChangeText={setComment}
+            value={comment}
+            height={"$10"}
+            fontSize={"$5"}
+            placeholderTextColor={"$gray8"}
+            textAlignVertical="top"
+            placeholder="Comment..."
+            width={"100%"}
+          />
+          <Separator backgroundColor={"$color8"} />
+          <ViewTama
+            aspectRatio={16 / 9}
+            width={"100%"}
+            justifyContent="center"
+            alignItems="center"
+            borderWidth="$1"
+            borderColor={"$color8"}
+            borderStyle="dashed"
+            onPress={async () => {
+              await pickImages([16, 9]);
+            }}
+          >
+            {preview ? (
+              <>
+                <Image
+                  source={{
+                    uri: preview,
+                    width: 160,
+                    height: 90,
+                  }}
+                  borderRadius={8}
+                  width="100%"
+                  height="100%"
+                  className=" object-cover object-center"
+                  onPress={async () => {
+                    await pickImages([16, 9]);
+                  }}
+                />
+                <View
+                  onTouchStart={() => {
+                    removeImages();
+                  }}
+                  className="-top-2 -right-2 bg-rose-500 absolute flex items-center justify-center p-[2px] rounded-full shadow-md"
+                >
+                  <X size={24} color={"white"} />
+                </View>
+              </>
+            ) : (
+              <>
+                <Camera color={"$color8"} />
+                <Text className=" font-semibold ">Select an Image</Text>
+              </>
+            )}
+          </ViewTama>
+        </ViewTama>
+      </ScrollView>
       {/* <View className="gap-4 mt-6">
         <PickStatus />
         <PickUnit />
@@ -228,3 +227,44 @@ const CreateStudyRecord = () => {
 };
 
 export default CreateStudyRecord;
+
+export function SwitchWithLabel(props: {
+  size: SizeTokens;
+  checked: boolean;
+  setChecked: (value: boolean) => void;
+  defaultChecked?: boolean;
+}) {
+  const id = `switch-${props.size.toString().slice(1)}-${
+    props.defaultChecked ?? ""
+  }}`;
+
+  return (
+    <XStack alignItems="center" justifyContent="flex-end" gap="$2">
+      <Label
+        paddingRight="$0"
+        fontSize={"$8"}
+        fontWeight={"700"}
+        justifyContent="flex-end"
+        size={props.size}
+        htmlFor={id}
+      >
+        Visibility:
+        <Text className="text-emerald-500">
+          {" "}
+          {props.checked ? "Public" : "Private"}
+        </Text>
+      </Label>
+
+      <Switch
+        id={id}
+        size={props.size}
+        checked={props.checked}
+        onCheckedChange={() => {
+          props.setChecked(!props.checked);
+        }}
+      >
+        <Switch.Thumb animation="quicker" />
+      </Switch>
+    </XStack>
+  );
+}

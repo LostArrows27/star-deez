@@ -5,16 +5,11 @@ import { Input, XStack } from "tamagui";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import convertMinute from "@/utils/convert-minute";
+import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
 
-export default function StudyDurationPicker({
-  duration,
-  setDuration,
-}: {
-  duration: number;
-  setDuration: (duration: number) => void;
-}) {
+export default function StudyDurationPicker() {
   const [showPicker, setShowPicker] = useState(false);
-
+  const { duration, setDuration } = useCreateStudyRecord();
   return (
     <Pressable onPress={() => setShowPicker(true)}>
       <XStack alignItems={"center"} justifyContent="flex-start" gap={"$2"}>

@@ -1,7 +1,7 @@
-import PickCategory from "@/components/home/tracking/create-document/pick-category";
-import PickStatus from "@/components/home/tracking/create-document/pick-status";
-import PickUnit from "@/components/home/tracking/create-document/pick-unit";
-import UploadDocumentImage from "@/components/home/tracking/create-document/upload-document-image";
+import PickCategory from "@/components/home/create-document/pick-category";
+import PickStatus from "@/components/home/create-document/pick-status";
+import PickUnit from "@/components/home/create-document/pick-unit";
+import UploadDocumentImage from "@/components/home/create-document/upload-document-image";
 import ModalWrapper from "@/components/modal/modal-wrapper";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useCreateDocument } from "@/hooks/modal/tracking/useCreateDocument";
@@ -110,6 +110,7 @@ const CartScreen = () => {
       options={{
         headerShown: true,
         headerTitle: "Upload your document",
+        animation: "slide_from_bottom",
       }}
     >
       <View className="center gap-y-10 w-full">
@@ -127,7 +128,8 @@ const CartScreen = () => {
         <TextArea
           onChangeText={setDescription}
           value={description}
-          height={"$5"}
+          height={"$10"}
+          textAlignVertical="top"
           fontSize={"$5"}
           placeholder="Document description..."
           width={"100%"}

@@ -1,11 +1,12 @@
+import { StudyingStatus } from "@/types/supabase-util-types";
 import { create } from "zustand";
 
-export type StudyingStatus = "studying" | "stand-by" | "done";
+export type FilterStatus = StudyingStatus | "all";
 
 export const useFilterStatus = create<{
   status: StudyingStatus;
   setStatus: (status: StudyingStatus) => void;
 }>((set) => ({
-  status: "studying",
+  status: "learning",
   setStatus: (status) => set({ status }),
 }));

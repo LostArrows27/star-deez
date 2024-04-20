@@ -6,6 +6,7 @@ import { Input, View as ViewTama, XStack } from "tamagui";
 import { Calendar } from "@tamagui/lucide-icons";
 
 import DateTimePicker from "@/components/ui/date-picker";
+import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
 const timeWithoutSecond = (date: Date) => {
   //remove seconds from to localeTimeString
 
@@ -14,17 +15,8 @@ const timeWithoutSecond = (date: Date) => {
 
   return `${time[0]}:${time[1]} ${locale[1]}`;
 };
-export default function StudyTimePicker({
-  date,
-  time,
-  setDate,
-  setTime,
-}: {
-  date: Date;
-  time: Date;
-  setDate: (date: Date) => void;
-  setTime: (date: Date) => void;
-}) {
+export default function StudyTimePicker() {
+  const { date, setDate, time, setTime } = useCreateStudyRecord();
   return (
     <XStack alignItems={"center"} justifyContent="flex-start" gap={"$2"}>
       <Calendar size={"$2"} color={"$color8"} />
@@ -36,20 +28,8 @@ export default function StudyTimePicker({
         buttonTextColorIOS="green"
       >
         <Input pointerEvents="none" editable={false} flexGrow={1}>
-          {date.toLocaleDateString()}
+          {date ? date.toLocaleDateString() : "Date"}
         </Input>
-
-        {/* <Button
-        scaleIcon={2.5}
-        px={10}
-        height={"$5"}
-        fontSize={"$4"}
-        justifyContent="flex-start"
-        icon={<Clock size={24} color={"$color8"} />}
-        chromeless
-      >
-        {date ? date.toLocaleDateString() : "mm/dd/yyyy"}
-      </Button> */}
       </DateTimePicker>
       <DateTimePicker
         type="time"
@@ -59,7 +39,7 @@ export default function StudyTimePicker({
         buttonTextColorIOS="green"
       >
         <Input pointerEvents="none" editable={false} flexGrow={1}>
-          {timeWithoutSecond(time)}
+          {time ? timeWithoutSecond(time) : "Time"}
         </Input>
       </DateTimePicker>
     </XStack>
