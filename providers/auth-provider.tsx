@@ -1,6 +1,7 @@
 import { authRoute, unverifiedRoute, verifedRoute } from "@/constants/Route";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseClient } from "@/lib/supabase";
 import { Profile } from "@/types/supabase-util-types";
+import { useAuth } from "@clerk/clerk-expo";
 import { Session, User } from "@supabase/supabase-js";
 import { Redirect, router, usePathname } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
@@ -12,6 +13,8 @@ type AuthData = {
   loading: boolean;
   user: User | null;
   userDetails: Profile | null;
+  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   setUserDetails: React.Dispatch<React.SetStateAction<Profile | null>>;
 };
 
@@ -20,6 +23,8 @@ export const AuthContext = createContext<AuthData>({
   loading: true,
   user: null,
   userDetails: null,
+  setSession: () => {},
+  setUser: () => {},
   setUserDetails: () => {},
 });
 
@@ -39,6 +44,19 @@ const AuthProvider = ({
     supabase.from("profiles").select("*").eq("id", id).maybeSingle();
 
   const pathname = usePathname();
+  const { getToken, sessionId, userId, isSignedIn, isLoaded, signOut } =
+    useAuth();
+  const fetchData = async () => {
+    // TODO #1: Replace with your JWT template name
+    const token = await getToken({ template: "supabase" });
+    console.log(sessionId, userId, "e;;fpe");
+    // signOut();
+
+    // // TODO #2: Replace with your database table name
+    // const { data, error } = await supabase.from("your_table").select();
+
+    // TODO #3: Handle the response
+  };
 
   // middleware custome
   useEffect(() => {
@@ -57,6 +75,10 @@ const AuthProvider = ({
     if (session && userDetails) return router.push("/(home)/(drawer)/newfeed");
   }, [pathname, session?.access_token]);
 
+  // useEffect(() => {
+  //   if (!sessionId || !userId) return;
+  //   fetchData();
+  // }, [sessionId, userId]);
   useEffect(() => {
     const { data: res } = supabase.auth.onAuthStateChange(
       async (_event, sessionChange) => {
@@ -88,7 +110,15 @@ const AuthProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{ session, loading, user, userDetails, setUserDetails }}
+      value={{
+        session,
+        loading,
+        user,
+        userDetails,
+        setUserDetails,
+        setSession,
+        setUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
