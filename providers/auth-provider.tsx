@@ -1,7 +1,7 @@
 import { authRoute, unverifiedRoute, verifedRoute } from "@/constants/Route";
 import { supabase, supabaseClient } from "@/lib/supabase";
 import { Profile } from "@/types/supabase-util-types";
-import { useAuth } from "@clerk/clerk-expo";
+
 import { Session, User } from "@supabase/supabase-js";
 import { router, usePathname } from "expo-router";
 import { createContext, useEffect, useState } from "react";
@@ -42,19 +42,6 @@ const AuthProvider = ({
     supabase.from("profiles").select("*").eq("id", id).maybeSingle();
 
   const pathname = usePathname();
-  const { getToken, sessionId, userId, isSignedIn, isLoaded, signOut } =
-    useAuth();
-  const fetchData = async () => {
-    // TODO #1: Replace with your JWT template name
-    const token = await getToken({ template: "supabase" });
-    console.log(sessionId, userId, "e;;fpe");
-    // signOut();
-
-    // // TODO #2: Replace with your database table name
-    // const { data, error } = await supabase.from("your_table").select();
-
-    // TODO #3: Handle the response
-  };
 
   // middleware custome
   useEffect(() => {

@@ -1,8 +1,9 @@
 import { Link, Stack } from "expo-router";
 import { View, Text } from "react-native";
 import { SelectStatus } from "@/components/home/tracking/select-status";
-import { Button, TextArea } from "tamagui";
+import { Button, Circle, TextArea } from "tamagui";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Pen } from "@tamagui/lucide-icons";
 
 const Page = () => {
   return (
@@ -34,6 +35,20 @@ const Page = () => {
           </Button>
         </Link>
       </View>
+      <Link asChild href={"/(modal)/tracking/create-study-record"}>
+        <Circle
+          size={50}
+          backgroundColor={"$color8"}
+          elevation="$1"
+          pressStyle={{ backgroundColor: "$green7Light" }}
+          overflow="hidden"
+          position="absolute"
+          bottom={30}
+          right={30}
+        >
+          <Pen size={"$1"} color={"#fff"} />
+        </Circle>
+      </Link>
     </View>
   );
 };

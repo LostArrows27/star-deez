@@ -106,6 +106,10 @@ function RootLayoutNav() {
                       name="(modal)/tracking/create-document"
                       options={{ headerShown: false }}
                     />
+                    <Stack.Screen
+                      name="(modal)/tracking/create-study-record"
+                      options={{ headerShown: false }}
+                    />
                   </Stack>
                 )}
               </SafeAreaView>
