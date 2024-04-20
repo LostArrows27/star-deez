@@ -3,10 +3,8 @@ import { supabase, supabaseClient } from "@/lib/supabase";
 import { Profile } from "@/types/supabase-util-types";
 import { useAuth } from "@clerk/clerk-expo";
 import { Session, User } from "@supabase/supabase-js";
-import { Redirect, router, usePathname } from "expo-router";
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { router, usePathname } from "expo-router";
+import { createContext, useEffect, useState } from "react";
 
 type AuthData = {
   session: Session | null;
@@ -64,15 +62,16 @@ const AuthProvider = ({
 
     if (!session && authRoute.includes(pathname)) return;
 
-    if (!session) return router.push("/");
+    if (!session) return router.replace("/");
 
     if (session && !userDetails && unverifiedRoute.includes(pathname)) return;
 
-    if (session && !userDetails) return router.push("/basic-information");
+    if (session && !userDetails) return router.replace("/basic-information");
 
     if (session && userDetails && verifedRoute.includes(pathname)) return;
 
-    if (session && userDetails) return router.push("/(home)/(drawer)/newfeed");
+    if (session && userDetails)
+      return router.replace("/(home)/(drawer)/newfeed");
   }, [pathname, session?.access_token]);
 
   // useEffect(() => {

@@ -131,7 +131,7 @@ const BasicInformation = () => {
             <Text color="red">{errors.firstName.message}</Text>
           )}
         </View>
-        <View className="gap-y-2  w-full mt-2">
+        <View className="gap-y-2 w-full mt-2">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -151,7 +151,7 @@ const BasicInformation = () => {
             <Text color="red">{errors.lastName.message}</Text>
           )}
         </View>
-        <View className="gap-y-2  w-full mt-2">
+        <View className="gap-y-2 w-full mt-2">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -179,7 +179,7 @@ const BasicInformation = () => {
 
           {errors.gender && <Text color="red">{errors.gender.message}</Text>}
         </View>
-        <View className="gap-y-2  w-full mt-2">
+        <View className="gap-y-2 w-full mt-2">
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
