@@ -29,7 +29,7 @@ export type PostItem = {
 const PostItem = (data: PostItem) => {
   return (
     <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Ripple("#e4e4e7", false)}
+      background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
       className="w-full h-full"
     >
       <View className="border-emerald-200 w-full p-5 pb-3 border-b">
@@ -104,7 +104,7 @@ const PostItem = (data: PostItem) => {
             </StyledText>
           </View>
           <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple("#e4e4e7", false)}
+            background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
             className="rounded-xl flex flex-row items-center mt-2"
           >
             <View className="rounded-xl flex-row items-center gap-3 px-2 py-2 pr-4 ml-5">
