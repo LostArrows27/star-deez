@@ -128,7 +128,8 @@ const CartScreen = () => {
         <TextArea
           onChangeText={setDescription}
           value={description}
-          height={"$5"}
+          height={"$10"}
+          textAlignVertical="top"
           fontSize={"$5"}
           placeholder="Document description..."
           width={"100%"}

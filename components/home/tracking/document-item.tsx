@@ -1,12 +1,21 @@
+import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
 import { DocumentFull } from "@/types/supabase-util-types";
 import { Edit3, Trash2 } from "@tamagui/lucide-icons";
 import { useState } from "react";
 import { View, Text, TouchableNativeFeedback, ScrollView } from "react-native";
 import { Adapt, Button, H3, Image, Popover, Separator } from "tamagui";
 
-const DocumentItem = ({ document }: { document: DocumentFull }) => {
+const DocumentItem = ({
+  document,
+  selectable = false,
+  onCloseSelections,
+}: {
+  document: DocumentFull;
+  selectable?: boolean;
+  onCloseSelections?: () => void;
+}) => {
   const [open, setOpen] = useState(false);
-
+  const { setSelectedDocument } = useCategorizedDocuments();
   return (
     <Popover
       open={open}
@@ -14,36 +23,45 @@ const DocumentItem = ({ document }: { document: DocumentFull }) => {
         setOpen(open);
       }}
     >
-      <Popover.Trigger asChild>
-        <TouchableNativeFeedback
-          // onLongPress={() => {
-          //   setOpen(true);
-          // }}
-          background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
-          className="w-[100px] pb-1 bg-emerald-500 mr-6 h-[145px] overflow-hidden rounded-lg "
-        >
-          <View className="w-[100px] pb-1 bg-emerald-500 mr-6 h-[145px] overflow-hidden rounded-lg ">
-            <Image
-              source={{
-                uri: document.cover || require("@/assets/images/post.png"),
-                width: 50,
-                height: 50,
-              }}
-              resizeMode="cover"
-              width={"100%"}
-              pt={"90%"}
-            />
-            <View className="center flex-1 px-3">
-              <Text
-                numberOfLines={2}
-                className=" mt-2 text-sm font-bold text-center text-white"
-              >
-                {document.title}
-              </Text>
-            </View>
+      <TouchableNativeFeedback
+        // onLongPress={() => {
+        //   setOpen(true);
+        // }}
+        onPress={() => {
+          if (selectable && onCloseSelections) {
+            setSelectedDocument(document);
+            onCloseSelections();
+          } else {
+            console.log("feaefa");
+
+            setOpen(true);
+          }
+        }}
+        background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
+        className="w-[100px] pb-1 bg-emerald-500 mr-6 h-[145px] overflow-hidden rounded-lg "
+      >
+        <View className="w-[100px] pb-1 bg-emerald-500 mr-6 h-[145px] overflow-hidden rounded-lg ">
+          <Image
+            source={{
+              uri: document.cover || require("@/assets/images/post.png"),
+              width: 50,
+              height: 50,
+            }}
+            resizeMode="cover"
+            width={"100%"}
+            pt={"90%"}
+          />
+          <View className="center flex-1 px-3">
+            <Text
+              numberOfLines={2}
+              className=" mt-2 text-sm font-bold text-center text-white"
+            >
+              {document.title}
+            </Text>
           </View>
-        </TouchableNativeFeedback>
-      </Popover.Trigger>
+        </View>
+      </TouchableNativeFeedback>
+
       <Adapt when="sm" platform="touch">
         <Popover.Sheet modal dismissOnSnapToBottom>
           <Popover.Sheet.Frame padding="$4">
