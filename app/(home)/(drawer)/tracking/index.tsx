@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { ScrollView } from "react-native";
+import { ScrollView, Text } from "react-native";
 import { SelectStatus } from "@/components/home/tracking/select-status";
 
 import DocumentList from "@/components/home/tracking/document-list";
