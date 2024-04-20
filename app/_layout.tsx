@@ -85,8 +85,8 @@ function RootLayoutNav() {
                       options={{ headerShown: false }}
                     />
                     <Stack.Screen
-                      name="cart"
-                      options={{ presentation: "modal" }}
+                      name="(modal)/tracking/create-document"
+                      options={{ headerShown: false }}
                     />
                   </Stack>
                 )}
