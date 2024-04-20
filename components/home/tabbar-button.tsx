@@ -9,7 +9,7 @@ export const CustomTabBarButton = ({
 }) => (
   <View className=" flex-1 overflow-hidden">
     <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Ripple("#e4e4e7", false, 90)}
+      background={TouchableNativeFeedback.Ripple("#d7d7d7", false, 90)}
       className="center flex-1 h-full pt-1"
       onPress={onPress}
     >

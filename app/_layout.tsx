@@ -3,7 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "@/css/global.css";
 import AuthProvider from "@/providers/auth-provider";
-import { TamaguiProvider, Theme } from "tamagui";
+import { Spinner, TamaguiProvider, Theme } from "tamagui";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import appConfig from "@/tamagui.config";
 import { SafeAreaView, View, Text, ActivityIndicator } from "react-native";
@@ -12,6 +12,7 @@ import { Drawer } from "expo-router/drawer";
 import ModalProviders from "@/providers/modal-provider";
 import { ToastProvider, ToastViewport } from "@tamagui/toast";
 import CustomToast from "@/components/ui/toast-custom";
+import LoadingScreen from "@/components/loading/loading-screen";
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -67,9 +68,7 @@ function RootLayoutNav() {
                 className="*:!font-[Inter] text-em"
               >
                 {loading ? (
-                  <View className="items-center justify-center h-screen">
-                    <ActivityIndicator size={"large"} />
-                  </View>
+                  <LoadingScreen />
                 ) : (
                   <Stack>
                     <Stack.Screen

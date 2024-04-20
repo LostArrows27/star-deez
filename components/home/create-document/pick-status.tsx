@@ -69,24 +69,27 @@ const PickStatus = () => {
 
         <Dialog.Content key="content">
           <Dialog.Title fontSize={"$8"}>Select status</Dialog.Title>
-          {statusArr.map((data, key) => (
-            <Button
-              key={key}
-              scaleIcon={2}
-              px={10}
-              height={"$5"}
-              fontSize={"$4"}
-              justifyContent="flex-start"
-              icon={convertStatusToIcon(data.value as Status)}
-              chromeless
-              onPress={() => {
-                setStatus(data.value as Status);
-                setOpen(false);
-              }}
-            >
-              {data.title}
-            </Button>
-          ))}
+          {statusArr.map((data, key) => {
+            if (data.value === "all") return;
+            return (
+              <Button
+                key={key}
+                scaleIcon={2}
+                px={10}
+                height={"$5"}
+                fontSize={"$4"}
+                justifyContent="flex-start"
+                icon={convertStatusToIcon(data.value as Status)}
+                chromeless
+                onPress={() => {
+                  setStatus(data.value as Status);
+                  setOpen(false);
+                }}
+              >
+                {data.title}
+              </Button>
+            );
+          })}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>
