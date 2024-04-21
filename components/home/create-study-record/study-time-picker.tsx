@@ -2,22 +2,17 @@ import { View, Text } from "react-native";
 import React from "react";
 
 import { Input, View as ViewTama, XStack } from "tamagui";
+import { format } from "date-fns";
 
 import { Calendar } from "@tamagui/lucide-icons";
 
 import DateTimePicker from "@/components/ui/date-picker";
 import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
 const timeWithoutSecond = (date: Date) => {
-  //remove seconds from to localeTimeString
-
-  const time = date.toLocaleTimeString().split(":");
-  const locale = date.toLocaleTimeString().split(" ");
-
-  return `${time[0]}:${time[1]} ${locale[1]}`;
+  return format(new Date(date), "h:mm a");
 };
 
 export default function StudyTimePicker() {
-
   const { date, setDate, time, setTime } = useCreateStudyRecord();
   return (
     <XStack alignItems={"center"} justifyContent="flex-start" gap={"$2"}>
