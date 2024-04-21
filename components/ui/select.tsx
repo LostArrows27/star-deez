@@ -26,7 +26,7 @@ export function SelectTama(
       {...props}
     >
       <Select.Trigger width={"100%"} iconAfter={ChevronDown}>
-        <Select.Value placeholder="Gender" color={"$color10"}/>
+        <Select.Value placeholder="Gender" color={"$color10"} />
       </Select.Trigger>
 
       <Adapt when="sm" platform="touch">
@@ -34,6 +34,7 @@ export function SelectTama(
           native={!!props.native}
           modal
           dismissOnSnapToBottom
+          snapPointsMode="fit"
           animationConfig={{
             type: "spring",
             damping: 20,
