@@ -52,7 +52,7 @@ const PostItem = (data: PostItem) => {
         </View>
         <View className="gap-4 pl-16 mt-4">
           {data.media && (
-            <View className="overflow-hidden w-full h-[150px] bg-red-500 rounded-md">
+            <View className="overflow-hidden transition-all w-full h-[150px] bg-red-500 rounded-md">
               <Image
                 source={{
                   uri: data.media,
