@@ -1,7 +1,6 @@
 import { authRoute, unverifiedRoute, verifedRoute } from "@/constants/Route";
-import { supabase, supabaseClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { Profile } from "@/types/supabase-util-types";
-
 import { Session, User } from "@supabase/supabase-js";
 import { router, usePathname } from "expo-router";
 import { createContext, useEffect, useState } from "react";
@@ -11,8 +10,6 @@ type AuthData = {
   loading: boolean;
   user: User | null;
   userDetails: Profile | null;
-  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   setUserDetails: React.Dispatch<React.SetStateAction<Profile | null>>;
 };
 
@@ -21,8 +18,6 @@ export const AuthContext = createContext<AuthData>({
   loading: true,
   user: null,
   userDetails: null,
-  setSession: () => {},
-  setUser: () => {},
   setUserDetails: () => {},
 });
 
@@ -61,10 +56,6 @@ const AuthProvider = ({
       return router.replace("/(home)/(drawer)/newfeed");
   }, [pathname, session?.access_token]);
 
-  // useEffect(() => {
-  //   if (!sessionId || !userId) return;
-  //   fetchData();
-  // }, [sessionId, userId]);
   useEffect(() => {
     const { data: res } = supabase.auth.onAuthStateChange(
       async (_event, sessionChange) => {
@@ -96,15 +87,7 @@ const AuthProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{
-        session,
-        loading,
-        user,
-        userDetails,
-        setUserDetails,
-        setSession,
-        setUser,
-      }}
+      value={{ session, loading, user, userDetails, setUserDetails }}
     >
       {children}
     </AuthContext.Provider>

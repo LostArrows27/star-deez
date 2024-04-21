@@ -1,16 +1,7 @@
 import { View } from "react-native";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  H2,
-  Image,
-  Input,
-  Separator,
-  Spinner,
-  Text,
-  XStack,
-} from "tamagui";
+import { Button, H2, Image, Input, Separator, Spinner, Text } from "tamagui";
 import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -26,7 +17,6 @@ import { useAuth } from "@/hooks/auth/useAuth";
 import { Gender } from "@/types/supabase-util-types";
 import { decode } from "base64-arraybuffer";
 import { router } from "expo-router";
-import { Calendar } from "@tamagui/lucide-icons";
 type tBasicInformation = z.infer<typeof BasicInformationSchema>;
 
 const BasicInformation = () => {
@@ -47,6 +37,7 @@ const BasicInformation = () => {
   const { onOpen } = useAlertError();
   const { user, userDetails, setUserDetails } = useAuth();
 
+  const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(values: tBasicInformation) {
     if (!user) {
       onOpen("User not found");
@@ -197,23 +188,10 @@ const BasicInformation = () => {
                 accentColor="green"
                 textColor="green"
                 onConfirm={onChange}
+                placeholder="Date of Birth"
                 date={value}
                 buttonTextColorIOS="green"
-              >
-                <XStack alignItems={"center"} justifyContent="flex-end">
-                  <Input
-                    pointerEvents="none"
-                    placeholder={"Date of Birth"}
-                    editable={false}
-                    flexGrow={1}
-                  >
-                    {value?.toLocaleDateString()}
-                  </Input>
-                  <XStack paddingRight={10} position="absolute">
-                    <Calendar />
-                  </XStack>
-                </XStack>
-              </DateTimePicker>
+              />
             )}
             name="dob"
           />
@@ -222,7 +200,6 @@ const BasicInformation = () => {
         </View>
 
         <AvatarPicker setImage={setAvatar} />
-
         <Form.Trigger marginTop="$3.5" asChild disabled={isSubmitting}>
           <Button
             themeInverse
@@ -237,6 +214,35 @@ const BasicInformation = () => {
             Confirm
           </Button>
         </Form.Trigger>
+        {/* <View className="flex-row">
+          <Separator
+            marginVertical={10}
+            width={"100%"}
+            borderColor={"$color6"}
+          />
+          <Text marginHorizontal="$3">or</Text>
+          <Separator
+            marginVertical={10}
+            width={"100%"}
+            borderColor={"$color6"}
+          />
+        </View>
+        <Button
+          variant="outlined"
+          width={"100%"}
+          marginBottom="$8"
+          icon={
+            <Image
+              source={{
+                uri: require("@/assets/images/icons/google.png"),
+                width: 24,
+                height: 24,
+              }}
+            />
+          }
+        >
+          Sign In with Google
+        </Button> */}
       </Form>
     </View>
   );
