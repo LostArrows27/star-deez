@@ -5,7 +5,7 @@ import UploadDocumentImage from "@/components/home/create-document/upload-docume
 import ModalWrapper from "@/components/modal/modal-wrapper";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useCreateDocument } from "@/hooks/modal/tracking/useCreateDocument";
-import { useUploadDocumentImage } from "@/hooks/modal/tracking/useUploadDocumentImage";
+
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { Button, Input, TextArea } from "tamagui";
@@ -16,6 +16,7 @@ import { useToastController } from "@tamagui/toast";
 import { router } from "expo-router";
 import uuid from "react-uuid";
 import { ActivityIndicator } from "react-native";
+import { useUploadDocumentImage } from "@/hooks/modal/tracking/useUploadDocumentImage";
 
 const CartScreen = () => {
   const {
@@ -148,6 +149,7 @@ const CartScreen = () => {
         pressStyle={{
           backgroundColor: canSubmit ? "$green8Light" : "$gray10Dark",
         }}
+        color={"white"}
         themeInverse
         disabled={!canSubmit}
         backgroundColor={canSubmit ? "$green9Light" : "$gray10Dark"}

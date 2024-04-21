@@ -34,6 +34,7 @@ export function SelectTama(
           native={!!props.native}
           modal
           dismissOnSnapToBottom
+          snapPointsMode="fit"
           animationConfig={{
             type: "spring",
             damping: 20,

@@ -16,3 +16,5 @@ export type DocumentFull = Document & {
   category: Category;
   unit: Unit;
 };
+
+export type StudyRecord = Database["public"]["Tables"]["study_records"]["Row"];
