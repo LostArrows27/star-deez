@@ -155,51 +155,6 @@ export type Database = {
           },
         ]
       }
-      study_records: {
-        Row: {
-          begin_at: number
-          class_id: string | null
-          comment: string | null
-          created_at: string
-          document_id: string | null
-          duration: number
-          end_at: number
-          id: string
-          image: string | null
-          time: string | null
-          user_id: string
-          visibility: string | null
-        }
-        Insert: {
-          begin_at?: number
-          class_id?: string | null
-          comment?: string | null
-          created_at?: string
-          document_id?: string | null
-          duration: number
-          end_at?: number
-          id?: string
-          image?: string | null
-          time?: string | null
-          user_id?: string
-          visibility?: string | null
-        }
-        Update: {
-          begin_at?: number
-          class_id?: string | null
-          comment?: string | null
-          created_at?: string
-          document_id?: string | null
-          duration?: number
-          end_at?: number
-          id?: string
-          image?: string | null
-          time?: string | null
-          user_id?: string
-          visibility?: string | null
-        }
-        Relationships: []
-      }
       unit: {
         Row: {
           created_at: string

@@ -1,5 +1,5 @@
-import { Linking, View } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -11,25 +11,18 @@ import {
   Text,
   Theme,
 } from "tamagui";
-
 import { Form } from "tamagui"; // or '@tamagui/form'
 import { supabase } from "@/lib/supabase";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import { SignInSchema } from "@/schema/auth";
-import * as WebBrowser from "expo-web-browser";
 import { Link, router } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
-import { Eye, EyeOff, User } from "@tamagui/lucide-icons";
+import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
-import { useWarmUpBrowser } from "@/hooks/useWarmUpBrowser";
-
-
 type tSignInSchema = z.infer<typeof SignInSchema>;
-WebBrowser.maybeCompleteAuthSession();
 
 const SignInScreen = () => {
-  useWarmUpBrowser();
   const {
     register,
     handleSubmit,
@@ -40,11 +33,11 @@ const SignInScreen = () => {
   } = useForm<tSignInSchema>({
     resolver: zodResolver(SignInSchema),
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToastController();
   const { onOpen } = useAlertError();
 
+  const [serverError, setServerError] = useState<string | null>(null);
   async function onSubmit(values: tSignInSchema) {
     // const res = await axios.post('/api/auth/sign-in', values);
 
@@ -65,25 +58,6 @@ const SignInScreen = () => {
       reset();
     }
   }
-  const google = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: "http://localhost:8081",
-      },
-    });
-    if (error) {
-      // handle
-    }
-    if (data.url) {
-      const result = await WebBrowser.openAuthSessionAsync(
-        data.url
-        // this never fires
-      );
-    }
-    console.log(error);
-  };
-
   return (
     <View className="items-center justify-center h-screen bg-white">
       <H2 color={"$color8"}>Star Deez</H2>
@@ -199,9 +173,14 @@ const SignInScreen = () => {
           width={"100%"}
           marginBottom="$8"
           icon={
-            <User size={24} color={"$color8"} style={{ marginRight: 10 }} />
+            <Image
+              source={{
+                uri: require("@/assets/images/icons/google.png"),
+                width: 24,
+                height: 24,
+              }}
+            />
           }
-          onPress={google}
         >
           Sign In with Google
         </Button>

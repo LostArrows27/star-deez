@@ -12,9 +12,9 @@ interface datePickerProps {
   accentColor?: string;
   textColor?: string;
   buttonTextColorIOS?: string;
+  placeholder?: string;
   onChange?: (date: Date) => void;
   onConfirm?: (date: Date) => void;
-  children: React.ReactNode;
 }
 
 const DateTimePicker = function DatePicker(props: datePickerProps) {
@@ -38,8 +38,25 @@ const DateTimePicker = function DatePicker(props: datePickerProps) {
   const type = props.type || "date";
 
   return (
-    <Pressable onPress={() => setShow(true)} className="flex-1">
-      {props.children}
+    <Pressable onPress={() => setShow(true)}>
+      <XStack alignItems={"center"} justifyContent="flex-end">
+        <Input
+          pointerEvents="none"
+          placeholder={props.placeholder || "mm/dd/yyyy"}
+          editable={false}
+          flexGrow={1}
+        >
+          {type === "date" && date?.toLocaleDateString()}
+
+          {type === "time" && date?.toLocaleTimeString()}
+        </Input>
+
+        <XStack paddingRight={10} position="absolute">
+          {type === "date" && <Calendar />}
+
+          {type === "time" && <Clock />}
+        </XStack>
+      </XStack>
 
       <DateTimePickerModal
         cancelTextIOS={props.cancelText}
@@ -47,6 +64,7 @@ const DateTimePicker = function DatePicker(props: datePickerProps) {
         date={date}
         isVisible={show}
         mode={type}
+        // display="inline"
         accentColor={props.accentColor}
         textColor={props.textColor}
         buttonTextColorIOS={props.buttonTextColorIOS}

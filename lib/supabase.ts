@@ -30,14 +30,3 @@ export const supabase = createClient<Database>(
     },
   }
 );
-
-export const supabaseClient = async(supabaseToken :string) => {
-  const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string,{
-    global: {
-      headers: {
-        Authorization: `Bearer ${supabaseToken}`,
-      }
-    }
-  });
-  return supabase;
-}

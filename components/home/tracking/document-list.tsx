@@ -9,15 +9,17 @@ import { ScrollView, Spinner } from "tamagui";
 import DocumentSubList from "./document-sub-list";
 
 import randomColor from "randomcolor";
-import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
 
 const DocumentList = () => {
   const id = useUserID();
 
   const [loading, setLoading] = useState(true);
 
-  const { categorizedDocument, setCategorizeDocument, colors, setColors } =
-    useCategorizedDocuments();
+  const [categorizedDocument, setCategorizeDocument] = useState<
+    CategorizedDocument[]
+  >([]);
+
+  const [colors, setColors] = useState<string[]>([]);
 
   const { status } = useFilterStatus();
 
