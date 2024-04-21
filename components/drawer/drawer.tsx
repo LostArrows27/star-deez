@@ -6,10 +6,10 @@ import {
   MaterialIcons,
   Ionicons,
 } from "@expo/vector-icons";
-import { router, usePathname } from "expo-router";
 import { Image, Separator } from "tamagui";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/auth/useAuth";
+import { router, usePathname } from "expo-router";
 import StyledText from "../styled-text";
 
 export const DrawerContainer = (props: any) => {
@@ -18,7 +18,7 @@ export const DrawerContainer = (props: any) => {
   const { userDetails } = useAuth();
 
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView contentContainerClassName="h-full" {...props}>
       <View className="flex flex-row items-start w-full gap-5 pt-4 pl-4 pr-8">
         <Image
           source={{
@@ -36,74 +36,100 @@ export const DrawerContainer = (props: any) => {
           </Text>
         </View>
       </View>
-      <Separator marginVertical={15} />
-      <DrawerItem
-        icon={({ color, size }) => (
-          <Feather
-            name="list"
-            size={size}
-            color={pathname == "/feed" ? "#fff" : "#000"}
-          />
-        )}
-        label={"Feed"}
-        labelStyle={[{ color: pathname == "/feed" ? "#fff" : "#000" }]}
-        style={{ backgroundColor: pathname == "/feed" ? "#333" : "#fff" }}
-        onPress={() => {}}
-      />
-      <DrawerItem
-        icon={({ color, size }) => (
-          <AntDesign
-            name="user"
-            size={size}
-            color={pathname == "/profile" ? "#fff" : "#000"}
-          />
-        )}
-        label={"Profile"}
-        labelStyle={[{ color: pathname == "/profile" ? "#fff" : "#000" }]}
-        style={{ backgroundColor: pathname == "/profile" ? "#333" : "#fff" }}
-        onPress={() => {}}
-      />
-      <DrawerItem
-        icon={({ color, size }) => (
-          <MaterialIcons
-            name="favorite-outline"
-            size={size}
-            color={pathname == "/favourites" ? "#fff" : "#000"}
-          />
-        )}
-        label={"Favourites"}
-        labelStyle={[{ color: pathname == "/favourites" ? "#fff" : "#000" }]}
-        style={{ backgroundColor: pathname == "/favourites" ? "#333" : "#fff" }}
-        onPress={() => {}}
-      />
-      <DrawerItem
-        icon={({ color, size }) => (
-          <Ionicons
-            name="settings-outline"
-            size={size}
-            color={pathname == "/settings" ? "#fff" : "#000"}
-          />
-        )}
-        label={"Settings"}
-        labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
-        style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
-        onPress={() => {}}
-      />
-      <DrawerItem
-        icon={({ color, size }) => (
-          <Feather
-            name="log-in"
-            size={24}
-            color={pathname == "/settings" ? "#fff" : "#000"}
-          />
-        )}
-        label={"Log out"}
-        labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
-        style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
-        onPress={() => {
-          supabase.auth.signOut();
-        }}
-      />
+      <Separator borderColor={"$gray5Light"} marginVertical={15} />
+      <View className="gap-4">
+        <DrawerItem
+          icon={({ color, size }) => (
+            <Feather
+              name="list"
+              size={size}
+              color={pathname == "/newfeed" ? "#059669" : "#000"}
+            />
+          )}
+          label={"Feed"}
+          labelStyle={[{ color: pathname == "/newfeed" ? "#059669" : "#000" }]}
+          style={{
+            backgroundColor: pathname == "/newfeed" ? "#dcfce7" : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != "/newfeed") router.push("/(home)/(drawer)/newfeed");
+          }}
+        />
+        <DrawerItem
+          icon={({ color, size }) => (
+            <AntDesign
+              name="search1"
+              size={size}
+              color={pathname == `/search` ? "#059669" : "#000"}
+            />
+          )}
+          label={"Search"}
+          labelStyle={[
+            {
+              color: pathname == `/search` ? "#059669" : "#000",
+            },
+          ]}
+          style={{
+            backgroundColor: pathname == `/search` ? "#dcfce7" : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != `/search` && userDetails?.id) {
+              router.push(`/search/`);
+            }
+          }}
+        />
+        <DrawerItem
+          icon={({ color, size }) => (
+            <AntDesign
+              name="user"
+              size={size}
+              color={
+                pathname == `/profile/${userDetails?.id}` ? "#059669" : "#000"
+              }
+            />
+          )}
+          label={"Profile"}
+          labelStyle={[
+            {
+              color:
+                pathname == `/profile/${userDetails?.id}` ? "#059669" : "#000",
+            },
+          ]}
+          style={{
+            backgroundColor:
+              pathname == `/profile/${userDetails?.id}` ? "#dcfce7" : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != `/profile/${userDetails?.id}` && userDetails?.id) {
+              router.push(`/profile/${userDetails?.id}`);
+            }
+          }}
+        />
+        <Separator borderColor={"$gray5Light"} />
+
+        <DrawerItem
+          icon={({ color, size }) => (
+            <Ionicons
+              name="settings-outline"
+              size={size}
+              color={pathname == "/settings" ? "#fff" : "#000"}
+            />
+          )}
+          label={"Settings"}
+          labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
+          style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
+          onPress={() => {}}
+        />
+        <DrawerItem
+          icon={({ color, size }) => <Feather name="log-in" size={24} />}
+          label={"Log out"}
+          onPress={() => {
+            supabase.auth.signOut();
+          }}
+        />
+      </View>
+      <View className="flex-1 w-full"></View>
+      <View className="pb-5"></View>
     </DrawerContentScrollView>
   );
 };

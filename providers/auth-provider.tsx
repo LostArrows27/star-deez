@@ -50,7 +50,14 @@ const AuthProvider = ({
 
     if (session && !userDetails) return router.replace("/basic-information");
 
-    if (session && userDetails && verifedRoute.includes(pathname)) return;
+    // so that we don't need to update the route in the future => verified route = !unverifiedRoute + !authRoute
+    if (
+      session &&
+      userDetails &&
+      !authRoute.includes(pathname) &&
+      !unverifiedRoute.includes(pathname)
+    )
+      return;
 
     if (session && userDetails)
       return router.replace("/(home)/(drawer)/newfeed");

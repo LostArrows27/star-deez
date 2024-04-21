@@ -141,6 +141,18 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="profile/[id]"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="search/index"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
