@@ -80,6 +80,10 @@ const SearchHeader = () => {
     }
   }, [search]);
 
+  useEffect(() => {
+    setSearch("");
+  }, []);
+
   return (
     <View className="mt-5">
       <View className="relative flex-row items-center justify-between w-full">
