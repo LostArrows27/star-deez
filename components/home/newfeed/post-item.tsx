@@ -7,9 +7,10 @@ import {
 } from "@tamagui/lucide-icons";
 import { View, Text, TouchableNativeFeedback } from "react-native";
 import { Avatar, Button, Image } from "tamagui";
-import { formatDistance } from "date-fns";
+import { formatDate, formatDistance } from "date-fns";
 import convertMinute from "@/utils/convert-minute";
 import StyledText from "@/components/styled-text";
+import { StudyRecord } from "@/types/supabase-util-types";
 
 export type PostItem = {
   avatar: string;
@@ -26,7 +27,7 @@ export type PostItem = {
   media?: string;
 };
 
-const PostItem = (data: PostItem) => {
+const PostItem = (data: StudyRecord) => {
   return (
     <TouchableNativeFeedback
       background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
@@ -36,26 +37,28 @@ const PostItem = (data: PostItem) => {
         <View className="flex-row justify-between w-full">
           <View className="flex-row items-start gap-5">
             <Avatar circular size="$4">
-              <Avatar.Image src={data.avatar} />
+              <Avatar.Image src={data.profiles.avatar || ""} />
               <Avatar.Fallback bc="$green9" />
             </Avatar>
-            <Text className="text-lg font-[Inter]">{data.name}</Text>
+            <Text className="text-lg font-[Inter]">
+              {data.profiles.last_name + " " + data.profiles.first_name}
+            </Text>
           </View>
           <View className="items-end">
             <Button h={"$2"} w={2} scaleIcon={1.5} icon={MoreHorizontal} />
             <View className=" mt-3">
               <StyledText fontSize={"$2"} color={"$gray10"}>
-                {formatDistance(data.time, new Date())} ago
+                {formatDate(data.created_at, "dd/MM/yyyy HH:mm")}
               </StyledText>
             </View>
           </View>
         </View>
         <View className="gap-4 pl-16 mt-4">
-          {data.media && (
+          {data.image && (
             <View className="overflow-hidden w-full h-[150px] bg-red-500 rounded-md">
               <Image
                 source={{
-                  uri: data.media,
+                  uri: data.image,
                   width: 100,
                   height: 50,
                 }}
@@ -75,22 +78,19 @@ const PostItem = (data: PostItem) => {
               className="w-[20px] h-[60px] object-cover object-center"
             />
             <View>
-              <StyledText>{data.document.name}</StyledText>
-              {data.learning_duration && (
+              <StyledText>{data.document.title}</StyledText>
+              {data.duration && (
                 <View className="flex-row items-center gap-2 mt-4">
                   <TimerReset size={15} />
-                  <StyledText>
-                    {convertMinute(data.learning_duration)}
-                  </StyledText>
+                  <StyledText>{convertMinute(data.duration, true)}</StyledText>
                 </View>
               )}
               <View className="flex-row items-center gap-2 mt-2">
                 <Newspaper size={15} />
                 <StyledText>
-                  {data.learning_amount}{" "}
-                  {data.learning_amount > 1
-                    ? data.document.unit + "s"
-                    : data.document.unit}
+                  {data.begin_at !== 0
+                    ? `${data.begin_at} ~ ${data.end_at} ${data.document?.unit.name}`
+                    : `${data.end_at}  ${data.document?.unit.name}`}
                 </StyledText>
               </View>
             </View>
@@ -118,7 +118,7 @@ const PostItem = (data: PostItem) => {
                 size={24}
               />
               <StyledText color={"$gray8"} fontSize={"$4"}>
-                {data.like}
+                {data.likes[0].count}
               </StyledText>
             </View>
           </TouchableNativeFeedback>

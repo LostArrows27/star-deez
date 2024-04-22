@@ -53,7 +53,7 @@ const AuthProvider = ({
     if (session && userDetails && verifedRoute.includes(pathname)) return;
 
     if (session && userDetails)
-      return router.replace("/(home)/(drawer)/newfeed");
+      return router.replace("/(home)/(drawer)/newfeed/(tabs)/all");
   }, [pathname, session?.access_token]);
 
   useEffect(() => {

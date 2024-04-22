@@ -18,4 +18,8 @@ export type DocumentFull = Document & {
 };
 
 
-export type StudyRecord = Database["public"]["Tables"]["study_records"]["Row"];
+export type StudyRecord = Database["public"]["Tables"]["study_records"]["Row"] & {
+  likes: {count:number}[];
+  profiles: Profile;
+  document: DocumentFull;
+};

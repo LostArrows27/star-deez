@@ -128,6 +128,12 @@ export default function LearningAmountPicker() {
             <Dialog.Close displayWhenAdapted asChild>
               <Button
                 onPress={() => {
+                  if (currentLearning.from > currentLearning.to) {
+                    toast.show("From should be less than to", {
+                      preset: "error",
+                    });
+                    return;
+                  }
                   setLearning(currentLearning);
                   setOpen(false);
                 }}

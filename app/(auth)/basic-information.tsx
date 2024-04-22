@@ -103,7 +103,7 @@ const BasicInformation = () => {
         });
         setUserDetails(profile);
         reset();
-        router.push("/(home)/(drawer)/newfeed");
+        router.push("/(home)/(drawer)/newfeed/(tabs)/all");
       }
     }
   }
