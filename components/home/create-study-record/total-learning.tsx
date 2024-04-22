@@ -7,8 +7,8 @@ export default function TotalLearning({
   currentLearning,
   setCurrentLearning,
 }: {
-  currentLearning: { from: number; to: number };
-  setCurrentLearning: (value: any) => void;
+  currentLearning: number;
+  setCurrentLearning: (value: number) => void;
 }) {
   const { selectedDocument } = useCategorizedDocuments();
   return (
@@ -25,13 +25,10 @@ export default function TotalLearning({
               fontSize={"$8"}
               onChangeText={(text) => {
                 if (!text) return;
-                const newLerning = {
-                  ...currentLearning,
-                  to: Number(text),
-                };
-                setCurrentLearning(newLerning);
+
+                setCurrentLearning(parseInt(text));
               }}
-              value={"" + currentLearning.to}
+              value={currentLearning.toString()}
             />
           </Theme>
         </View>

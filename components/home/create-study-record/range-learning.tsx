@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Input, Separator, Theme } from "tamagui";
 import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
+import { useToastController } from "@tamagui/toast";
 
 export default function RangeLearning({
   currentLearning,
@@ -11,6 +12,7 @@ export default function RangeLearning({
   setCurrentLearning: (value: any) => void;
 }) {
   const { selectedDocument } = useCategorizedDocuments();
+
   return (
     <>
       <View className="items-center flex-row  justify-center py-20 w-full">
@@ -24,7 +26,7 @@ export default function RangeLearning({
               minWidth={"$6"}
               fontSize={"$8"}
               onChangeText={(text) => {
-                if (!text) return;
+                if (Number(text) < 1) return;
                 const newLerning = {
                   ...currentLearning,
                   from: Number(text),
@@ -52,6 +54,8 @@ export default function RangeLearning({
               minWidth={"$6"}
               fontSize={"$8"}
               onChangeText={(text) => {
+                if (Number(text) < 1) return;
+
                 const newLerning = {
                   ...currentLearning,
                   to: Number(text),

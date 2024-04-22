@@ -96,15 +96,53 @@ export type Database = {
           },
         ]
       }
+      likes: {
+        Row: {
+          created_at: string
+          id: string
+          study_record_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          study_record_id?: string | null
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          study_record_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_likes_study_record_id_fkey"
+            columns: ["study_record_id"]
+            isOneToOne: false
+            referencedRelation: "study_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar: string
           bio: string | null
           college: string | null
+          cover: string | null
           created_at: string
           dob: string
           email: string
           first_name: string
+          full_name: string | null
           gender: Database["public"]["Enums"]["gender"]
           high_school: string | null
           id: string
@@ -117,10 +155,12 @@ export type Database = {
           avatar: string
           bio?: string | null
           college?: string | null
+          cover?: string | null
           created_at?: string
           dob: string
           email: string
           first_name: string
+          full_name?: string | null
           gender?: Database["public"]["Enums"]["gender"]
           high_school?: string | null
           id: string
@@ -133,10 +173,12 @@ export type Database = {
           avatar?: string
           bio?: string | null
           college?: string | null
+          cover?: string | null
           created_at?: string
           dob?: string
           email?: string
           first_name?: string
+          full_name?: string | null
           gender?: Database["public"]["Enums"]["gender"]
           high_school?: string | null
           id?: string
@@ -155,13 +197,39 @@ export type Database = {
           },
         ]
       }
+      search_history: {
+        Row: {
+          created_at: string
+          search_word: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          search_word: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          search_word?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_search_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       study_records: {
         Row: {
           begin_at: number
           class_id: string | null
           comment: string | null
           created_at: string
-          document_id: string | null
+          document_id: string
           duration: number
           end_at: number
           id: string
@@ -175,13 +243,13 @@ export type Database = {
           class_id?: string | null
           comment?: string | null
           created_at?: string
-          document_id?: string | null
+          document_id: string
           duration: number
           end_at?: number
           id?: string
           image?: string | null
           time?: string | null
-          user_id?: string
+          user_id: string
           visibility?: string | null
         }
         Update: {
@@ -189,7 +257,7 @@ export type Database = {
           class_id?: string | null
           comment?: string | null
           created_at?: string
-          document_id?: string | null
+          document_id?: string
           duration?: number
           end_at?: number
           id?: string
@@ -198,7 +266,22 @@ export type Database = {
           user_id?: string
           visibility?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_study_records_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "document"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_study_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       unit: {
         Row: {
@@ -234,7 +317,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      search_profiles: {
+        Args: {
+          search_term: string
+        }
+        Returns: {
+          avatar: string
+          bio: string | null
+          college: string | null
+          cover: string | null
+          created_at: string
+          dob: string
+          email: string
+          first_name: string
+          full_name: string | null
+          gender: Database["public"]["Enums"]["gender"]
+          high_school: string | null
+          id: string
+          job: string | null
+          last_name: string
+          phone: string | null
+          role: string | null
+        }[]
+      }
     }
     Enums: {
       document_status: "learning" | "standby" | "finished"

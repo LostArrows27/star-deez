@@ -1,3 +1,23 @@
-import TabLayout from "@/components/home/tab-layout";
+import { Stack } from "expo-router";
 
-export default TabLayout;
+const TabHomeLayout = () => {
+  return (
+    <Stack
+      screenOptions={{
+        headerShadowVisible: false,
+      }}
+    >
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: "white",
+          },
+        }}
+        name="(tabs)"
+      />
+    </Stack>
+  );
+};
+
+export default TabHomeLayout;
