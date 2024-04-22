@@ -93,8 +93,6 @@ const ProfileTabView = () => {
       </View>
       <Swiper
         onIndexChanged={(index) => {
-          console.log(index);
-
           setCurrentIndex(index);
         }}
         ref={swiperRef as any}
