@@ -16,7 +16,7 @@ import {
   XStack,
 } from "tamagui";
 import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
-import { ClipboardCopy, GraduationCap } from "@tamagui/lucide-icons";
+import { ClipboardCopy, GraduationCap, Newspaper } from "@tamagui/lucide-icons";
 import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
 import { useToastController } from "@tamagui/toast";
 import TotalLearning from "./total-learning";
@@ -25,9 +25,11 @@ import RangeLearning from "./range-learning";
 export default function LearningAmountPicker() {
   const [open, setOpen] = useState(false);
   const [currentLearning, setCurrentLearning] = useState({
-    from: 0,
-    to: 0,
+    from: 1,
+    to: 1,
   });
+  const [total, setTotal] = useState(0);
+  const [currentTab, setCurrentTab] = useState("tab1");
   const { learning, setLearning } = useCreateStudyRecord();
   const { selectedDocument } = useCategorizedDocuments();
   const toast = useToastController();
@@ -46,7 +48,7 @@ export default function LearningAmountPicker() {
     >
       <Dialog.Trigger>
         <XStack alignItems={"center"} justifyContent="flex-start" gap={"$2"}>
-          <GraduationCap size={"$2"} color={"$color8"} />
+          <Newspaper size={"$2"} color={"$color8"} />
           <Input pointerEvents="none" editable={false} flexGrow={1}>
             {learning.to !== 0
               ? learning.from !== 0
@@ -81,13 +83,14 @@ export default function LearningAmountPicker() {
         <Dialog.Content key="content">
           <Dialog.Title fontSize={"$8"}>Learning progress</Dialog.Title>
           <Tabs
-            defaultValue="tab1"
             orientation="horizontal"
             flexDirection="column"
             width={"100%"}
             borderRadius="$4"
             borderWidth="$0.25"
             overflow="hidden"
+            value={currentTab}
+            onValueChange={(value) => setCurrentTab(value)}
             borderColor="$borderColor"
           >
             <Tabs.List
@@ -108,8 +111,8 @@ export default function LearningAmountPicker() {
               value="tab1"
             >
               <TotalLearning
-                currentLearning={currentLearning}
-                setCurrentLearning={setCurrentLearning}
+                currentLearning={total}
+                setCurrentLearning={setTotal}
               />
             </Tabs.Content>
 
@@ -128,13 +131,19 @@ export default function LearningAmountPicker() {
             <Dialog.Close displayWhenAdapted asChild>
               <Button
                 onPress={() => {
-                  if (currentLearning.from > currentLearning.to) {
-                    toast.show("From should be less than to", {
-                      preset: "error",
+                  if (currentTab === "tab1") {
+                    setLearning({
+                      from: 0,
+                      to: total,
                     });
-                    return;
+                  } else {
+                    if (currentLearning.from > currentLearning.to) {
+                      toast.show("Invalid range", { preset: "error" });
+                      return;
+                    }
+                    setLearning(currentLearning);
                   }
-                  setLearning(currentLearning);
+
                   setOpen(false);
                 }}
                 theme="active"

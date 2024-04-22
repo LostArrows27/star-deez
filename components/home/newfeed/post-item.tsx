@@ -1,4 +1,5 @@
 import {
+  Clock,
   MessageSquare,
   MoreHorizontal,
   Newspaper,
@@ -11,6 +12,7 @@ import { formatDate, formatDistance } from "date-fns";
 import convertMinute from "@/utils/convert-minute";
 import StyledText from "@/components/styled-text";
 import { StudyRecord } from "@/types/supabase-util-types";
+import { router } from "expo-router";
 
 export type PostItem = {
   avatar: string;
@@ -31,6 +33,9 @@ const PostItem = (data: StudyRecord) => {
   return (
     <TouchableNativeFeedback
       background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
+      onPress={() => {
+        router.push(`/(modal)/study-record/${data.id}`);
+      }}
       className="w-full h-full"
     >
       <View className="border-emerald-200 w-full p-5 pb-3 border-b">
@@ -53,7 +58,9 @@ const PostItem = (data: StudyRecord) => {
             </View>
           </View>
         </View>
-        <View className="gap-4 pl-16 mt-4">
+
+        <View className="gap-4 pl-16 mt-6">
+          <Text className="text-[17px] ">{data.comment}</Text>
           {data.image && (
             <View className="overflow-hidden w-full h-[150px] bg-red-500 rounded-md">
               <Image
@@ -81,7 +88,7 @@ const PostItem = (data: StudyRecord) => {
               <StyledText>{data.document.title}</StyledText>
               {data.duration && (
                 <View className="flex-row items-center gap-2 mt-4">
-                  <TimerReset size={15} />
+                  <Clock size={15} />
                   <StyledText>{convertMinute(data.duration, true)}</StyledText>
                 </View>
               )}

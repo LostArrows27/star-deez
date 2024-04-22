@@ -46,7 +46,7 @@ const CreateStudyRecord = () => {
   } = useCreateStudyRecord();
   const { image, preview, removeImages, pickImages } =
     useUploadStudyRecordImage();
-  const { selectedDocument } = useCategorizedDocuments();
+  const { selectedDocument, setSelectedDocument } = useCategorizedDocuments();
   const toast = useToastController();
   const [publicS, setPublic] = useState(true);
   const canSubmit =
@@ -56,7 +56,7 @@ const CreateStudyRecord = () => {
     if (loading || !canSubmit || !userDetails) return;
     setLoading(true);
     const id = uuid();
-    const fileName = `${userDetails?.id}/${id}}`;
+    const fileName = `${userDetails?.id}/${id}/image`;
     let url: any = undefined;
     if (image && !image?.canceled) {
       const { data, error } = await supabase.storage
@@ -80,7 +80,7 @@ const CreateStudyRecord = () => {
     const { data, error } = await supabase.from("study_records").insert([
       {
         id,
-        document_id: selectedDocument ? selectedDocument.id : null,
+        document_id: selectedDocument.id,
         comment,
         duration,
         image: url,
@@ -97,6 +97,7 @@ const CreateStudyRecord = () => {
     } else {
       reset();
       removeImages();
+      setSelectedDocument(null);
       toast.show("Success!!", {
         message: "Study recorded successfully!",
         native: false,
@@ -173,7 +174,7 @@ const CreateStudyRecord = () => {
           />
           <Separator backgroundColor={"$color8"} />
           <ViewTama
-            aspectRatio={16 / 9}
+            aspectRatio={12 / 9}
             width={"100%"}
             justifyContent="center"
             alignItems="center"
@@ -181,7 +182,7 @@ const CreateStudyRecord = () => {
             borderColor={"$color8"}
             borderStyle="dashed"
             onPress={async () => {
-              await pickImages([16, 9]);
+              await pickImages([12, 9]);
             }}
           >
             {preview ? (
@@ -189,7 +190,7 @@ const CreateStudyRecord = () => {
                 <Image
                   source={{
                     uri: preview,
-                    width: 160,
+                    width: 120,
                     height: 90,
                   }}
                   borderRadius={8}
@@ -197,7 +198,7 @@ const CreateStudyRecord = () => {
                   height="100%"
                   className=" object-cover object-center"
                   onPress={async () => {
-                    await pickImages([16, 9]);
+                    await pickImages([12, 9]);
                   }}
                 />
                 <View

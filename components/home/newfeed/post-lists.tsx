@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { Spinner } from "tamagui";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import uuid from "react-uuid";
 
 const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
   // TODO: custom infinite scroll
@@ -19,42 +20,33 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
   const [hasMore, setHasMore] = useState(true);
   const { userDetails } = useAuth();
 
-  const getAllPosts = useRef(
-    supabase
-      .from("study_records")
-      .select(
-        "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-      )
-      .order("created_at", { ascending: false })
-  );
-  const getFollowingPosts = useRef(
-    supabase
-      .from("study_records")
-      .select(
-        "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-      )
-      .order("created_at", { ascending: false })
-  );
-
-  const getProfilePosts = useRef(
-    supabase
-      .from("study_records")
-      .select(
-        "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-      )
-      .order("created_at", { ascending: false })
-  );
-
   useEffect(() => {
     (async () => {
+      if (!userDetails) return;
       const queryFunc =
         type === "all"
-          ? getAllPosts
+          ? supabase
+              .from("study_records")
+              .select(
+                "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+              )
+              .order("created_at", { ascending: false })
           : type === "following"
-          ? getFollowingPosts
-          : getProfilePosts;
+          ? supabase
+              .from("study_records")
+              .select(
+                "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+              )
+              .order("created_at", { ascending: false })
+          : supabase
+              .from("study_records")
+              .select(
+                "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+              )
+              .eq("user_id", userDetails?.id)
+              .order("created_at", { ascending: false });
 
-      const { data, error } = await queryFunc.current.limit(3);
+      const { data, error } = await queryFunc.limit(3);
 
       setInitialLoad(false);
 
@@ -66,39 +58,76 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
 
   const loadMorePosts = async () => {
     if (!hasMore) return;
+    if (!userDetails) return;
     setLoading(true);
     const queryFunc =
       type === "all"
-        ? getAllPosts
+        ? supabase
+            .from("study_records")
+            .select(
+              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+            )
+            .order("created_at", { ascending: false })
         : type === "following"
-        ? getFollowingPosts
-        : getProfilePosts;
+        ? supabase
+            .from("study_records")
+            .select(
+              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+            )
+            .order("created_at", { ascending: false })
+        : supabase
+            .from("study_records")
+            .select(
+              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+            )
+            .eq("user_id", userDetails?.id)
+            .order("created_at", { ascending: false });
 
-    const { data, error } = await queryFunc.current.range(
+    const { data, error } = await queryFunc.range(
       posts.length,
       posts.length + 2
     );
-    setLoading(false);
+
     if (error || !data) return console.log(error);
     setPosts([...posts, ...(data as StudyRecord[])]);
+
     if (data.length < 3) setHasMore(false);
+    setLoading(false);
   };
 
   const reloadPosts = async () => {
+    if (!userDetails) return;
     setReload(true);
+
     const queryFunc =
       type === "all"
-        ? getAllPosts
+        ? supabase
+            .from("study_records")
+            .select(
+              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+            )
+            .order("created_at", { ascending: false })
         : type === "following"
-        ? getFollowingPosts
-        : getProfilePosts;
+        ? supabase
+            .from("study_records")
+            .select(
+              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+            )
+            .order("created_at", { ascending: false })
+        : supabase
+            .from("study_records")
+            .select(
+              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
+            )
+            .eq("user_id", userDetails?.id)
+            .order("created_at", { ascending: false });
 
-    const { data, error } = await queryFunc.current.limit(3);
+    const { data, error } = await queryFunc.limit(3);
 
-    setReload(false);
     if (error || !data) return console.log(error);
     setPosts(data as StudyRecord[]);
     setHasMore(true);
+    setReload(false);
   };
   return (
     <View className="w-full  bg-white items-center">
@@ -120,7 +149,7 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
             />
           }
           data={posts}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => uuid()}
           renderItem={(data) => {
             return <PostItem {...data.item} />;
           }}

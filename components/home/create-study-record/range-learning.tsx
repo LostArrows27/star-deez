@@ -26,8 +26,7 @@ export default function RangeLearning({
               minWidth={"$6"}
               fontSize={"$8"}
               onChangeText={(text) => {
-                if (!text) return;
-           
+                if (Number(text) < 1) return;
                 const newLerning = {
                   ...currentLearning,
                   from: Number(text),
@@ -55,8 +54,8 @@ export default function RangeLearning({
               minWidth={"$6"}
               fontSize={"$8"}
               onChangeText={(text) => {
-                if (!text) return;
-              
+                if (Number(text) < 1) return;
+
                 const newLerning = {
                   ...currentLearning,
                   to: Number(text),
