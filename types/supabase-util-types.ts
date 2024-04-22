@@ -17,5 +17,7 @@ export type DocumentFull = Document & {
   unit: Unit;
 };
 
-
 export type StudyRecord = Database["public"]["Tables"]["study_records"]["Row"];
+
+export type SearchHistory =
+  Database["public"]["Tables"]["search_history"]["Row"];
