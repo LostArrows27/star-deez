@@ -3,6 +3,7 @@ import { useSearchResult } from "@/hooks/home/search/useSearchResult";
 import { View, Text } from "react-native";
 import { Avatar, Button } from "tamagui";
 import { router } from "expo-router";
+import { Image } from "expo-image";
 
 const ResultList = () => {
   const { searchResults, loading } = useSearchResult();
@@ -11,9 +12,23 @@ const ResultList = () => {
     <View>
       <Text className="text-emerald-600 mt-5 mb-5 text-lg">Search results</Text>
       {searchResults.length === 0 ? (
-        <Text className="text-gray-400">
-          No results found. Please try another search.
-        </Text>
+        <>
+          <Text className="text-gray-400">
+            No results found. Please try another search.
+          </Text>
+
+          <View className="center w-full pt-4">
+            <Image
+              autoplay
+              style={{
+                width: 300,
+                height: 300,
+              }}
+              contentFit="cover"
+              source={require("@/assets/images/profile/nooo.gif")}
+            />
+          </View>
+        </>
       ) : (
         searchResults.map((result, index) => (
           <StyledPressable
