@@ -10,28 +10,72 @@ import ProfileHeader from "@/components/home/profile/profile-header";
 import ProfileFollower from "@/components/home/profile/profile-follower";
 import { ScrollView } from "react-native";
 import ProfileTabView from "@/components/home/profile/profile-tab-view";
+import { useFollowStatus } from "@/hooks/home/profile/useFollowStatus";
+import { useFollowerList } from "@/hooks/home/profile/useFollowerList";
 
 const UserPage = () => {
   const params = useLocalSearchParams();
 
   const { profile, setProfile } = useProfileData();
 
-  const { loading } = useGetInitData(async () => {
-    const { data, error } = await supabase
+  const { setIsFollowing } = useFollowStatus();
+
+  const { setFollowers, setCountFollower, setCountFollowing } =
+    useFollowerList();
+
+  const { loading } = useGetInitData(async (user) => {
+    const getProfileData = supabase
       .from("profiles")
       .select("*")
       .eq("id", params?.id || "")
       .returns<Profile>()
       .maybeSingle();
 
-    if (!error && data) {
-      setProfile(data);
+    const getFollowerList = supabase
+      .from("follower")
+      .select("*, profiles!public_follower_user_id_fkey(*)")
+      .eq("follower_id", params?.id);
+
+    const getFollowingNumber = supabase
+      .from("follower")
+      .select("*")
+      .eq("user_id", params?.id);
+
+    const [profileRes, followerListRes, followingNumberRes] = await Promise.all(
+      [getProfileData, getFollowerList, getFollowingNumber]
+    );
+
+    if (!profileRes.error && profileRes.data) {
+      setProfile(profileRes.data);
+    }
+
+    if (!followerListRes.error) {
+      setFollowers(followerListRes.data.map((item) => item.profiles!));
+      setCountFollower(followerListRes.data.length);
+    }
+
+    if (!followingNumberRes.error) {
+      setCountFollowing(followingNumberRes.data.length);
+    }
+
+    if (user.id !== params?.id) {
+      const { data, error } = await supabase
+        .from("follower")
+        .select("*")
+        .eq("user_id", user?.id)
+        .eq("follower_id", params?.id)
+        .maybeSingle();
+
+      if (!error) {
+        setIsFollowing(data ? true : false);
+      }
     }
   });
 
   return (
     <View className="flex-1 bg-white">
       <Stack.Screen
+        getId={({ params }) => String(Date.now())}
         options={{
           headerTitle: loading
             ? ""

@@ -11,6 +11,7 @@ import { Image } from "expo-image";
 import { View, Text } from "react-native";
 import { Button } from "tamagui";
 import HeaderStatistic from "./header-statistic";
+import FollowStatusButton from "./follow-status-button";
 
 const ProfileHeader = () => {
   const { profile } = useProfileData();
@@ -50,7 +51,7 @@ const ProfileHeader = () => {
         {profile?.bio ? profile?.bio : "Nah, I'd have bio 🤓"}
       </StyledText>
       <View className="center flex-row justify-between w-full gap-8 mt-6">
-        {userDetails?.id === profile?.id ? (
+        {userDetails?.id !== profile?.id ? (
           <>
             <Button
               borderRadius={99999999}
@@ -60,18 +61,7 @@ const ProfileHeader = () => {
               backgroundColor={"white"}
               icon={<MessageSquareText scale={1.3} color={"$green7Light"} />}
             ></Button>
-            <Button
-              themeInverse
-              pressStyle={{
-                backgroundColor: "$green8Light",
-              }}
-              backgroundColor={"$green9Light"}
-              borderRadius={"$9"}
-              size={"$4"}
-              width={"$11"}
-            >
-              Follow
-            </Button>
+            <FollowStatusButton />
             <Button
               borderRadius={99999999}
               width={"$4"}

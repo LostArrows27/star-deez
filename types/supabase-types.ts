@@ -96,6 +96,39 @@ export type Database = {
           },
         ]
       }
+      follower: {
+        Row: {
+          created_at: string
+          follower_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_follower_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_follower_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       likes: {
         Row: {
           created_at: string
@@ -229,7 +262,7 @@ export type Database = {
           class_id: string | null
           comment: string | null
           created_at: string
-          document_id: string | null
+          document_id: string
           duration: number
           end_at: number
           id: string
@@ -243,13 +276,13 @@ export type Database = {
           class_id?: string | null
           comment?: string | null
           created_at?: string
-          document_id?: string | null
+          document_id: string
           duration: number
           end_at?: number
           id?: string
           image?: string | null
           time?: string | null
-          user_id?: string
+          user_id: string
           visibility?: string | null
         }
         Update: {
@@ -257,7 +290,7 @@ export type Database = {
           class_id?: string | null
           comment?: string | null
           created_at?: string
-          document_id?: string | null
+          document_id?: string
           duration?: number
           end_at?: number
           id?: string
@@ -266,7 +299,22 @@ export type Database = {
           user_id?: string
           visibility?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_study_records_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "document"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_study_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       unit: {
         Row: {

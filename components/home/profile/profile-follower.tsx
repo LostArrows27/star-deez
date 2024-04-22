@@ -1,4 +1,7 @@
+import StyledPressable from "@/components/styled-pressable";
 import { fakeFollowers } from "@/constants/Follower";
+import { useFollowerList } from "@/hooks/home/profile/useFollowerList";
+import { router } from "expo-router";
 import { FlatList } from "react-native";
 import { Text, View, Image } from "react-native";
 
@@ -11,9 +14,9 @@ function cutString(str: string) {
   return str;
 }
 
-// TODO: fetch follower + link to user profile
-
 const ProfileFollower = () => {
+  const { followers } = useFollowerList();
+
   return (
     <View className="w-full pb-8">
       <View className="bg-gray-100 h-[15px] w-full"></View>
@@ -22,25 +25,38 @@ const ProfileFollower = () => {
           <Text className=" text-emerald-500 text-lg font-medium">
             Followers
           </Text>
-          <Text className="text-base text-gray-500">View all</Text>
-        </View>
-        <FlatList
-          scrollEnabled={fakeFollowers.length > 4}
-          data={fakeFollowers}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View className="center mr-9 gap-2 mt-6">
-              <Image
-                className="w-16 h-16 rounded-full"
-                source={{ uri: item.avatar }}
-              />
-              <Text className="text-base text-center text-gray-500">
-                {cutString(item.name)}
-              </Text>
-            </View>
+          {followers.length > 0 && (
+            <Text className="text-base text-gray-500">View all</Text>
           )}
-          horizontal={true}
-        />
+        </View>
+        {followers.length > 0 ? (
+          <FlatList
+            scrollEnabled={followers.length > 4}
+            data={followers}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <StyledPressable
+                onPress={() => {
+                  router.replace(`/profile/${item.id}`);
+                }}
+                className="center gap-2 pr-4 mt-6 mr-5"
+              >
+                <Image
+                  className="w-16 h-16 rounded-full"
+                  source={{ uri: item.avatar }}
+                />
+                <Text className="text-base text-center text-gray-500">
+                  {cutString(
+                    item.full_name || item.first_name + " " + item.last_name
+                  )}
+                </Text>
+              </StyledPressable>
+            )}
+            horizontal={true}
+          />
+        ) : (
+          <Text className="mt-5 text-gray-400">No followers</Text>
+        )}
       </View>
     </View>
   );
