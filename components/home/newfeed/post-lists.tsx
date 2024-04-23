@@ -1,27 +1,72 @@
 import { RefreshControl, View } from "react-native";
 import PostItem from "./post-item";
 import { FlatList } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { StudyRecord } from "@/types/supabase-util-types";
-import { supabase } from "@/lib/supabase";
 import { Spinner } from "tamagui";
 import { useAuth } from "@/hooks/auth/useAuth";
-import { Stack } from "expo-router";
 import queryPost from "@/utils/query-post";
+import { useFocusEffect } from "@react-navigation/native";
 
-const PostLists = ({
-  type,
-  profile_id,
-}: {
+const MemoizedPostItem = memo(PostItem);
+
+const renderItem = ({ item }: { item: StudyRecord }) => (
+  <MemoizedPostItem
+    id={item.id}
+    profile_avatar={item.profiles.avatar!}
+    profile_last_name={item.profiles.last_name!}
+    profile_first_name={item.profiles.first_name!}
+    comment={item.comment!}
+    image={item.image!}
+    document_title={item.document.title}
+    document_unit_name={item.document.unit.name}
+    document_cover={item.document.cover!}
+    duration={item.duration}
+    begin_at={item.begin_at}
+    end_at={item.end_at}
+    created_at={item.created_at}
+    likes={item.likes[0].count}
+  />
+);
+
+const PostLists = (props: {
   type: "all" | "following" | "profiles";
   profile_id: string | null;
 }) => {
+  const { type, profile_id } = props;
+
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const { userDetails } = useAuth();
+
+  useFocusEffect(
+    useCallback(() => {
+      // Actions to perform when the screen is focused
+      const queryFunc = queryPost(type, profile_id);
+
+      (async () => {
+        if (!userDetails) return;
+        setLoading(true);
+        const { data, error } = await queryFunc.limit(3);
+
+        setInitialLoad(false);
+
+        if (error || !data) return console.log(error);
+
+        setPosts(data as StudyRecord[]);
+        setLoading(false);
+      })();
+      return () => {
+        // Actions to perform when the screen goes out of focus
+        // Clean up heavy resources here
+        setPosts([]);
+        setLoading(false);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     (async () => {
@@ -38,13 +83,11 @@ const PostLists = ({
     })();
   }, []);
 
-  const renderItem = (data: { item: StudyRecord }) => {
-    return <PostItem {...data.item} />;
-  };
-
   const loadMorePosts = async () => {
     if (!hasMore) return;
     if (!userDetails) return;
+    if (loading) return;
+
     setLoading(true);
     const queryFunc = queryPost(type, profile_id);
 
@@ -74,6 +117,9 @@ const PostLists = ({
     setReload(false);
   }, [userDetails?.id]);
 
+  // useRef to see re-redner time
+  const renderCount = useRef(0);
+
   return (
     <View className="items-center w-full bg-white">
       {initialLoad ? (
@@ -87,7 +133,6 @@ const PostLists = ({
           scrollEnabled={posts.length > 1}
           showsVerticalScrollIndicator={false}
           onEndReached={loadMorePosts}
-          onEndReachedThreshold={0.5}
           refreshControl={
             <RefreshControl
               colors={["#3cb179", "#3cb179"]}
@@ -96,6 +141,9 @@ const PostLists = ({
             />
           }
           data={[...posts]}
+          maxToRenderPerBatch={5}
+          updateCellsBatchingPeriod={30}
+          removeClippedSubviews={true}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           ListFooterComponent={() => {

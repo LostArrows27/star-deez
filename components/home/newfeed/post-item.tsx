@@ -12,24 +12,26 @@ import convertMinute from "@/utils/convert-minute";
 import StyledText from "@/components/styled-text";
 import { StudyRecord } from "@/types/supabase-util-types";
 import { router } from "expo-router";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 
-export type PostItem = {
-  avatar: string;
-  name: string;
-  time: Date;
-  document: {
-    cover?: string;
-    name: string;
-    unit: string;
-  };
-  learning_amount: number;
-  learning_duration?: number; // in minutes
-  like: number;
-  media?: string;
+export type PostItemProps = {
+  id: string;
+  profile_last_name: string;
+  profile_first_name: string;
+  profile_avatar: string;
+  comment: string;
+  image: string;
+  document_title: string;
+  document_unit_name: string;
+  document_cover: string;
+  duration: number;
+  begin_at: number;
+  end_at: number;
+  created_at: string;
+  likes: number;
 };
 
-const PostItem = (data: StudyRecord) => {
+const PostItem = (data: PostItemProps) => {
   return (
     <TouchableNativeFeedback
       background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
@@ -42,11 +44,11 @@ const PostItem = (data: StudyRecord) => {
         <View className="flex-row justify-between w-full">
           <View className="flex-row items-start gap-5">
             <Avatar circular size="$4">
-              <Avatar.Image src={data.profiles.avatar || ""} />
+              <Avatar.Image src={data.profile_avatar || ""} />
               <Avatar.Fallback bc="$green9" />
             </Avatar>
             <Text className="text-lg font-[Inter]">
-              {data.profiles.last_name + " " + data.profiles.first_name}
+              {data.profile_first_name + " " + data.profile_last_name}
             </Text>
           </View>
           <View className="items-end">
@@ -80,7 +82,7 @@ const PostItem = (data: StudyRecord) => {
             <Image
               resizeMethod="resize"
               source={{
-                uri: data.document.cover || require("@/assets/images/post.png"),
+                uri: data.document_cover || require("@/assets/images/post.png"),
                 width: 40,
                 height: 51,
               }}
@@ -88,7 +90,7 @@ const PostItem = (data: StudyRecord) => {
             />
 
             <View>
-              <StyledText>{data.document.title}</StyledText>
+              <StyledText>{data.document_title}</StyledText>
               {data.duration && (
                 <View className="flex-row items-center gap-2 mt-4">
                   <Clock size={15} />
@@ -99,8 +101,8 @@ const PostItem = (data: StudyRecord) => {
                 <Newspaper size={15} />
                 <StyledText>
                   {data.begin_at !== 0
-                    ? `${data.begin_at} ~ ${data.end_at} ${data.document?.unit.name}`
-                    : `${data.end_at}  ${data.document?.unit.name}`}
+                    ? `${data.begin_at} ~ ${data.end_at} ${data.document_unit_name}`
+                    : `${data.end_at}  ${data.document_unit_name}`}
                 </StyledText>
               </View>
             </View>
@@ -128,7 +130,7 @@ const PostItem = (data: StudyRecord) => {
                 size={24}
               />
               <StyledText color={"$gray8"} fontSize={"$4"}>
-                {data.likes[0].count}
+                {data.likes}
               </StyledText>
             </View>
           </TouchableNativeFeedback>
@@ -138,4 +140,4 @@ const PostItem = (data: StudyRecord) => {
   );
 };
 
-export default PostItem;
+export default memo(PostItem);

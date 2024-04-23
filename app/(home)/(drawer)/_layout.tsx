@@ -130,7 +130,6 @@ export default function TabLayout() {
         name="notification"
         options={{
           lazy: false,
-
           title: "Notification",
           tabBarIcon: ({ color, focused }) => (
             <Octicons
