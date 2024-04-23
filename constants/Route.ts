@@ -10,6 +10,9 @@ const verifedRoute = [
   "/tracking",
   "/tracking/create-document",
   "/tracking/create-study-record",
+  "/study-record",
+  "/newfeed/following",
+  "/newfeed/all",
 ];
 
 // NOTE: log in with unverified information

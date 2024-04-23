@@ -15,6 +15,7 @@ export default function CustomToast() {
       y={0}
       opacity={1}
       scale={1}
+      zIndex={9999999999}
       animation="100ms"
       viewportName={currentToast.viewportName}
     >
