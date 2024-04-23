@@ -7,8 +7,15 @@ import { supabase } from "@/lib/supabase";
 import { Spinner } from "tamagui";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { Stack } from "expo-router";
+import queryPost from "@/utils/query-post";
 
-const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
+const PostLists = ({
+  type,
+  profile_id,
+}: {
+  type: "all" | "following" | "profiles";
+  profile_id: string | null;
+}) => {
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -19,28 +26,7 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
   useEffect(() => {
     (async () => {
       if (!userDetails) return;
-      const queryFunc =
-        type === "all"
-          ? supabase
-              .from("study_records")
-              .select(
-                "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-              )
-              .order("created_at", { ascending: false })
-          : type === "following"
-          ? supabase
-              .from("study_records")
-              .select(
-                "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-              )
-              .order("created_at", { ascending: false })
-          : supabase
-              .from("study_records")
-              .select(
-                "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-              )
-              .eq("user_id", userDetails?.id)
-              .order("created_at", { ascending: false });
+      const queryFunc = queryPost(type, profile_id);
 
       const { data, error } = await queryFunc.limit(3);
 
@@ -60,28 +46,7 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
     if (!hasMore) return;
     if (!userDetails) return;
     setLoading(true);
-    const queryFunc =
-      type === "all"
-        ? supabase
-            .from("study_records")
-            .select(
-              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-            )
-            .order("created_at", { ascending: false })
-        : type === "following"
-        ? supabase
-            .from("study_records")
-            .select(
-              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-            )
-            .order("created_at", { ascending: false })
-        : supabase
-            .from("study_records")
-            .select(
-              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-            )
-            .eq("user_id", userDetails?.id)
-            .order("created_at", { ascending: false });
+    const queryFunc = queryPost(type, profile_id);
 
     const { data, error } = await queryFunc.range(
       posts.length,
@@ -99,28 +64,7 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
     if (!userDetails) return;
     setReload(true);
 
-    const queryFunc =
-      type === "all"
-        ? supabase
-            .from("study_records")
-            .select(
-              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-            )
-            .order("created_at", { ascending: false })
-        : type === "following"
-        ? supabase
-            .from("study_records")
-            .select(
-              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-            )
-            .order("created_at", { ascending: false })
-        : supabase
-            .from("study_records")
-            .select(
-              "*, likes(count),profiles(id,avatar,first_name,last_name),document(id,title,cover,unit(name))"
-            )
-            .eq("user_id", userDetails?.id)
-            .order("created_at", { ascending: false });
+    const queryFunc = queryPost(type, profile_id);
 
     const { data, error } = await queryFunc.limit(3);
 

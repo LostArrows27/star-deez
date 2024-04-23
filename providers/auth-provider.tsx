@@ -60,7 +60,7 @@ const AuthProvider = ({
       return;
 
     if (session && userDetails)
-      return router.replace("/(home)/(drawer)/newfeed/");
+      return router.replace("/(home)/(drawer)/newfeed");
   }, [pathname, session?.access_token]);
 
   useEffect(() => {
