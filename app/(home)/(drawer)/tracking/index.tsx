@@ -12,7 +12,7 @@ const Page = () => {
     <View className="h-full">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="flex-col relative flex-1 h-screen p-4 pt-2"
+        className="relative flex-col flex-1 h-screen p-4 pt-2"
       >
         <Stack.Screen />
         <SelectStatus />

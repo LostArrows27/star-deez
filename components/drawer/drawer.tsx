@@ -44,16 +44,20 @@ export const DrawerContainer = (props: any) => {
             <Feather
               name="list"
               size={size}
-              color={pathname == "/newfeed" ? "#059669" : "#000"}
+              color={pathname == "/newfeed/following" ? "#059669" : "#000"}
             />
           )}
           label={"Feed"}
-          labelStyle={[{ color: pathname == "/newfeed" ? "#059669" : "#000" }]}
+          labelStyle={[
+            { color: pathname == "/newfeed/following" ? "#059669" : "#000" },
+          ]}
           style={{
-            backgroundColor: pathname == "/newfeed" ? "#dcfce7" : "#fff",
+            backgroundColor:
+              pathname == "/newfeed/following" ? "#dcfce7" : "#fff",
           }}
           onPress={() => {
-            if (pathname != "/newfeed") router.push("/(home)/(drawer)/newfeed");
+            if (pathname != "/newfeed/following")
+              router.push("/(home)/(drawer)/newfeed/(tabs)/following");
           }}
         />
         <DrawerItem
@@ -76,29 +80,6 @@ export const DrawerContainer = (props: any) => {
           onPress={() => {
             if (pathname != `/search` && userDetails?.id) {
               router.push(`/search/`);
-            }
-          }}
-        />
-        <DrawerItem
-          icon={({ color, size }) => (
-            <FontAwesome6
-              name="earth-americas"
-              size={size}
-              color={pathname == `/global-feed` ? "#059669" : "#000"}
-            />
-          )}
-          label={"Global Feed"}
-          labelStyle={[
-            {
-              color: pathname == `/global-feed` ? "#059669" : "#000",
-            },
-          ]}
-          style={{
-            backgroundColor: pathname == `/global-feed` ? "#dcfce7" : "#fff",
-          }}
-          onPress={() => {
-            if (pathname != `/global-feed` && userDetails?.id) {
-              router.push(`/global-feed/`);
             }
           }}
         />
