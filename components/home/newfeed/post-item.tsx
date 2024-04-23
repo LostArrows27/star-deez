@@ -4,7 +4,6 @@ import {
   MoreHorizontal,
   Newspaper,
   ThumbsUp,
-  TimerReset,
 } from "@tamagui/lucide-icons";
 import { View, Text, TouchableNativeFeedback } from "react-native";
 import { Avatar, Button, Image } from "tamagui";
@@ -13,6 +12,7 @@ import convertMinute from "@/utils/convert-minute";
 import StyledText from "@/components/styled-text";
 import { StudyRecord } from "@/types/supabase-util-types";
 import { router } from "expo-router";
+import { useEffect } from "react";
 
 export type PostItem = {
   avatar: string;
@@ -62,8 +62,9 @@ const PostItem = (data: StudyRecord) => {
         <View className="gap-4 pl-16 mt-6">
           <Text className="text-[17px] ">{data.comment}</Text>
           {data.image && (
-            <View className="overflow-hidden w-full h-[150px] bg-red-500 rounded-md">
+            <View className="overflow-hidden w-full h-[150px]  rounded-md">
               <Image
+                resizeMethod="resize"
                 source={{
                   uri: data.image,
                   width: 100,
@@ -77,6 +78,7 @@ const PostItem = (data: StudyRecord) => {
           )}
           <View className="rounded-2xl border-emerald-500 px-7 flex-row w-full gap-4 p-5 border">
             <Image
+              resizeMethod="resize"
               source={{
                 uri: data.document.cover || require("@/assets/images/post.png"),
                 width: 40,
@@ -84,6 +86,7 @@ const PostItem = (data: StudyRecord) => {
               }}
               className="w-[20px] h-[60px] object-cover object-center"
             />
+
             <View>
               <StyledText>{data.document.title}</StyledText>
               {data.duration && (

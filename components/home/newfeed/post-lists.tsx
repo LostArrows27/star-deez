@@ -1,18 +1,14 @@
-import { ActivityIndicator, RefreshControl, View } from "react-native";
-import { Text } from "react-native";
+import { RefreshControl, View } from "react-native";
 import PostItem from "./post-item";
 import { FlatList } from "react-native";
-import { postData } from "../../../constants/Post";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StudyRecord } from "@/types/supabase-util-types";
 import { supabase } from "@/lib/supabase";
 import { Spinner } from "tamagui";
 import { useAuth } from "@/hooks/auth/useAuth";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import uuid from "react-uuid";
+import { Stack } from "expo-router";
 
 const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
-  // TODO: custom infinite scroll
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -56,6 +52,10 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
     })();
   }, []);
 
+  const renderItem = (data: { item: StudyRecord }) => {
+    return <PostItem {...data.item} />;
+  };
+
   const loadMorePosts = async () => {
     if (!hasMore) return;
     if (!userDetails) return;
@@ -95,7 +95,7 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
     setLoading(false);
   };
 
-  const reloadPosts = async () => {
+  const reloadPosts = useCallback(async () => {
     if (!userDetails) return;
     setReload(true);
 
@@ -128,16 +128,19 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
     setPosts(data as StudyRecord[]);
     setHasMore(true);
     setReload(false);
-  };
+  }, [userDetails?.id]);
+
   return (
-    <View className="w-full  bg-white items-center">
+    <View className="items-center w-full bg-white">
       {initialLoad ? (
-        <View className="items-center h-full justify-center ">
+        <View className=" items-center justify-center h-full">
           <Spinner scale={1} size="large" color="$green10" />
         </View>
       ) : (
         <FlatList
           className="h-full"
+          initialNumToRender={3}
+          scrollEnabled={posts.length > 1}
           showsVerticalScrollIndicator={false}
           onEndReached={loadMorePosts}
           onEndReachedThreshold={0.5}
@@ -148,11 +151,9 @@ const PostLists = ({ type }: { type: "all" | "following" | "profiles" }) => {
               onRefresh={reloadPosts}
             />
           }
-          data={posts}
-          keyExtractor={(item) => uuid()}
-          renderItem={(data) => {
-            return <PostItem {...data.item} />;
-          }}
+          data={[...posts]}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
           ListFooterComponent={() => {
             return (
               <>

@@ -17,9 +17,12 @@ export type DocumentFull = Document & {
   unit: Unit;
 };
 
+export type StudyRecord =
+  Database["public"]["Tables"]["study_records"]["Row"] & {
+    likes: { count: number }[];
+    profiles: Profile;
+    document: DocumentFull;
+  };
 
-export type StudyRecord = Database["public"]["Tables"]["study_records"]["Row"] & {
-  likes: {count:number}[];
-  profiles: Profile;
-  document: DocumentFull;
-};
+export type SearchHistory =
+  Database["public"]["Tables"]["search_history"]["Row"];

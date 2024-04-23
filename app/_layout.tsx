@@ -19,18 +19,16 @@ export {
 } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
     InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
-    unset: require("@tamagui/font-inter/otf/Inter-Medium.otf"), // default
+    unset: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
