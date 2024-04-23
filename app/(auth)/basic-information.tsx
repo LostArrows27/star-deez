@@ -103,7 +103,7 @@ const BasicInformation = () => {
         });
         setUserDetails(profile);
         reset();
-        router.push("/(home)/(drawer)/newfeed/(tabs)/all");
+        router.push("/(home)/(drawer)/newfeed/");
       }
     }
   }
@@ -188,7 +188,13 @@ const BasicInformation = () => {
 
           {errors.gender && <Text color="red">{errors.gender.message}</Text>}
         </View>
-        <View className="gap-y-2 w-full mt-2">
+        <View
+          style={{
+            marginVertical: 30,
+            marginTop: 30,
+          }}
+          className="gap-y-2 w-full mt-2"
+        >
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (

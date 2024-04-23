@@ -14,7 +14,7 @@ const TabHomeLayout = () => {
             backgroundColor: "white",
           },
         }}
-        name="(tabs)"
+        name="index"
       />
     </Stack>
   );

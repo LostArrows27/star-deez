@@ -25,6 +25,7 @@ export default function StudyRecordDetails() {
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
     (async () => {
+      if (!id) return;
       const { data: post, error } = await supabase
         .from("study_records")
         .select(
@@ -39,7 +40,7 @@ export default function StudyRecordDetails() {
   }, [id]);
   return (
     <ModalWrapper
-      className="flex-1 p-4 px-6  bg-white"
+      className="flex-1 p-4 px-6 bg-white"
       options={{
         headerShown: true,
         headerTitle: "Study Record",
@@ -49,11 +50,11 @@ export default function StudyRecordDetails() {
     >
       <ScrollView>
         {loading || !data ? (
-          <View className="items-center h-full justify-center ">
+          <View className=" items-center justify-center h-full">
             <Spinner scale={1} size="large" color="$green10" />
           </View>
         ) : (
-          <View className="border-emerald-200 w-full  pb-3 border-b">
+          <View className="border-emerald-200 w-full pb-3 border-b">
             <View className="flex-row justify-between w-full">
               <View className="flex-row items-start gap-5">
                 <Avatar circular size="$4">
@@ -70,10 +71,10 @@ export default function StudyRecordDetails() {
                 </View>
               </View>
             </View>
-            <View className="gap-4  mt-6">
-              <Text className="text-lg ">{data.comment}</Text>
+            <View className="gap-4 mt-6">
+              <Text className=" text-lg">{data.comment}</Text>
               {data.image && (
-                <View className="overflow-hidden w-full h-[150px] bg-red-500 rounded-md">
+                <View className="overflow-hidden w-full h-[150px]  rounded-md">
                   <Image
                     source={{
                       uri: data.image,

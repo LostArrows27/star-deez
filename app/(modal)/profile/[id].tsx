@@ -24,6 +24,7 @@ const UserPage = () => {
     useFollowerList();
 
   const { loading } = useGetInitData(async (user) => {
+    if (!params?.id) return;
     const getProfileData = supabase
       .from("profiles")
       .select("*")

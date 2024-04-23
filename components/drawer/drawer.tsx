@@ -11,6 +11,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { router, usePathname } from "expo-router";
 import StyledText from "../styled-text";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 export const DrawerContainer = (props: any) => {
   const pathname = usePathname();
@@ -80,6 +81,29 @@ export const DrawerContainer = (props: any) => {
         />
         <DrawerItem
           icon={({ color, size }) => (
+            <FontAwesome6
+              name="earth-americas"
+              size={size}
+              color={pathname == `/global-feed` ? "#059669" : "#000"}
+            />
+          )}
+          label={"Global Feed"}
+          labelStyle={[
+            {
+              color: pathname == `/global-feed` ? "#059669" : "#000",
+            },
+          ]}
+          style={{
+            backgroundColor: pathname == `/global-feed` ? "#dcfce7" : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != `/global-feed` && userDetails?.id) {
+              router.push(`/global-feed/`);
+            }
+          }}
+        />
+        <DrawerItem
+          icon={({ color, size }) => (
             <AntDesign
               name="user"
               size={size}
@@ -118,7 +142,9 @@ export const DrawerContainer = (props: any) => {
           label={"Settings"}
           labelStyle={[{ color: pathname == "/settings" ? "#fff" : "#000" }]}
           style={{ backgroundColor: pathname == "/settings" ? "#333" : "#fff" }}
-          onPress={() => {}}
+          onPress={() => {
+            // router.push("/global-feed/");
+          }}
         />
         <DrawerItem
           icon={({ color, size }) => <Feather name="log-in" size={24} />}

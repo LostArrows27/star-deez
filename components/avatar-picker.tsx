@@ -1,11 +1,8 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Circle, Image } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import { Plus } from "@tamagui/lucide-icons";
-import { decode } from "base64-arraybuffer";
-// import DocumentPicker from "react-native-document-picker";
-// import RNFS from "react-native-fs";
 export default function AvatarPicker({
   setImage,
 }: {
@@ -23,7 +20,6 @@ export default function AvatarPicker({
     });
 
     if (!result.canceled) {
-     
       setPreView(result.assets[0].uri);
       setImage(result);
     }

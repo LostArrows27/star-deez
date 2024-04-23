@@ -41,7 +41,7 @@ export default function TabLayout() {
             <Avatar.Fallback bc="$green9" />
           </Avatar>
         ),
-        headerShadowVisible: true,
+        headerShadowVisible: false,
         headerStyle: {
           // add shadow
           shadowColor: "#000",
