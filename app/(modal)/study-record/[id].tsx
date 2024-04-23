@@ -72,7 +72,7 @@ export default function StudyRecordDetails() {
               </View>
             </View>
             <View className="gap-4 mt-6">
-              <Text className=" text-lg">{data.comment}</Text>
+              {data.comment && <Text className=" text-lg">{data.comment}</Text>}
               {data.image && (
                 <View className="overflow-hidden w-full h-[150px]  rounded-md">
                   <Image

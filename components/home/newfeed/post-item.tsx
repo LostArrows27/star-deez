@@ -60,7 +60,7 @@ const PostItem = (data: StudyRecord) => {
         </View>
 
         <View className="gap-4 pl-16 mt-6">
-          <Text className="text-[17px] ">{data.comment}</Text>
+          {data.comment && <Text className="text-[17px]">{data.comment}</Text>}
           {data.image && (
             <View className="overflow-hidden w-full h-[150px]  rounded-md">
               <Image
