@@ -26,3 +26,10 @@ export type StudyRecord =
 
 export type SearchHistory =
   Database["public"]["Tables"]["search_history"]["Row"];
+
+export type Notification =
+  Database["public"]["Tables"]["notification"]["Row"] & {
+    meta_data: {
+      avatar: string;
+    };
+  };
