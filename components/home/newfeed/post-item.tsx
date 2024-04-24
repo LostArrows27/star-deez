@@ -13,6 +13,7 @@ import StyledText from "@/components/styled-text";
 import { StudyRecord } from "@/types/supabase-util-types";
 import { router } from "expo-router";
 import { memo, useEffect } from "react";
+import LikeButton from "./like-button";
 
 export type PostItemProps = {
   id: string;
@@ -115,25 +116,7 @@ const PostItem = (data: PostItemProps) => {
               Comment
             </StyledText>
           </View>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
-            className="rounded-xl flex flex-row items-center mt-2"
-          >
-            <View className="rounded-xl flex-row items-center gap-3 px-2 py-2 pr-4 ml-5">
-              <ThumbsUp
-                onPointerCancel={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-                color={"$green7"}
-                className="z-50 rotate-180"
-                size={24}
-              />
-              <StyledText color={"$gray8"} fontSize={"$4"}>
-                {data.likes}
-              </StyledText>
-            </View>
-          </TouchableNativeFeedback>
+          <LikeButton likes={data.likes} study_record_id={data.id} />
         </View>
       </View>
     </TouchableNativeFeedback>
