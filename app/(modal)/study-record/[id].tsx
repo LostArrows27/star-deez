@@ -18,6 +18,7 @@ import { formatDate } from "date-fns";
 import { Image } from "tamagui";
 import convertMinute from "@/utils/convert-minute";
 import CommentInput from "@/components/home/study-record-detail/comment-input";
+import LikeButton from "@/components/home/newfeed/like-button";
 
 export default function StudyRecordDetails() {
   const { id } = useGlobalSearchParams();
@@ -130,25 +131,10 @@ export default function StudyRecordDetails() {
                   Comment
                 </StyledText>
               </View>
-              <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
-                className="rounded-xl flex flex-row items-center mt-2"
-              >
-                <View className="rounded-xl flex-row items-center gap-3 px-2 py-2 pr-4 ml-5">
-                  <ThumbsUp
-                    onPointerCancel={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
-                    color={"$green7"}
-                    className="z-50 rotate-180"
-                    size={24}
-                  />
-                  <StyledText color={"$gray8"} fontSize={"$4"}>
-                    {data.likes[0].count}
-                  </StyledText>
-                </View>
-              </TouchableNativeFeedback>
+              <LikeButton
+                likes={data.likes[0].count}
+                study_record_id={data.id}
+              />
             </View>
           </View>
         )}
