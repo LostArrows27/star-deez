@@ -10,8 +10,6 @@ import { Image, Separator } from "tamagui";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { router, usePathname } from "expo-router";
-import StyledText from "../styled-text";
-import { FontAwesome6 } from "@expo/vector-icons";
 
 export const DrawerContainer = (props: any) => {
   const pathname = usePathname();
@@ -130,8 +128,9 @@ export const DrawerContainer = (props: any) => {
         <DrawerItem
           icon={({ color, size }) => <Feather name="log-in" size={24} />}
           label={"Log out"}
-          onPress={() => {
-            supabase.auth.signOut();
+          onPress={async () => {
+            props.navigation.closeDrawer();
+            const { error } = await supabase.auth.signOut();
           }}
         />
       </View>
