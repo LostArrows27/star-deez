@@ -1,8 +1,9 @@
-import { View, Text, TouchableNativeFeedback, ScrollView } from "react-native";
+import { View, Text, TouchableNativeFeedback } from "react-native";
 import React, { useEffect } from "react";
 import { router, useGlobalSearchParams } from "expo-router";
 import ModalWrapper from "@/components/modal/modal-wrapper";
 import { Avatar, Button, Spinner } from "tamagui";
+import { ScrollView } from "react-native-virtualized-view";
 import {
   MessageSquare,
   MoreHorizontal,
@@ -19,6 +20,7 @@ import { Image } from "tamagui";
 import convertMinute from "@/utils/convert-minute";
 import CommentInput from "@/components/home/study-record-detail/comment-input";
 import LikeButton from "@/components/home/newfeed/like-button";
+import CommentSection from "@/components/home/study-record-detail/comment-section";
 
 export default function StudyRecordDetails() {
   const { id } = useGlobalSearchParams();
@@ -41,7 +43,7 @@ export default function StudyRecordDetails() {
   }, [id]);
   return (
     <ModalWrapper
-      className="flex-1 p-4 px-6 bg-white"
+      className="flex-1 p-5 px-6 bg-white"
       options={{
         headerShown: true,
         headerTitle: "Study Record",
@@ -49,7 +51,13 @@ export default function StudyRecordDetails() {
         headerRight: () => <MoreVertical />,
       }}
     >
-      <ScrollView>
+      <ScrollView
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+        style={{
+          height: "100%",
+        }}
+      >
         {loading || !data ? (
           <View className=" items-center justify-center h-full">
             <Spinner scale={1} size="large" color="$green10" />
@@ -149,8 +157,9 @@ export default function StudyRecordDetails() {
             </View>
           </View>
         )}
-        <CommentInput />
+        <CommentSection />
       </ScrollView>
+      <CommentInput />
     </ModalWrapper>
   );
 }

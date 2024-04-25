@@ -91,7 +91,11 @@ const UserPage = () => {
           <Spinner scale={1.2} size="large" color="$green10" />
         </View>
       ) : profile ? (
-        <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+        <ScrollView
+          nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+          className="flex-1"
+        >
           <ProfileHeader />
           <ProfileFollower />
           <ProfileTabView />

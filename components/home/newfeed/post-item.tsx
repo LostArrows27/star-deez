@@ -22,6 +22,7 @@ export type PostItemProps = {
   profile_avatar: string;
   comment: string;
   image: string;
+  scrolling: boolean;
   document_title: string;
   document_unit_name: string;
   document_cover: string;
@@ -35,7 +36,11 @@ export type PostItemProps = {
 const PostItem = (data: PostItemProps) => {
   return (
     <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
+      background={
+        !data.scrolling
+          ? TouchableNativeFeedback.Ripple("#d7d7d7", false)
+          : TouchableNativeFeedback.Ripple("transparent", false)
+      }
       onPress={() => {
         router.push(`/(modal)/study-record/${data.id}`);
       }}

@@ -5,7 +5,7 @@ import { Plane, Send, Smile } from "@tamagui/lucide-icons";
 
 export default function CommentInput() {
   return (
-    <View pt="$5">
+    <View mt="$3">
       <View
         width={"100%"}
         justifyContent="center"
