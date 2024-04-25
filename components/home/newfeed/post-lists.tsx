@@ -3,10 +3,12 @@ import PostItem from "./post-item";
 import { FlatList } from "react-native";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { StudyRecord } from "@/types/supabase-util-types";
-import { Spinner } from "tamagui";
+import { H2, H3, Spinner } from "tamagui";
 import { useAuth } from "@/hooks/auth/useAuth";
 import queryPost from "@/utils/query-post";
 import { useFocusEffect } from "@react-navigation/native";
+import { Image } from "expo-image";
+import StyledText from "@/components/styled-text";
 
 const MemoizedPostItem = memo(PostItem);
 
@@ -126,7 +128,7 @@ const PostLists = (props: {
         <View className=" items-center justify-center h-full">
           <Spinner scale={1} size="large" color="$green10" />
         </View>
-      ) : (
+      ) : posts.length > 0 ? (
         <FlatList
           className="h-full"
           initialNumToRender={3}
@@ -158,6 +160,29 @@ const PostLists = (props: {
             );
           }}
         />
+      ) : (
+        <View className="center h-full">
+          <Image
+            autoplay
+            style={{
+              width: 498 / 2,
+              height: 329 / 2,
+            }}
+            contentFit="cover"
+            source={require("@/assets/images/home/cat_typing.gif")}
+          />
+          <H3 mt="$4" color={"$color8"}>
+            No posts yet
+          </H3>
+          <StyledText
+            color={"$gray10Light"}
+            letterSpacing={"$10"}
+            textAlign="center"
+            mt="$3"
+          >
+            Please follow more people to see their posts
+          </StyledText>
+        </View>
       )}
     </View>
   );

@@ -4,7 +4,7 @@ import { Profile } from "@/types/supabase-util-types";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { supabase } from "@/lib/supabase";
 import { useProfileData } from "@/hooks/home/profile/useProfileData";
-import { Spinner } from "tamagui";
+import { H3, Spinner } from "tamagui";
 import { Image } from "expo-image";
 import ProfileHeader from "@/components/home/profile/profile-header";
 import ProfileFollower from "@/components/home/profile/profile-follower";
@@ -12,6 +12,7 @@ import { ScrollView } from "react-native";
 import ProfileTabView from "@/components/home/profile/profile-tab-view";
 import { useFollowStatus } from "@/hooks/home/profile/useFollowStatus";
 import { useFollowerList } from "@/hooks/home/profile/useFollowerList";
+import StyledText from "@/components/styled-text";
 
 const UserPage = () => {
   const params = useLocalSearchParams();
@@ -104,11 +105,14 @@ const UserPage = () => {
               height: 300,
             }}
             contentFit="cover"
-            source={require("@/assets/images/profile/nooo.gif")}
+            source={require("@/assets/images/profile/cat_bubble.png")}
           />
-          <Text className="text-xl font-semibold">
+          <H3 color={"$color8"} my={10} mt={30}>
+            Not found user
+          </H3>
+          <StyledText color={"$gray10Light"}>
             Look like this user doesn't exist 🥲
-          </Text>
+          </StyledText>
         </View>
       )}
     </View>

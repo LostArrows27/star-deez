@@ -4,12 +4,14 @@ import { supabase } from "@/lib/supabase";
 import { Notification, Profile } from "@/types/supabase-util-types";
 import { memo, useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Text } from "tamagui";
+import { H3, Text } from "tamagui";
 import Loading from "../newfeed/loading";
 import { useRealTime } from "@/hooks/useRealTime";
 import useUserID from "@/hooks/auth/useUserID";
 import { FlatList } from "react-native-gesture-handler";
 import NotificationChild from "./notification-child";
+import { Image } from "expo-image";
+import StyledText from "@/components/styled-text";
 
 export type NotificationData = Notification;
 
@@ -80,7 +82,7 @@ const NotificationList = ({ tab }: { tab: string }) => {
         <View className="pt-36">
           <Loading />
         </View>
-      ) : (
+      ) : filterNotifcation.length > 0 ? (
         <View className="mt-8">
           <FlatList
             className="h-full"
@@ -92,6 +94,29 @@ const NotificationList = ({ tab }: { tab: string }) => {
             removeClippedSubviews={true}
             renderItem={renderItem}
           />
+        </View>
+      ) : (
+        <View className="center w-full gap-4 mt-20">
+          <Image
+            autoplay
+            style={{
+              width: 200,
+              height: 200,
+            }}
+            contentFit="cover"
+            source={require("@/assets/images/notification/pusheen.gif")}
+          />
+          <H3 color={"$color8"} mt="8" textTransform="uppercase">
+            {tab === "unread" ? "NO UNREAD notification" : "No notification"}
+          </H3>
+          <StyledText
+            color={"$gray10Light"}
+            lineHeight={"$5"}
+            mx="$7"
+            textAlign="center"
+          >
+            Pusheen will notify you when there is something new zzz
+          </StyledText>
         </View>
       )}
     </ScrollView>
