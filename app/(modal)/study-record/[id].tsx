@@ -1,6 +1,6 @@
 import { View, Text, TouchableNativeFeedback, ScrollView } from "react-native";
 import React, { useEffect } from "react";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import ModalWrapper from "@/components/modal/modal-wrapper";
 import { Avatar, Button, Spinner } from "tamagui";
 import {
@@ -58,12 +58,23 @@ export default function StudyRecordDetails() {
           <View className="border-emerald-200 w-full pb-3 border-b">
             <View className="flex-row justify-between w-full">
               <View className="flex-row items-start gap-5">
-                <Avatar circular size="$4">
+                <Avatar
+                  onPress={() => {
+                    router.push(`/profile/${data.profiles.id}`);
+                  }}
+                  circular
+                  size="$4"
+                >
                   <Avatar.Image src={data.profiles.avatar || ""} />
                   <Avatar.Fallback bc="$green9" />
                 </Avatar>
                 <View>
-                  <Text className="text-lg font-[Inter]">
+                  <Text
+                    onPress={() => {
+                      router.push(`/profile/${data.profiles.id}`);
+                    }}
+                    className="text-lg font-[Inter]"
+                  >
                     {data.profiles.last_name + " " + data.profiles.first_name}
                   </Text>
                   <StyledText fontSize={"$2"} color={"$gray10"}>
