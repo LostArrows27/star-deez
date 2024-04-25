@@ -5,6 +5,7 @@ import Swiper from "react-native-swiper";
 import Banner from "@/components/introduction/banner";
 import { useRef, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
+import ProfileStudyRecords from "./profile-study-records";
 
 const ProfileTabView = () => {
   const swiperRef = useRef<any>();
@@ -109,11 +110,7 @@ const ProfileTabView = () => {
           content="Let's record the time you spent studying today"
           image={require("@/assets/images/introduction/first.jpg")}
         />
-        <Banner
-          heading="Friend's Study Records"
-          content="What kind of study is your friend doing? Take a peek"
-          image={require("@/assets/images/introduction/second.jpg")}
-        />
+        <ProfileStudyRecords />
         <Banner
           heading="Check with Graphs"
           content="See your effort at a glance and get motivated"

@@ -38,6 +38,61 @@ export type Database = {
           },
         ]
       }
+      comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_edited: boolean
+          modified_at: string | null
+          reply_comment_id: string | null
+          study_record_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_edited?: boolean
+          modified_at?: string | null
+          reply_comment_id?: string | null
+          study_record_id?: string
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_edited?: boolean
+          modified_at?: string | null
+          reply_comment_id?: string | null
+          study_record_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_reply_comment_id_fkey"
+            columns: ["reply_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_study_record_id_fkey"
+            columns: ["study_record_id"]
+            isOneToOne: false
+            referencedRelation: "study_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       document: {
         Row: {
           category_id: string
@@ -131,24 +186,34 @@ export type Database = {
       }
       likes: {
         Row: {
+          comment_id: string | null
           created_at: string
           id: string
           study_record_id: string | null
           user_id: string
         }
         Insert: {
+          comment_id?: string | null
           created_at?: string
           id?: string
           study_record_id?: string | null
           user_id?: string
         }
         Update: {
+          comment_id?: string | null
           created_at?: string
           id?: string
           study_record_id?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_likes_study_record_id_fkey"
             columns: ["study_record_id"]
