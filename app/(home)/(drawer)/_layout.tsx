@@ -5,19 +5,27 @@ import { cn } from "@/lib/utils";
 import { Avatar } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Octicons } from "@expo/vector-icons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { CustomTabBarButton } from "@/components/home/tabbar-button";
+import TabNotificationIcon from "@/components/home/notification/tab-notification-icon";
+import { useState } from "react";
 
 export default function TabLayout() {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
 
   const { userDetails } = useAuth();
 
+  const [tabName, setTabName] = useState("");
+
   return (
     <Tabs
+      screenListeners={{
+        tabPress: (e) => {
+          setTabName(e.target!.split("-")[0]);
+        },
+      }}
       screenOptions={{
         headerLeft: () => (
           <Avatar
@@ -132,10 +140,10 @@ export default function TabLayout() {
           lazy: false,
           title: "Notification",
           tabBarIcon: ({ color, focused }) => (
-            <Octicons
-              name={focused ? "bell-fill" : "bell"}
-              size={23}
+            <TabNotificationIcon
+              tab={tabName}
               color={color}
+              focused={focused}
             />
           ),
         }}

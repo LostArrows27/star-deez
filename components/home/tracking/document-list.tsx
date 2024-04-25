@@ -5,11 +5,13 @@ import { CategorizedDocument } from "@/types/home/tracking-type";
 import { StudyingStatus } from "@/types/supabase-util-types";
 import { useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
-import { ScrollView, Spinner } from "tamagui";
+import { H3, ScrollView, Spinner } from "tamagui";
 import DocumentSubList from "./document-sub-list";
 
 import randomColor from "randomcolor";
 import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
+import { Image } from "expo-image";
+import StyledText from "@/components/styled-text";
 
 const DocumentList = () => {
   const id = useUserID();
@@ -68,7 +70,7 @@ const DocumentList = () => {
         <View className=" center h-full">
           <Spinner scale={1.2} mb={80} size="large" color="$green10" />
         </View>
-      ) : (
+      ) : categorizedDocument.length > 0 ? (
         <View className="gap-y-5">
           {categorizedDocument.map((item, index) => {
             if (!item.documents || item.documents.length === 0) return;
@@ -80,6 +82,30 @@ const DocumentList = () => {
               />
             );
           })}
+        </View>
+      ) : (
+        <View className="items-center h-full">
+          <Image
+            autoplay
+            style={{
+              width: 261 / 1.5,
+              height: 190 / 1.5,
+              marginTop: 50,
+            }}
+            contentFit="cover"
+            source={require("@/assets/images/tracking/cat_book.png")}
+          />
+          <H3 mt="$4" textTransform="uppercase" color={"$color8"}>
+            No document yet
+          </H3>
+          <StyledText
+            lineHeight={"$5"}
+            color={"$gray10Light"}
+            textAlign="center"
+            mt="$3"
+          >
+            Try creating new document to record your learning progress
+          </StyledText>
         </View>
       )}
     </View>

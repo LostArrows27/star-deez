@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import useUserID from "@/hooks/auth/useUserID";
 import { useFollowStatus } from "@/hooks/home/profile/useFollowStatus";
 import { useGetInitData } from "@/hooks/useGetInitData";
@@ -17,6 +18,8 @@ const FollowStatusButton = () => {
   const id = useUserID();
 
   const toast = useToastController();
+
+  const { userDetails } = useAuth();
 
   const handleFollow = async () => {
     if (!id) return;
@@ -41,6 +44,40 @@ const FollowStatusButton = () => {
       });
 
       if (!error) {
+        const { data: checkData, error: checkError } = await supabase
+          .from("notification")
+          .select("*")
+          .eq("receiver_id", params!.id as string)
+          .eq("sender_id", id)
+          .eq(
+            "content",
+            `${userDetails?.first_name} ${userDetails?.last_name} has followed you`
+          );
+
+        if (checkError) {
+          toast.show("Follow failed");
+          setLoading(false);
+          return;
+        }
+
+        if (checkData && checkData.length > 0) {
+          setIsFollowing(true);
+          toast.show("Follow success");
+          setLoading(false);
+          return;
+        }
+
+        const { data: notification, error: notiError } = await supabase
+          .from("notification")
+          .insert({
+            receiver_id: params!.id as string,
+            sender_id: id,
+            content: `${userDetails?.first_name} ${userDetails?.last_name} has followed you`,
+            link_to: `/profile/${id}`,
+            meta_data: {
+              avatar: userDetails?.avatar,
+            },
+          });
         setIsFollowing(true);
         toast.show("Follow success");
       } else {

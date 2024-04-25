@@ -21,11 +21,12 @@ const ResultList = () => {
             <Image
               autoplay
               style={{
-                width: 300,
-                height: 300,
+                width: 200,
+                height: 200,
+                marginTop: 50,
               }}
               contentFit="cover"
-              source={require("@/assets/images/profile/nooo.gif")}
+              source={require("@/assets/images/profile/cat_bubble.png")}
             />
           </View>
         </>
