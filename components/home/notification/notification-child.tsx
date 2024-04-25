@@ -8,6 +8,7 @@ import StyledPressable from "@/components/styled-pressable";
 import { router } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
+import { useNotificationChildOption } from "@/hooks/home/notification/useNotificationChildOption";
 
 type ChildProps = {
   id: string;
@@ -19,7 +20,9 @@ type ChildProps = {
 };
 
 const NotificationChild = (props: ChildProps) => {
-  // TODO: add notification 3 dots option
+  const { setOpen, setNotificationId, setIsReaded } =
+    useNotificationChildOption();
+
   return (
     <StyledPressable
       onPress={async () => {
@@ -27,7 +30,7 @@ const NotificationChild = (props: ChildProps) => {
         if (props.is_readed) return;
         const { data, error } = await supabase
           .from("notification")
-          .update({ is_readed: true })
+          .update({ is_readed: true, is_seen: true })
           .eq("id", props.id);
       }}
       style={
@@ -71,6 +74,11 @@ const NotificationChild = (props: ChildProps) => {
       </View>
       <View className="center mr-1">
         <Button
+          onPress={() => {
+            setOpen(true);
+            setIsReaded(props.is_readed);
+            setNotificationId(props.id);
+          }}
           size={"$2"}
           backgroundColor={"$colorTransparent"}
           icon={<Entypo name="dots-three-vertical" size={16} color="black" />}

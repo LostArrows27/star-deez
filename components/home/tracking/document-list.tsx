@@ -70,7 +70,7 @@ const DocumentList = () => {
         <View className=" center h-full">
           <Spinner scale={1.2} mb={80} size="large" color="$green10" />
         </View>
-      ) : categorizedDocument.length === 0 ? (
+      ) : categorizedDocument.length > 0 ? (
         <View className="gap-y-5">
           {categorizedDocument.map((item, index) => {
             if (!item.documents || item.documents.length === 0) return;

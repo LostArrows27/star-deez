@@ -1,10 +1,9 @@
-import LoadingScreen from "@/components/loading/loading-screen";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { supabase } from "@/lib/supabase";
-import { Notification, Profile } from "@/types/supabase-util-types";
-import { memo, useEffect, useMemo, useState } from "react";
+import { Notification } from "@/types/supabase-util-types";
+import { useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { H3, Text } from "tamagui";
+import { H3 } from "tamagui";
 import Loading from "../newfeed/loading";
 import { useRealTime } from "@/hooks/useRealTime";
 import useUserID from "@/hooks/auth/useUserID";
@@ -12,6 +11,7 @@ import { FlatList } from "react-native-gesture-handler";
 import NotificationChild from "./notification-child";
 import { Image } from "expo-image";
 import StyledText from "@/components/styled-text";
+import NotificationOptionModal from "./notification-option-modal";
 
 export type NotificationData = Notification;
 
@@ -84,6 +84,7 @@ const NotificationList = ({ tab }: { tab: string }) => {
         </View>
       ) : filterNotifcation.length > 0 ? (
         <View className="mt-8">
+          <NotificationOptionModal />
           <FlatList
             className="h-full"
             initialNumToRender={6}
