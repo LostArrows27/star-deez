@@ -108,7 +108,7 @@ const CreateStudyRecord = () => {
 
   return (
     <ModalWrapper
-      className="flex-1 p-4 px-6  bg-white"
+      className="flex-1 p-4 px-6 bg-white"
       options={{
         headerShown: true,
         headerTitle: "Create Study Record",
@@ -141,7 +141,7 @@ const CreateStudyRecord = () => {
       }}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text className="text-xl font-semibold mb-2">Detail</Text>
+        <Text className="mb-2 text-xl font-semibold">Detail</Text>
         <ViewTama
           width={"100%"}
           backgroundColor={"$color4"}
@@ -155,7 +155,7 @@ const CreateStudyRecord = () => {
           <LearningAmountPicker />
           <SwitchWithLabel size="$2" checked={publicS} setChecked={setPublic} />
         </ViewTama>
-        <Text className="text-xl font-semibold my-2">Comment</Text>
+        <Text className="my-2 text-xl font-semibold">Comment</Text>
         <ViewTama
           width={"100%"}
           backgroundColor={"$color4"}
@@ -213,7 +213,7 @@ const CreateStudyRecord = () => {
             ) : (
               <>
                 <Camera color={"$color8"} />
-                <Text className=" font-semibold ">Select an Image</Text>
+                <Text className=" font-semibold">Select an Image</Text>
               </>
             )}
           </ViewTama>
