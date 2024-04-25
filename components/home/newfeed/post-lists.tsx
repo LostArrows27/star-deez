@@ -32,20 +32,24 @@ const renderItem = ({ item }: { item: StudyRecord }) => (
 const PostLists = (props: {
   type: "all" | "following" | "profiles";
   profile_id: string | null;
+  listFollowing?: string[];
 }) => {
   const { type, profile_id } = props;
 
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+
   const [initialLoad, setInitialLoad] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  // const [following, setFollowing] = useState<string[]>([]);
   const { userDetails } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
       // Actions to perform when the screen is focused
-      const queryFunc = queryPost(type, profile_id);
+
+      const queryFunc = queryPost(type, profile_id, props.listFollowing);
 
       (async () => {
         if (!userDetails) return;
@@ -71,7 +75,7 @@ const PostLists = (props: {
   useEffect(() => {
     (async () => {
       if (!userDetails) return;
-      const queryFunc = queryPost(type, profile_id);
+      const queryFunc = queryPost(type, profile_id, props.listFollowing);
 
       const { data, error } = await queryFunc.limit(3);
 
@@ -89,7 +93,7 @@ const PostLists = (props: {
     if (loading) return;
 
     setLoading(true);
-    const queryFunc = queryPost(type, profile_id);
+    const queryFunc = queryPost(type, profile_id, props.listFollowing);
 
     const { data, error } = await queryFunc.range(
       posts.length,
@@ -107,7 +111,7 @@ const PostLists = (props: {
     if (!userDetails) return;
     setReload(true);
 
-    const queryFunc = queryPost(type, profile_id);
+    const queryFunc = queryPost(type, profile_id, props.listFollowing);
 
     const { data, error } = await queryFunc.limit(3);
 
@@ -121,7 +125,7 @@ const PostLists = (props: {
   const renderCount = useRef(0);
 
   return (
-    <View className="items-center w-full bg-white">
+    <View className="items-center w-full h-full bg-white">
       {initialLoad ? (
         <View className=" items-center justify-center h-full">
           <Spinner scale={1} size="large" color="$green10" />
@@ -130,6 +134,7 @@ const PostLists = (props: {
         <FlatList
           className="h-full"
           initialNumToRender={3}
+       
           scrollEnabled={posts.length > 1}
           showsVerticalScrollIndicator={false}
           onEndReached={loadMorePosts}
@@ -163,4 +168,4 @@ const PostLists = (props: {
   );
 };
 
-export default PostLists;
+export default memo(PostLists);
