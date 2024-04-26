@@ -6,11 +6,74 @@ import { CustomTabBarButton } from "@/components/home/tabbar-button";
 import { Avatar } from "tamagui";
 import { useDrawerNavigation } from "@/hooks/useDrawerNavigation";
 import { useAuth } from "@/hooks/auth/useAuth";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import {
+  Participant,
+  useParticipantsList,
+} from "@/hooks/home/live-participants/useParticipantsList";
+import { useFocusEffect } from "@react-navigation/native";
 
 const TabLayout = () => {
   const navigation = useDrawerNavigation();
 
   const { userDetails } = useAuth();
+
+  const { setParticipants } = useParticipantsList();
+
+  const [focus, setFocus] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setFocus(true);
+
+      return () => {
+        setFocus(false);
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    if (userDetails?.id && focus) {
+      const userStatus = {
+        id: userDetails!.id,
+        avatar: userDetails!.avatar,
+        name: userDetails!.full_name,
+      };
+
+      const room = supabase.channel("live_session");
+
+      room
+        .on("presence", { event: "sync" }, () => {
+          const newState = room.presenceState();
+
+          const usersList = Object.keys(newState)
+            .map((data) => {
+              const presences = newState[data] as unknown as Participant[];
+
+              const lists = presences.map((presence) => {
+                return {
+                  id: presence.id,
+                  avatar: presence.avatar,
+                  name: presence.name,
+                };
+              });
+
+              return lists;
+            })
+            .flat();
+
+          setParticipants(usersList);
+        })
+        .subscribe()
+        .track(userStatus);
+
+      return () => {
+        room.untrack();
+        room.unsubscribe();
+      };
+    }
+  }, [focus, userDetails?.id]);
 
   return (
     <Tabs

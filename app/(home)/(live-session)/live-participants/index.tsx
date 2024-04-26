@@ -5,36 +5,40 @@ import { View, Text, FlatList } from "react-native";
 import { Image } from "expo-image";
 import { Circle, H3 } from "tamagui";
 import StyledText from "@/components/styled-text";
+import { useParticipantsList } from "@/hooks/home/live-participants/useParticipantsList";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 const renderParticipant = ({ item, index }: { item: any; index: number }) => {
-  return (
-    <Participant avatar={item.avatar} name={item.document.name} id={item.id} />
-  );
+  return <Participant avatar={item.avatar} name={item.name} id={item.id} />;
 };
 
 const ParticipantsList = () => {
   const id = useUserID();
+
+  const { participants } = useParticipantsList();
 
   return (
     <View className="w-full h-full">
       <View className="bg-emerald-500 flex-row items-center justify-center w-full h-10 gap-5 px-10">
         <Circle backgroundColor={"white"} size={10} />
         <Text className="font-lg font-semibold text-white">
-          3,012 studying with you
+          {participants.length} studying with you
         </Text>
       </View>
       <View className=" w-full h-full px-4">
-        {postData.length === 0 ? (
+        {participants.length > 0 ? (
           <FlatList
             contentContainerStyle={{
-              width: "100%",
               paddingTop: 30,
-              flex: 1,
               gap: 30,
-              height: "100%",
             }}
+            className="h-full"
+            initialNumToRender={12}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
             numColumns={3}
-            data={postData}
+            data={participants}
             renderItem={renderParticipant}
           />
         ) : (

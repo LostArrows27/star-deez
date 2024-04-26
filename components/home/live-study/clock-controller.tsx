@@ -6,6 +6,8 @@ import { Button, Text, Theme } from "tamagui";
 import { Feather } from "@expo/vector-icons";
 import ResetButton from "./reset-button";
 import FinishButton from "./finish-button";
+import { useParticipantsList } from "@/hooks/home/live-participants/useParticipantsList";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const ClockController = () => {
   const { isRunning, start, stop, reset } = useClockTimer();
@@ -21,7 +23,7 @@ const ClockController = () => {
       <View className="items-center gap-5">
         <Theme name={"orange"}>
           <Button
-            onPress={() => {
+            onPress={async () => {
               isRunning ? stop() : start();
             }}
             borderRadius={99999999}

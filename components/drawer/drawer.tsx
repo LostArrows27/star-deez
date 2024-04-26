@@ -81,6 +81,7 @@ export const DrawerContainer = (props: any) => {
             }
           }}
         />
+
         <DrawerItem
           icon={({ color, size }) => (
             <AntDesign
@@ -105,6 +106,29 @@ export const DrawerContainer = (props: any) => {
           onPress={() => {
             if (pathname != `/profile/${userDetails?.id}` && userDetails?.id) {
               router.push(`/profile/${userDetails?.id}`);
+            }
+          }}
+        />
+        <DrawerItem
+          icon={({ color, size }) => (
+            <MaterialIcons
+              name="access-alarms"
+              size={size}
+              color={pathname == `/live-study` ? "#059669" : "#000"}
+            />
+          )}
+          label={"Study together"}
+          labelStyle={[
+            {
+              color: pathname == `/live-study` ? "#059669" : "#000",
+            },
+          ]}
+          style={{
+            backgroundColor: pathname == `/live-study` ? "#dcfce7" : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != `/live-study` && userDetails?.id) {
+              router.push(`/live-study/`);
             }
           }}
         />
