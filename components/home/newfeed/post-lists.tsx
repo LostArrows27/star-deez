@@ -33,6 +33,7 @@ const renderItem = ({
     begin_at={item.begin_at}
     scrolling={scrolling}
     end_at={item.end_at}
+    comments={item.comments[0].count}
     created_at={item.created_at}
     likes={item.likes[0].count}
   />
@@ -129,7 +130,6 @@ const PostLists = (props: {
     setHasMore(true);
     setReload(false);
   }, [userDetails?.id]);
-
 
   return (
     <View className="items-center w-full h-full bg-white">
