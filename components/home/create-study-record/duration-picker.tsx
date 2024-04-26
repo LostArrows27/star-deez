@@ -1,15 +1,25 @@
 import { View, Text, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Clock } from "@tamagui/lucide-icons";
 import { Input, XStack } from "tamagui";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import convertMinute from "@/utils/convert-minute";
 import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
+import { useLocalSearchParams } from "expo-router";
 
 export default function StudyDurationPicker() {
   const [showPicker, setShowPicker] = useState(false);
   const { duration, setDuration } = useCreateStudyRecord();
+  const { learning_amount } = useLocalSearchParams();
+
+  useEffect(() => {
+    if (learning_amount) {
+      // from string to number -> rounded no decimal
+      setDuration(Math.round(parseInt(learning_amount as string) / 60));
+    }
+  }, [learning_amount]);
+
   return (
     <Pressable onPress={() => setShowPicker(true)}>
       <XStack alignItems={"center"} justifyContent="flex-start" gap={"$2"}>
@@ -23,7 +33,6 @@ export default function StudyDurationPicker() {
         setIsVisible={setShowPicker}
         hideSeconds
         onConfirm={(pickedDuration) => {
-         
           //   setAlarmString(formatTime(pickedDuration));
           const durationTMP =
             pickedDuration.hours * 60 + pickedDuration.minutes;

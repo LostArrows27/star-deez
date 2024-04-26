@@ -23,6 +23,8 @@ const DocumentSubList = ({
       </View>
       <FlatList
         horizontal
+        initialNumToRender={2}
+        removeClippedSubviews={true}
         scrollEnabled={data.documents.length > 2}
         data={data.documents}
         renderItem={(data) => <DocumentItem document={data.item} />}

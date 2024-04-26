@@ -6,6 +6,7 @@ import Banner from "@/components/introduction/banner";
 import { useRef, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ProfileStudyRecords from "./profile-study-records";
+import { authRoute } from "@/constants/Route";
 
 const ProfileTabView = () => {
   const swiperRef = useRef<any>();
@@ -105,17 +106,19 @@ const ProfileTabView = () => {
           display: "none",
         }}
       >
-        <Banner
+        {/* <Banner
           heading="Turn Study into a Habit"
           content="Let's record the time you spent studying today"
           image={require("@/assets/images/introduction/first.jpg")}
-        />
+        /> */}
+        <View></View>
         <ProfileStudyRecords />
-        <Banner
+        {/* <Banner
           heading="Check with Graphs"
           content="See your effort at a glance and get motivated"
           image={require("@/assets/images/introduction/third.jpg")}
-        />
+        /> */}
+        <View></View>
       </Swiper>
     </View>
   );

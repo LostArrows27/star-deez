@@ -9,6 +9,7 @@ import queryPost from "@/utils/query-post";
 import { useFocusEffect } from "@react-navigation/native";
 import { Image } from "expo-image";
 import StyledText from "@/components/styled-text";
+import { cn } from "@/lib/utils";
 
 const MemoizedPostItem = memo(PostItem);
 
@@ -43,8 +44,9 @@ const PostLists = (props: {
   type: "all" | "following" | "profiles";
   profile_id: string | null;
   listFollowing?: string[];
+  className?: string;
 }) => {
-  const { type, profile_id } = props;
+  const { type, profile_id, className } = props;
 
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
@@ -173,7 +175,7 @@ const PostLists = (props: {
           }}
         />
       ) : (
-        <View className="center h-full">
+        <View className={cn("center h-full", className)}>
           <Image
             autoplay
             style={{
