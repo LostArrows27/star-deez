@@ -10,8 +10,6 @@ import { Image, Separator } from "tamagui";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { router, usePathname } from "expo-router";
-import StyledText from "../styled-text";
-import { FontAwesome6 } from "@expo/vector-icons";
 
 export const DrawerContainer = (props: any) => {
   const pathname = usePathname();
@@ -83,6 +81,7 @@ export const DrawerContainer = (props: any) => {
             }
           }}
         />
+
         <DrawerItem
           icon={({ color, size }) => (
             <AntDesign
@@ -110,6 +109,29 @@ export const DrawerContainer = (props: any) => {
             }
           }}
         />
+        <DrawerItem
+          icon={({ color, size }) => (
+            <MaterialIcons
+              name="access-alarms"
+              size={size}
+              color={pathname == `/live-study` ? "#059669" : "#000"}
+            />
+          )}
+          label={"Study together"}
+          labelStyle={[
+            {
+              color: pathname == `/live-study` ? "#059669" : "#000",
+            },
+          ]}
+          style={{
+            backgroundColor: pathname == `/live-study` ? "#dcfce7" : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != `/live-study` && userDetails?.id) {
+              router.push(`/live-study/`);
+            }
+          }}
+        />
         <Separator borderColor={"$gray5Light"} />
 
         <DrawerItem
@@ -130,8 +152,9 @@ export const DrawerContainer = (props: any) => {
         <DrawerItem
           icon={({ color, size }) => <Feather name="log-in" size={24} />}
           label={"Log out"}
-          onPress={() => {
-            supabase.auth.signOut();
+          onPress={async () => {
+            props.navigation.closeDrawer();
+            const { error } = await supabase.auth.signOut();
           }}
         />
       </View>

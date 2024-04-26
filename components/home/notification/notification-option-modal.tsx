@@ -4,6 +4,7 @@ import { TouchableNativeFeedback, View, Text } from "react-native";
 import { useNotificationChildOption } from "@/hooks/home/notification/useNotificationChildOption";
 import { Adapt, Popover } from "tamagui";
 import { supabase } from "@/lib/supabase";
+import { Entypo } from "@expo/vector-icons";
 
 const NotificationOptionModal = () => {
   const { open, setOpen, notification_id, is_readed } =
@@ -15,6 +16,15 @@ const NotificationOptionModal = () => {
     const { data, error } = await supabase
       .from("notification")
       .update({ is_readed: true, is_seen: true })
+      .eq("id", notification_id);
+  };
+
+  const markAsUnread = async () => {
+    setOpen(false);
+    if (!is_readed || !notification_id) return;
+    const { data, error } = await supabase
+      .from("notification")
+      .update({ is_readed: false, is_seen: false })
       .eq("id", notification_id);
   };
 
@@ -85,6 +95,13 @@ const NotificationOptionModal = () => {
           >
             <Ionicons name="checkmark-sharp" size={24} color="black" />
             <Text>Mark this notification as readed</Text>
+          </StyledPressable>
+          <StyledPressable
+            onPress={markAsUnread}
+            className="gap-7 flex-row items-center w-full px-6 py-4"
+          >
+            <Entypo name="unread" size={24} color="black" />
+            <Text>Mark this notification as unread</Text>
           </StyledPressable>
           <StyledPressable
             onPress={hideNotification}

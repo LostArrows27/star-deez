@@ -23,7 +23,11 @@ export default function ProfileStudyRecords() {
     <View>
       {show ? (
         <View>
-          <PostLists type="profiles" profile_id={id as string} />
+          <PostLists
+            className=" h-fit w-full mt-20"
+            type="profiles"
+            profile_id={id as string}
+          />
         </View>
       ) : (
         <Loading />

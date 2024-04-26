@@ -3,16 +3,14 @@ import {
   MessageSquare,
   MoreHorizontal,
   Newspaper,
-  ThumbsUp,
 } from "@tamagui/lucide-icons";
 import { View, Text, TouchableNativeFeedback } from "react-native";
 import { Avatar, Button, Image } from "tamagui";
-import { formatDate, formatDistance } from "date-fns";
+import { formatDate } from "date-fns";
 import convertMinute from "@/utils/convert-minute";
 import StyledText from "@/components/styled-text";
-import { StudyRecord } from "@/types/supabase-util-types";
 import { router } from "expo-router";
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import LikeButton from "./like-button";
 
 export type PostItemProps = {

@@ -95,4 +95,36 @@ export const postData: PostItem[] = [
     media:
       "https://inybkzznasdhmswsixhd.supabase.co/storage/v1/object/public/posts/thanhdung0207/6642dc59-5683-eb27-e972-91887280dc03/lno3ijyx",
   },
+  {
+    id: "123456aa",
+    avatar:
+      "https://inybkzznasdhmswsixhd.supabase.co/storage/v1/object/public/images/cabbee6b-0cb1-4e2a-a944-f4a4190f6926/profile-lohyuemq",
+    name: "LostArrows27",
+    time: new Date(),
+    document: {
+      name: "Kaiwa N0",
+      unit: "Page",
+    },
+    learning_duration: 30,
+    learning_amount: 10,
+    like: 10,
+    media:
+      "https://inybkzznasdhmswsixhd.supabase.co/storage/v1/object/public/posts/thanhdung0207/6642dc59-5683-eb27-e972-91887280dc03/lno3ijyx",
+  },
+  {
+    id: "1234567saaa",
+    avatar:
+      "https://inybkzznasdhmswsixhd.supabase.co/storage/v1/object/public/images/cabbee6b-0cb1-4e2a-a944-f4a4190f6926/profile-lohyuemq",
+    name: "LostArrows27",
+    time: new Date(),
+    document: {
+      name: "Kaiwa N0",
+      unit: "Page",
+    },
+    learning_duration: 30,
+    learning_amount: 10,
+    like: 10,
+    media:
+      "https://inybkzznasdhmswsixhd.supabase.co/storage/v1/object/public/posts/thanhdung0207/6642dc59-5683-eb27-e972-91887280dc03/lno3ijyx",
+  },
 ];
