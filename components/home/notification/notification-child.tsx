@@ -69,7 +69,7 @@ const NotificationChild = (props: ChildProps) => {
           fontSize={"$2"}
           color={props.is_readed ? "$gray9Light" : "$gray2Light"}
         >
-          {formatDistanceToNow(new Date(props.created_at))}
+          {formatDistanceToNow(new Date(props.created_at))} ago
         </Text>
       </View>
       <View className="center mr-1">
