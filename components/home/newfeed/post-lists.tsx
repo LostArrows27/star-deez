@@ -13,7 +13,13 @@ import { cn } from "@/lib/utils";
 
 const MemoizedPostItem = memo(PostItem);
 
-const renderItem = ({ item }: { item: StudyRecord }) => (
+const renderItem = ({
+  item,
+  scrolling,
+}: {
+  item: StudyRecord;
+  scrolling: boolean;
+}) => (
   <MemoizedPostItem
     id={item.id}
     profile_avatar={item.profiles.avatar!}
@@ -26,7 +32,9 @@ const renderItem = ({ item }: { item: StudyRecord }) => (
     document_cover={item.document.cover!}
     duration={item.duration}
     begin_at={item.begin_at}
+    scrolling={scrolling}
     end_at={item.end_at}
+    comments={item.comments[0].count}
     created_at={item.created_at}
     likes={item.likes[0].count}
   />
@@ -43,7 +51,7 @@ const PostLists = (props: {
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-
+  const [scrolling, setScrolling] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   // const [following, setFollowing] = useState<string[]>([]);
@@ -125,9 +133,6 @@ const PostLists = (props: {
     setReload(false);
   }, [userDetails?.id]);
 
-  // useRef to see re-redner time
-  const renderCount = useRef(0);
-
   return (
     <View className="items-center w-full h-full bg-white">
       {initialLoad ? (
@@ -136,9 +141,12 @@ const PostLists = (props: {
         </View>
       ) : posts.length > 0 ? (
         <FlatList
+          nestedScrollEnabled={true}
           className="h-full"
           initialNumToRender={3}
           scrollEnabled={posts.length > 1}
+          onScrollBeginDrag={() => setScrolling(true)}
+          onScrollEndDrag={() => setScrolling(false)}
           showsVerticalScrollIndicator={false}
           onEndReached={loadMorePosts}
           refreshControl={
@@ -153,7 +161,7 @@ const PostLists = (props: {
           updateCellsBatchingPeriod={30}
           removeClippedSubviews={true}
           keyExtractor={(item) => item.id}
-          renderItem={renderItem}
+          renderItem={(item) => renderItem({ ...item, scrolling })}
           ListFooterComponent={() => {
             return (
               <>

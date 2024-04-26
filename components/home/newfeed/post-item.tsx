@@ -20,6 +20,7 @@ export type PostItemProps = {
   profile_avatar: string;
   comment: string;
   image: string;
+  scrolling: boolean;
   document_title: string;
   document_unit_name: string;
   document_cover: string;
@@ -27,13 +28,18 @@ export type PostItemProps = {
   begin_at: number;
   end_at: number;
   created_at: string;
+  comments: number;
   likes: number;
 };
 
 const PostItem = (data: PostItemProps) => {
   return (
     <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
+      background={
+        !data.scrolling
+          ? TouchableNativeFeedback.Ripple("#d7d7d7", false)
+          : TouchableNativeFeedback.Ripple("transparent", false)
+      }
       onPress={() => {
         router.push(`/(modal)/study-record/${data.id}`);
       }}
@@ -109,9 +115,13 @@ const PostItem = (data: PostItemProps) => {
         </View>
         <View className="flex-row pb-1 pl-16 mt-4">
           <View className="flex-row items-center gap-2">
-            <MessageSquare color={"$gray8"} className=" rotate-180" size={24} />
+            <MessageSquare
+              color={"$color8"}
+              className=" rotate-180"
+              size={24}
+            />
             <StyledText color={"$gray8"} fontSize={"$4"}>
-              Comment
+              {data.comments > 0 ? data.comments : "Comment"}
             </StyledText>
           </View>
           <LikeButton likes={data.likes} study_record_id={data.id} />

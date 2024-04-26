@@ -22,6 +22,7 @@ export type StudyRecord =
     likes: { count: number }[];
     profiles: Profile;
     document: DocumentFull;
+    comments: { count: number }[];
   };
 
 export type SearchHistory =
@@ -33,3 +34,8 @@ export type Notification =
       avatar: string;
     };
   };
+
+export type Comment = Database["public"]["Tables"]["comments"]["Row"] & {
+  profiles: Profile;
+  likes: { count: number }[];
+};
