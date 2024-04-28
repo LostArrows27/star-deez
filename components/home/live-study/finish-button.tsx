@@ -1,19 +1,53 @@
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useParticipantsList } from "@/hooks/home/live-participants/useParticipantsList";
 import { useClockTimer } from "@/hooks/home/live-study/useManageStudyClock";
-import { Check, RotateCcw } from "@tamagui/lucide-icons";
+import { Check } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import { Button, XStack, YStack } from "tamagui";
 import { AlertDialog } from "tamagui";
 const FinishButton = () => {
   const { stop, start, time, reset } = useClockTimer();
+  const room = useParticipantsList((state) => state.room);
+  const { userDetails } = useAuth();
 
   return (
     <AlertDialog
       onOpenChange={(open) => {
+        let userData = {
+          id: userDetails!.id,
+          avatar: userDetails!.avatar,
+          name: userDetails!.full_name,
+        };
+
         if (open) {
+          room?.track(
+            {
+              ...userData,
+              isRunning: false,
+              studyTime: 0,
+            },
+            {
+              presence: {
+                key: userDetails!.id,
+              },
+            }
+          );
           return stop();
         }
 
         if (time !== 0) {
+          room?.track(
+            {
+              ...userData,
+              isRunning: true,
+              studyTime: time,
+            },
+            {
+              presence: {
+                key: userDetails!.id,
+              },
+            }
+          );
           return start();
         }
       }}

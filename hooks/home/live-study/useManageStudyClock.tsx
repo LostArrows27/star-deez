@@ -23,14 +23,13 @@ const useManageStudyClock = create<ClockState>((set, get) => ({
     set({ isRunning: false });
   },
   reset: () => {
-    set({ time: 0, timeString: "00:00:00" });
+    set({ isRunning: false, time: 0, timeString: "00:00:00" });
   },
   setTime: (time) => {
     set({ time, timeString: secondsToHMS(time) });
   },
 }));
 
-// Using an effect to handle the interval and time updates
 export const useClockTimer = () => {
   const { isRunning, time, setTime } = useManageStudyClock();
 

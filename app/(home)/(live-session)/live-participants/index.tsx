@@ -1,22 +1,24 @@
 import Participant from "@/components/home/live-participants/participant";
-import { postData } from "@/constants/Post";
-import useUserID from "@/hooks/auth/useUserID";
 import { View, Text, FlatList } from "react-native";
 import { Image } from "expo-image";
 import { Circle, H3 } from "tamagui";
 import StyledText from "@/components/styled-text";
 import { useParticipantsList } from "@/hooks/home/live-participants/useParticipantsList";
-import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
 
 const renderParticipant = ({ item, index }: { item: any; index: number }) => {
-  return <Participant avatar={item.avatar} name={item.name} id={item.id} />;
+  return (
+    <Participant
+      isRunning={item.isRunning}
+      avatar={item.avatar}
+      name={item.name}
+      id={item.id}
+      studyTime={item?.studyTime}
+    />
+  );
 };
 
 const ParticipantsList = () => {
-  const id = useUserID();
-
-  const { participants } = useParticipantsList();
+  const participants = useParticipantsList((state) => state.participants);
 
   return (
     <View className="w-full h-full">
@@ -34,9 +36,11 @@ const ParticipantsList = () => {
               gap: 30,
             }}
             className="h-full"
-            initialNumToRender={12}
+            initialNumToRender={
+              participants.length > 12 ? 12 : participants.length
+            }
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => item.id}
             numColumns={3}
             data={participants}
             renderItem={renderParticipant}

@@ -1,9 +1,15 @@
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useParticipantsList } from "@/hooks/home/live-participants/useParticipantsList";
 import { useClockTimer } from "@/hooks/home/live-study/useManageStudyClock";
 import { RotateCcw } from "@tamagui/lucide-icons";
 import { Button, XStack, YStack } from "tamagui";
 import { AlertDialog } from "tamagui";
 const ResetButton = () => {
   const { reset } = useClockTimer();
+
+  const { room } = useParticipantsList();
+
+  const { userDetails } = useAuth();
 
   return (
     <AlertDialog>
@@ -48,6 +54,20 @@ const ResetButton = () => {
               <AlertDialog.Action asChild>
                 <Button
                   onPress={() => {
+                    room?.track(
+                      {
+                        id: userDetails!.id,
+                        avatar: userDetails!.avatar,
+                        name: userDetails!.full_name,
+                        studyTime: 0,
+                        isRunning: false,
+                      },
+                      {
+                        presence: {
+                          key: userDetails!.id,
+                        },
+                      }
+                    );
                     reset();
                   }}
                   theme="active"
