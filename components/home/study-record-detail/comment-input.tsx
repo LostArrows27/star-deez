@@ -22,11 +22,18 @@ import { useStudyRecordDetails } from "@/hooks/modal/study-record/useStudyRecord
 import { useCommentControl } from "@/hooks/modal/study-record/useCommentControls";
 export default function CommentInput({
   reply_comment_id,
+  profiles,
 }: {
   reply_comment_id?: string;
+  profiles?: Profile;
 }) {
   const { id } = useGlobalSearchParams();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(() => {
+    if (profiles) {
+      return `@[${profiles.first_name} ${profiles.last_name}](${profiles.id})`;
+    }
+    return "";
+  });
   const ref = useRef();
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const { userDetails } = useAuth();
