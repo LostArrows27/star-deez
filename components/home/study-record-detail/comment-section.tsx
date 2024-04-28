@@ -61,7 +61,7 @@ function CommentSection() {
     <View h={comments.length > 0 ? "fit" : "$20"} flex={1} mt="$3">
       {!initialLoading ? (
         <FlatList
-          className="h-full gap-4 "
+          className=" h-full gap-4"
           initialNumToRender={1}
           scrollEnabled={comments.length > 2}
           // onScrollBeginDrag={() => setScrolling(true)}

@@ -59,8 +59,7 @@ const LiveStudyPage = () => {
 
           setParticipants(usersList);
         })
-        .subscribe()
-        .track(userStatus);
+        .subscribe();
 
       setRoom(room);
 

@@ -7,7 +7,7 @@ import { AlertDialog } from "tamagui";
 const ResetButton = () => {
   const { reset } = useClockTimer();
 
-  const { room } = useParticipantsList();
+  const room = useParticipantsList((state) => state.room);
 
   const { userDetails } = useAuth();
 
@@ -54,20 +54,11 @@ const ResetButton = () => {
               <AlertDialog.Action asChild>
                 <Button
                   onPress={() => {
-                    room?.track(
-                      {
-                        id: userDetails!.id,
-                        avatar: userDetails!.avatar,
-                        name: userDetails!.full_name,
-                        studyTime: 0,
-                        isRunning: false,
+                    room?.untrack({
+                      presence: {
+                        key: userDetails!.id,
                       },
-                      {
-                        presence: {
-                          key: userDetails!.id,
-                        },
-                      }
-                    );
+                    });
                     reset();
                   }}
                   theme="active"

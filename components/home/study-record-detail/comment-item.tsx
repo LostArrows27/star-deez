@@ -69,7 +69,6 @@ function CommentItem({
 
   const onTextLayout = useCallback((e: any) => {
     setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 4 lines or not
-    // console.log(e.nativeEvent);
   }, []);
 
   useEffect(() => {
@@ -108,7 +107,6 @@ function CommentItem({
     table: "comments",
     filter: `reply_comment_id=eq.${id}`,
     onInsert: async (payload) => {
-      // console.log(userDetails);
       const newComment = {
         ...payload.new,
         profiles: {
@@ -131,7 +129,7 @@ function CommentItem({
     },
   });
   return (
-    <View className="w-full ">
+    <View className=" w-full">
       <View className="flex-row items-start">
         <Avatar
           style={{
@@ -207,12 +205,14 @@ function CommentItem({
             </StyledPressable>
           )}
           {openReply && (
-            <View className="mt-4 gap-4">
+            <View className="gap-4 mt-4">
               {!loading ? (
                 subComments.length > 0 &&
-                subComments.map((item) => <CommentItem {...item} />)
+                subComments.map((item) => (
+                  <CommentItem key={item.id} {...item} />
+                ))
               ) : (
-                <View className="items-center justify-center p-2  ">
+                <View className=" items-center justify-center p-2">
                   <Spinner scale={1} size="large" color="$green10" />
                 </View>
               )}

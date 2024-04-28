@@ -66,7 +66,6 @@ export default function CommentInput({
     if (keyword == null) {
       return null;
     }
-    console.log("renderSuggestions", keyword);
 
     return (
       <View

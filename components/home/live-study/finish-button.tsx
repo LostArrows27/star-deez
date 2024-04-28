@@ -20,18 +20,11 @@ const FinishButton = () => {
         };
 
         if (open) {
-          room?.track(
-            {
-              ...userData,
-              isRunning: false,
-              studyTime: 0,
+          room?.untrack({
+            presence: {
+              key: userDetails!.id,
             },
-            {
-              presence: {
-                key: userDetails!.id,
-              },
-            }
-          );
+          });
           return stop();
         }
 
