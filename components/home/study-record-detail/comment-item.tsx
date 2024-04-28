@@ -12,6 +12,7 @@ import LikeComment from "./like-comment";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { Reply } from "@tamagui/lucide-icons";
 dayjs.extend(updateLocale);
 dayjs.extend(relativeTime);
 dayjs.updateLocale("en", {
@@ -151,7 +152,7 @@ function CommentItem({
           <Avatar.Fallback bc="$green9" />
         </Avatar>
         <View className="flex-1">
-          <Text color={"$color8"} fontWeight={"700"}>
+          <Text color={"$color9"} fontWeight={"700"}>
             {profiles.first_name} {profiles.last_name}
           </Text>
 
@@ -173,26 +174,38 @@ function CommentItem({
               </Text>
             </TouchableOpacity>
           )}
-          {/* <CommentOptions
-            likes={likes[0].count}
-            created_at={created_at}
-            comment_id={id}
-            openReply={openReply}
-            setOpenReply={setOpenReply}
-          /> */}
+
           <View className="flex-row gap-4">
-            <Text color={"$color7"}>{dayjs(created_at).fromNow(true)}</Text>
+            <Text color={"$gray9"}>{dayjs(created_at).fromNow(true)}</Text>
             <LikeComment comment_id={id} likes={likes[0].count} />
 
-            <StyledPressable onPress={() => setOpenReply((pre) => !pre)}>
-              <Text
-                color={openReply ? "$color8" : "$color7"}
-                fontWeight={openReply ? "800" : "normal"}
-              >
-                {countSubComments > 0 ? countSubComments : ""} Reply
+            {!reply_comment_id && (
+              <StyledPressable onPress={() => setOpenReply((pre) => !pre)}>
+                <Text
+                  color={"$gray9"}
+                  fontWeight={openReply ? "800" : "normal"}
+                >
+                  {openReply ? "Close" : "Reply"}
+                </Text>
+              </StyledPressable>
+            )}
+          </View>
+          {!openReply && countSubComments > 0 && (
+            <StyledPressable
+              onPress={() => setOpenReply((pre) => !pre)}
+              className="flex-row gap-2 mt-2"
+            >
+              <Reply
+                size={"$1"}
+                color={"$gray9"}
+                fontWeight={"bold"}
+                rotate="180deg"
+              />
+              <Text color={"$gray9"} fontWeight={"bold"}>
+                See {countSubComments} replies
               </Text>
             </StyledPressable>
-          </View>
+          )}
           {openReply && (
             <View className="mt-4 gap-4">
               {!loading ? (
@@ -203,7 +216,7 @@ function CommentItem({
                   <Spinner scale={1} size="large" color="$green10" />
                 </View>
               )}
-              <CommentInput reply_comment_id={id} />
+              <CommentInput reply_comment_id={id} profiles={profiles} />
             </View>
           )}
         </View>

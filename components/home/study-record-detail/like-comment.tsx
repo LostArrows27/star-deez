@@ -1,9 +1,10 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/auth/useAuth";
 import StyledPressable from "@/components/styled-pressable";
 import { Text } from "tamagui";
+import { Heart } from "@tamagui/lucide-icons";
 
 export default function LikeComment({
   comment_id,
@@ -57,13 +58,33 @@ export default function LikeComment({
     }
   };
   return (
-    <StyledPressable onPress={handleLike}>
-      <Text
-        color={liked ? "$color8" : "$color7"}
-        fontWeight={liked ? "800" : "normal"}
-      >
-        {count !== 0 ? count : ""} Like
-      </Text>
-    </StyledPressable>
+    <>
+      <StyledPressable onPress={handleLike}>
+        <Text
+          color={liked ? "$red9" : "$gray9"}
+          fontWeight={liked ? "800" : "normal"}
+        >
+          {liked ? "Liked" : "Like"}
+        </Text>
+      </StyledPressable>
+
+      <View className="right-0 absolute items-center  flex-row gap-2">
+        {count > 0 && (
+          <Text
+            color={liked ? "$black " : "$gray9"}
+            fontWeight={liked ? "800" : "normal"}
+          >
+            {count}
+          </Text>
+        )}
+        <Pressable onPress={handleLike} hitSlop={20}>
+          <Heart
+            size={"$1"}
+            fill={liked ? "red" : "transparent"}
+            color={liked ? "$red9" : "$gray9"}
+          />
+        </Pressable>
+      </View>
+    </>
   );
 }
