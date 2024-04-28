@@ -41,7 +41,7 @@ const FormatedTime = ({ timeString }: { timeString: string }) => {
 };
 
 const LiveClock = () => {
-  const { start, stop, timeString, reset } = useClockTimer();
+  const timeString = useClockTimer().timeString;
 
   return (
     <View className="items-center mt-20">
