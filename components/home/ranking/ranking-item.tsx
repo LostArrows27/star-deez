@@ -42,13 +42,13 @@ const RankingItem = ({
     <View
       className={cn("flex-row  py-2  h-fit justify-between gap-4 items-center")}
     >
-      <View className="rounded-full border w-12 h-12  justify-center items-center border-green-400 ">
-        <Text className="font-bold text-2xl text-green-400 ">{ranking}</Text>
+      <View className=" items-center justify-center w-12 h-12 border border-green-400 rounded-full">
+        <Text className=" text-2xl font-bold text-green-400">{ranking}</Text>
       </View>
-      <View className="flex-1  max-h-5 justify-center gap-2">
+      <View className="max-h-5 justify-center flex-1 gap-2">
         <View className="flex-row justify-between">
           <Text className="font-bold">{name}</Text>
-          <Text>{convertMinute(time, false, true)}</Text>
+          <Text>{convertMinute(time, true, false)}</Text>
         </View>
         <Progress size={"$4"} value={value}>
           <Progress.Indicator backgroundColor={"$color8"} animation="slow" />

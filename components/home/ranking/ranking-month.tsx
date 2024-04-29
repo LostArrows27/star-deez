@@ -65,13 +65,24 @@ export default function RankingMonth() {
     (async () => {
       if (!userDetails?.id) return;
       setLoading(true);
-      const startDate = formatDateForQuery(startOfMonth(selectedDate));
-      const endDate = formatDateForQuery(endOfMonth(selectedDate));
+      const startMonth = formatDateForQuery(startOfMonth(selectedDate));
+      const endMonth = formatDateForQuery(endOfMonth(selectedDate));
+
+      const startDate = new Date(startMonth);
+
+      const endDate = new Date(endMonth);
+
+      startDate.setDate(startDate.getDate());
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate.setDate(endDate.getDate());
+      endDate.setHours(23, 59, 59, 999);
+
       const { data, error } = await supabase
         .from("study_records")
         .select("duration, profiles(first_name, last_name, avatar,id),id")
-        .gte("time", startDate + "T00:00:00+00:00") // Start of the day in UTC
-        .lt("time", endDate + "T23:59:59+00:00");
+        .gte("time", startDate.toISOString()) // Start of the day in UTC
+        .lt("time", endDate.toISOString());
 
       if (error || !data) return console.log(error);
 
@@ -120,7 +131,7 @@ export default function RankingMonth() {
     })();
   }, [selectedDate]);
   return (
-    <View className="h-full bg-white p-5">
+    <View className="h-full p-5 bg-white">
       <MonthCalendarHorizontal
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
@@ -132,16 +143,16 @@ export default function RankingMonth() {
           ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
-          className="h-full flex-1"
+          className="flex-1 h-full"
           onScroll={handleScroll}
         >
           <TopTierLearners learners={ranking} />
           <Separator borderWidth={"$0.5"} backgroundColor={"$color7"} />
           <View className="flex-row gap-4 mt-3">
-            <Text className="font-semibold ">Total: {ranking.length}</Text>
-            <Text className="font-semibold ">My rank: {myRank.rank}</Text>
+            <Text className=" font-semibold">Total: {ranking.length}</Text>
+            <Text className=" font-semibold">My rank: {myRank.rank}</Text>
           </View>
-          <View className=" h-fit  my-5 items-center">
+          <View className=" h-fit items-center my-5">
             {ranking.length > 0 ? (
               ranking.map((item, index) => {
                 return (
@@ -167,7 +178,6 @@ export default function RankingMonth() {
           onPress={() => {
             const y = itemHeight * (myRank.rank + 1) - 290; // Calculate y position of sticky rank
             scrollViewRef.current?.scrollTo({ y, animated: true });
-            console.log(y, "y");
           }}
           style={{
             position: "absolute",
