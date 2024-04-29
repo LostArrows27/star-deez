@@ -5,7 +5,6 @@ import { useGetInitData } from "@/hooks/useGetInitData";
 import { supabase } from "@/lib/supabase";
 import { useCallback } from "react";
 import { Calendar } from "react-native-calendars";
-import { MarkedDates } from "react-native-calendars/src/types";
 import { H4, Separator } from "tamagui";
 import { useState } from "react";
 import { convertDurationToColor } from "@/utils/convertDurationToColor";
@@ -13,7 +12,7 @@ import { View } from "react-native";
 import { useDateStats } from "@/hooks/home/statistic/useDateStats";
 import DateStats from "./date-stats";
 import { format } from "date-fns";
-import { green } from "@/constants/TailwindColor";
+import StatsNumberList from "./stats-number-list";
 
 const CalendarStats = () => {
   const { data, setData } = useCalendarStats();
@@ -61,7 +60,8 @@ const CalendarStats = () => {
 
   return (
     <View>
-      <H4 p={"$3"}>Calendar</H4>
+      <H4 p={"$3"}>Calendar stats</H4>
+      <StatsNumberList data={data} />
       <Calendar
         style={{
           height: 350,
