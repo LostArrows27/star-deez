@@ -1,11 +1,13 @@
+import CalendarStats from "@/components/home/statistic/calendar-stats";
 import { Stack } from "expo-router";
-import { View, Text } from "react-native";
+import { ScrollView } from "react-native";
 
 const Page = () => {
   return (
-    <View>
+    <ScrollView className="w-full">
       <Stack.Screen />
-    </View>
+      <CalendarStats />
+    </ScrollView>
   );
 };
 

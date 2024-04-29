@@ -52,6 +52,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.51.3",
     "react-native": "0.73.6",
+    "react-native-calendars": "^1.1304.1",
     "react-native-controlled-mentions": "^2.2.5",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.14.0",
