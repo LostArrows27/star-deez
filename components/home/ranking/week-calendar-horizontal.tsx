@@ -34,7 +34,7 @@ export default function WeekCalendarHorizontals({
   };
 
   return (
-    <View className="flex-row w-full justify-between items-center bg-gray-200 py-2 px-4 rounded-lg">
+    <View className="flex-row w-full justify-between items-center bg-green-100 py-2 px-4 rounded-lg">
       <View className="rounded-full w-fit overflow-hidden items-center justify-center">
         <StyledPressable
           style={{
@@ -47,7 +47,7 @@ export default function WeekCalendarHorizontals({
         </StyledPressable>
       </View>
       <Text className=" text-xl">
-        {formatDate(firstDay(), "MMM dd")}  -  {formatDate(lastDay(), "MMM dd")}
+        {formatDate(firstDay(), "MMM dd")} - {formatDate(lastDay(), "MMM dd")}
       </Text>
       <View className="rounded-full w-fit overflow-hidden items-center justify-center">
         <StyledPressable

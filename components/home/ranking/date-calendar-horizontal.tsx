@@ -19,7 +19,7 @@ export default function DateCalendarHorizontal({
     setSelectedDate((prev) => new Date(prev.getTime() + 86400000));
   };
   return (
-    <View className="flex-row w-full justify-between items-center bg-gray-200 py-2 px-4 rounded-lg">
+    <View className="flex-row w-full justify-between items-center bg-green-100 py-2 px-4 rounded-lg">
       <View className="rounded-full w-fit overflow-hidden items-center justify-center">
         <StyledPressable
           style={{
