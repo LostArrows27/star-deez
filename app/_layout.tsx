@@ -85,11 +85,7 @@ function RootLayoutNav() {
                       options={{ headerShown: false }}
                     />
                     <Stack.Screen
-                      name="(modal)/tracking/create-study-record"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="(modal)/study-record/[id]"
+                      name="(modal)/ranking"
                       options={{ headerShown: false }}
                     />
                   </Stack>

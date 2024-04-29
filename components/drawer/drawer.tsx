@@ -5,6 +5,7 @@ import {
   AntDesign,
   MaterialIcons,
   Ionicons,
+  FontAwesome6,
 } from "@expo/vector-icons";
 import { Image, Separator } from "tamagui";
 import { supabase } from "@/lib/supabase";
@@ -129,6 +130,27 @@ export const DrawerContainer = (props: any) => {
           onPress={() => {
             if (pathname != `/live-study` && userDetails?.id) {
               router.push(`/live-study/`);
+            }
+          }}
+        />
+        <DrawerItem
+          icon={({ color, size }) => (
+            <FontAwesome6 name="ranking-star" size={20} color="black" />
+          )}
+          label={"Ranking"}
+          labelStyle={[
+            {
+              color: pathname.startsWith(`/ranking`) ? "#059669" : "#000",
+            },
+          ]}
+          style={{
+            backgroundColor: pathname.startsWith(`/ranking`)
+              ? "#dcfce7"
+              : "#fff",
+          }}
+          onPress={() => {
+            if (pathname != `/ranking` && userDetails?.id) {
+              router.push(`/ranking/day`);
             }
           }}
         />
