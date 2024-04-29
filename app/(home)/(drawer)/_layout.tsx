@@ -92,7 +92,6 @@ export default function TabLayout() {
         name="newfeed"
         options={{
           title: "Home",
-
           lazy: false,
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
