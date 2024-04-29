@@ -28,13 +28,13 @@ function CommentSection() {
       .eq("study_record_id", details.id)
       .is("reply_comment_id", null)
       .order("created_at", { ascending: false })
-      .range(comments.length, comments.length + 3);
+      .range(comments.length, comments.length + 4);
 
     if (error || !data) return console.log(error);
     const newComments = data as Comment[];
     setComments([...comments, ...newComments]);
 
-    if (data.length < 4) setHasMore(false);
+    if (data.length < 5) setHasMore(false);
     setLoading(false);
   };
 
@@ -48,7 +48,7 @@ function CommentSection() {
         .eq("study_record_id", details.id)
         .is("reply_comment_id", null)
         .order("created_at", { ascending: false })
-        .limit(4);
+        .limit(5);
 
       if (error || !data) return console.log(error);
 

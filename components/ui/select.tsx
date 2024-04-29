@@ -16,6 +16,8 @@ export function SelectTama(
     items: { value: string; label: string }[];
     setVal: React.Dispatch<React.SetStateAction<string>>;
     val: string;
+    placeholder?: string;
+    label?: string;
   }
 ) {
   return (
@@ -26,7 +28,10 @@ export function SelectTama(
       {...props}
     >
       <Select.Trigger width={"100%"} iconAfter={ChevronDown}>
-        <Select.Value placeholder="Gender" color={"$color10"} />
+        <Select.Value
+          placeholder={props.placeholder ? props.placeholder : "Gender"}
+          color={"$color10"}
+        />
       </Select.Trigger>
 
       <Adapt when="sm" platform="touch">
@@ -78,7 +83,7 @@ export function SelectTama(
           height={"50%"}
         >
           <Select.Group>
-            <Select.Label>Gender</Select.Label>
+            <Select.Label>{props.label ? props.label : "Gender"}</Select.Label>
             {/* for longer lists memoizing these is useful */}
             {useMemo(
               () =>
