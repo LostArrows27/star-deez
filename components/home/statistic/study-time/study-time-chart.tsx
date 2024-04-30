@@ -16,6 +16,8 @@ import {
 import { Text } from "react-native";
 import Loading from "../../newfeed/loading";
 import StudyTimeTotal from "./study-time-total";
+import StyledPressable from "@/components/styled-pressable";
+import { router } from "expo-router";
 
 type ChartData = {
   [key: string]: any;
@@ -53,22 +55,22 @@ const StudyTimeChart = () => {
       const endOfCurrentWeek = new Date();
       const startOfCurrentWeek = subWeeks(endOfCurrentWeek, 1);
 
-      const allKeys = new Set(
-        records
-          .map((record) => record.document?.title)
-          .filter((title): title is string => !!title)
-      );
-
       const filteredRecords = records.filter((record) =>
-        isWithinInterval(parseISO(record.created_at), {
+        isWithinInterval(parseISO(record.time!), {
           start: startOfCurrentWeek,
           end: endOfCurrentWeek,
         })
       );
 
+      const allKeys = new Set(
+        filteredRecords
+          .map((record) => record.document?.title)
+          .filter((title): title is string => !!title)
+      );
+
       const groupedByDate = filteredRecords.reduce(
         (acc: Record<string, ChartData>, record) => {
-          const dateStr = format(parseISO(record.created_at), "yyyy-MM-dd");
+          const dateStr = format(parseISO(record.time!), "yyyy-MM-dd");
           if (!acc[dateStr]) {
             acc[dateStr] = { date: dateStr, totalDuration: 0 };
             allKeys.forEach((key) => {
@@ -84,6 +86,8 @@ const StudyTimeChart = () => {
         },
         {}
       );
+
+      console.log(groupedByDate);
 
       const chartData = [];
       const uniqueKeys = Array.from(allKeys);
@@ -127,9 +131,17 @@ const StudyTimeChart = () => {
           <StudyTimeTotal />
 
           <View className="border-emerald-500 rounded-2xl py-2 border">
-            <View className="w-full px-3 h-[250px]">
+            <StyledPressable
+              onPress={() => {
+                router.push({
+                  pathname: "/study-time/day",
+                });
+              }}
+              className="w-full px-3 h-[250px]"
+            >
               <View className="h-[250px] flex-1 w-full flex-row items-start">
                 <YAxis
+                  numberOfTicks={6}
                   data={data}
                   svg={{
                     fill: "gray",
@@ -169,7 +181,7 @@ const StudyTimeChart = () => {
                   svg={{ fontSize: 10, fill: "black", fontFamily: "Inter" }}
                 />
               </View>
-            </View>
+            </StyledPressable>
             <View className="gap-4 px-[44px] mt-5">
               {keys.map((value, index) => (
                 <View key={index} className="flex-row gap-6 py-2">
