@@ -3,7 +3,7 @@ import StatsNumberChild from "./stats-number-child";
 import { useEffect, useState } from "react";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { MarkedDates } from "react-native-calendars/src/types";
-import { CalendarDataProps } from "@/hooks/home/statistic/useCalendarStats";
+import { CalendarDataProps } from "@/hooks/home/statistic/calendar-stats/useCalendarStats";
 
 type StatsNumberListProps = {
   [key: string]: number;

@@ -1,5 +1,5 @@
 import StyledText from "@/components/styled-text";
-import { RecordProps } from "@/hooks/home/statistic/useDateStats";
+import { RecordProps } from "@/hooks/home/statistic/calendar-stats/useDateStats";
 import formatTime from "@/utils/format-time";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { format } from "date-fns";

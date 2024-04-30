@@ -1,16 +1,16 @@
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import {
   Feather,
   AntDesign,
   MaterialIcons,
   Ionicons,
-  FontAwesome6,
 } from "@expo/vector-icons";
 import { Image, Separator } from "tamagui";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { router, usePathname } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const DrawerContainer = (props: any) => {
   const pathname = usePathname();
@@ -135,7 +135,11 @@ export const DrawerContainer = (props: any) => {
         />
         <DrawerItem
           icon={({ color, size }) => (
-            <FontAwesome6 name="ranking-star" size={20} color="black" />
+            <MaterialCommunityIcons
+              name="medal-outline"
+              size={size}
+              color="black"
+            />
           )}
           label={"Ranking"}
           labelStyle={[

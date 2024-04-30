@@ -1,6 +1,6 @@
 import { primaryColor } from "@/constants/Colors";
 import useUserID from "@/hooks/auth/useUserID";
-import { useCalendarStats } from "@/hooks/home/statistic/useCalendarStats";
+import { useCalendarStats } from "@/hooks/home/statistic/calendar-stats/useCalendarStats";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { supabase } from "@/lib/supabase";
 import { useCallback } from "react";
@@ -9,7 +9,7 @@ import { H4, Separator } from "tamagui";
 import { useState } from "react";
 import { convertDurationToColor } from "@/utils/convertDurationToColor";
 import { View } from "react-native";
-import { useDateStats } from "@/hooks/home/statistic/useDateStats";
+import { useDateStats } from "@/hooks/home/statistic/calendar-stats/useDateStats";
 import DateStats from "./date-stats";
 import { format } from "date-fns";
 import StatsNumberList from "./stats-number-list";

@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { ScrollView, View } from "react-native";
-import CalendarStats from "@/components/home/statistic/calendar-stats";
+import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-stats";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import Loading from "@/components/home/newfeed/loading";
@@ -22,7 +22,9 @@ const Page = () => {
     <ScrollView showsVerticalScrollIndicator={false} className="w-full">
       <Stack.Screen />
       {show ? (
-        <CalendarStats />
+        <>
+          <CalendarStats />
+        </>
       ) : (
         <View className="mt-20">
           <Loading />

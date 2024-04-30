@@ -1,6 +1,9 @@
 import StyledText from "@/components/styled-text";
 import useUserID from "@/hooks/auth/useUserID";
-import { RecordProps, useDateStats } from "@/hooks/home/statistic/useDateStats";
+import {
+  RecordProps,
+  useDateStats,
+} from "@/hooks/home/statistic/calendar-stats/useDateStats";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { supabase } from "@/lib/supabase";
 import formatTime from "@/utils/format-time";
