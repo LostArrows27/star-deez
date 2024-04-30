@@ -15,6 +15,7 @@ import {
 } from "date-fns";
 import { Text } from "react-native";
 import Loading from "../../newfeed/loading";
+import StudyTimeTotal from "./study-time-total";
 
 type ChartData = {
   [key: string]: any;
@@ -122,62 +123,68 @@ const StudyTimeChart = () => {
       {loading ? (
         <Loading />
       ) : (
-        <>
-          <View className="w-full px-3 h-[250px]">
-            <View className="h-[250px] flex-1 w-full flex-row items-start">
-              <YAxis
-                data={data}
-                svg={{
-                  fill: "gray",
-                  fontSize: 10,
-                  fontFamily: "Inter",
-                }}
-                style={{
-                  width: 40,
-                }}
-                yAccessor={({ item }: { item: any }) => item.totalDuration / 60}
-                formatLabel={(value) => `${value}h`}
-                contentInset={{ top: 20, bottom: 20 }}
-              />
-              <StackedBarChart
-                spacingInner={0.3}
-                spacingOuter={0.3}
-                style={{ flex: 1 }}
-                keys={keys}
-                colors={colors}
-                data={data}
-                showGrid={true}
-                contentInset={{ top: 20, bottom: 20 }}
-              >
-                <Grid />
-              </StackedBarChart>
-            </View>
-            <View className=" flex-row w-full pl-[40px]">
-              <XAxis
-                style={{ marginHorizontal: 0, flex: 1 }}
-                data={data}
-                formatLabel={(value, index) => {
-                  return format(parseISO(data[index].date), "dd/MM");
-                }}
-                contentInset={{ left: 20, right: 20 }}
-                svg={{ fontSize: 10, fill: "black", fontFamily: "Inter" }}
-              />
-            </View>
-          </View>
-          <View className="gap-4 px-[44px] mt-5">
-            {keys.map((value, index) => (
-              <View key={index} className="flex-row gap-6 py-2">
-                <View
-                  className="w-[16px] h-[16px] rounded-full"
-                  style={{ backgroundColor: colors[index] }}
-                ></View>
-                <Text numberOfLines={1}>{value}</Text>
+        <View className="px-3">
+          <StudyTimeTotal />
+
+          <View className="border-emerald-500 rounded-2xl py-2 border">
+            <View className="w-full px-3 h-[250px]">
+              <View className="h-[250px] flex-1 w-full flex-row items-start">
+                <YAxis
+                  data={data}
+                  svg={{
+                    fill: "gray",
+                    fontSize: 10,
+                    fontFamily: "Inter",
+                  }}
+                  style={{
+                    width: 40,
+                  }}
+                  yAccessor={({ item }: { item: any }) =>
+                    item.totalDuration / 60
+                  }
+                  formatLabel={(value) => `${value}h`}
+                  contentInset={{ top: 20, bottom: 20 }}
+                />
+                <StackedBarChart
+                  spacingInner={0.3}
+                  spacingOuter={0.3}
+                  style={{ flex: 1 }}
+                  keys={keys}
+                  colors={colors}
+                  data={data}
+                  showGrid={true}
+                  contentInset={{ top: 20, bottom: 20 }}
+                >
+                  <Grid />
+                </StackedBarChart>
               </View>
-            ))}
+              <View className=" flex-row w-full pl-[40px]">
+                <XAxis
+                  style={{ marginHorizontal: 0, flex: 1 }}
+                  data={data}
+                  formatLabel={(value, index) => {
+                    return format(parseISO(data[index].date), "dd/MM");
+                  }}
+                  contentInset={{ left: 20, right: 20 }}
+                  svg={{ fontSize: 10, fill: "black", fontFamily: "Inter" }}
+                />
+              </View>
+            </View>
+            <View className="gap-4 px-[44px] mt-5">
+              {keys.map((value, index) => (
+                <View key={index} className="flex-row gap-6 py-2">
+                  <View
+                    className="w-[16px] h-[16px] rounded-full"
+                    style={{ backgroundColor: colors[index] }}
+                  ></View>
+                  <Text numberOfLines={1}>{value}</Text>
+                </View>
+              ))}
+            </View>
           </View>
-        </>
+        </View>
       )}
-      <Separator mt="$4" />
+      <Separator mt="$6" />
     </View>
   );
 };
