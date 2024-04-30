@@ -4,7 +4,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import Loading from "@/components/home/newfeed/loading";
 import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-stats";
-import StudyTime from "@/components/home/statistic/study-time/study-time";
+import StudyTimeChart from "@/components/home/statistic/study-time/study-time-chart";
 
 const Page = () => {
   const [show, setShow] = useState(false);
@@ -24,7 +24,7 @@ const Page = () => {
       <Stack.Screen />
       {show ? (
         <>
-          <StudyTime />
+          <StudyTimeChart />
           <CalendarStats />
         </>
       ) : (
