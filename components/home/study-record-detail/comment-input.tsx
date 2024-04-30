@@ -1,7 +1,7 @@
 import { Pressable, Text } from "react-native";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, Ref, useEffect, useMemo, useRef, useState } from "react";
 import { Input, Spinner, View } from "tamagui";
-import { Plane, Send, Smile } from "@tamagui/lucide-icons";
+import { Plane, Send, Smile, X } from "@tamagui/lucide-icons";
 import {
   MentionInput,
   MentionSuggestionsProps,
@@ -20,34 +20,31 @@ import { useGlobalSearchParams } from "expo-router";
 import { useToastController } from "@tamagui/toast";
 import { useStudyRecordDetails } from "@/hooks/modal/study-record/useStudyRecordDetails";
 import { useCommentControl } from "@/hooks/modal/study-record/useCommentControls";
-export default function CommentInput({
-  reply_comment_id,
-  profiles,
-}: {
-  reply_comment_id?: string;
-  profiles?: Profile;
-}) {
+import { TextInput } from "react-native";
+import StyledPressable from "@/components/styled-pressable";
+export default function CommentInput() {
   const { id } = useGlobalSearchParams();
-  const [value, setValue] = useState(() => {
-    if (profiles) {
-      return `@[${profiles.first_name} ${profiles.last_name}](${profiles.id})`;
-    }
-    return "";
-  });
-  const ref = useRef();
+  const { replyComment, setInputRef, setReplyComment } = useCommentControl();
+  const [value, setValue] = useState("");
+  const ref = useRef<TextInput | null>(null);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const { userDetails } = useAuth();
   const { data: details } = useStudyRecordDetails();
   const { comments, setComments } = useCommentControl();
 
   useEffect(() => {
+    if (!replyComment) return;
+    setValue(
+      `@[${replyComment.last_name} ${replyComment.first_name}](${replyComment.profile_id}) `
+    );
+  }, [replyComment]);
+  useEffect(() => {
     (async () => {
       if (!userDetails?.id || !details) return;
       const { data: profiles, error } = await supabase
         .from("profiles")
         .select("id,first_name,last_name")
-        .neq("id", userDetails.id)
-        .neq("id", details.user_id);
+        .neq("id", userDetails.id);
       if (error || !profiles) return console.log(error);
 
       const tmp = profiles.map((profile) => ({
@@ -57,6 +54,11 @@ export default function CommentInput({
 
       setSuggestions(tmp);
     })();
+
+    return () => {
+      setReplyComment(null);
+      setInputRef(null);
+    };
   }, [userDetails?.id]);
 
   const renderSuggestions = ({
@@ -97,6 +99,11 @@ export default function CommentInput({
     );
   };
   const toast = useToastController();
+  useEffect(() => {
+    if (ref.current) {
+      setInputRef(ref);
+    }
+  }, [ref.current]);
   const handleComment = async () => {
     if (!value || !id || !userDetails?.id || !details) return;
     //extract mentions id from value
@@ -108,7 +115,7 @@ export default function CommentInput({
       .insert({
         content: value,
         study_record_id: id as string,
-        reply_comment_id: reply_comment_id || null,
+        reply_comment_id: replyComment?.id || null,
         user_id: userDetails.id,
       })
       .select("*,profiles(id,avatar,first_name,last_name),likes(count)")
@@ -120,10 +127,12 @@ export default function CommentInput({
       });
     }
 
-    const newComment = comments;
-    newComment.unshift(data as Comment);
+    if (!replyComment?.id) {
+      const newComment = comments;
+      newComment.unshift(data as Comment);
+      setComments(newComment);
+    }
 
-    setComments(newComment);
     //send notification to the user
 
     const mentions = value.match(mentionRegEx);
@@ -177,7 +186,26 @@ export default function CommentInput({
     }
   };
   return (
-    <View mt="$3">
+    <View pt="$3" borderTopWidth="$0.75" borderColor="$green7">
+      {replyComment && (
+        <View pb={"$3"} pos={"relative"}>
+          <Text className="text-gray-500">
+            Replying to{" "}
+            <Text className="text-black">
+              {replyComment.last_name + " " + replyComment.first_name}
+            </Text>
+          </Text>
+          <StyledPressable
+            style={{
+              position: "absolute",
+              right: 10,
+            }}
+            onPress={() => setReplyComment(null)}
+          >
+            <X size={"$1"} />
+          </StyledPressable>
+        </View>
+      )}
       <View
         width={"100%"}
         justifyContent="center"
@@ -190,6 +218,7 @@ export default function CommentInput({
         <MentionInput
           value={value}
           onChange={setValue}
+          inputRef={ref}
           placeholder="Type something..."
           containerStyle={{
             borderWidth: 1,
@@ -204,6 +233,7 @@ export default function CommentInput({
             {
               trigger: "@", // Should be a single character like '@' or '#'
               renderSuggestions,
+              isInsertSpaceAfterMention: true,
               textStyle: { fontWeight: "bold", color: "rgb(48, 164, 108)" }, // The mention style in the input
             },
           ]}

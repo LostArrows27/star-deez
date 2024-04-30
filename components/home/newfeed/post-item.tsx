@@ -53,7 +53,7 @@ const PostItem = (data: PostItemProps) => {
               <Avatar.Fallback bc="$green9" />
             </Avatar>
             <Text className="text-lg font-[Inter]">
-              {data.profile_first_name + " " + data.profile_last_name}
+              {data.profile_last_name + " " + data.profile_first_name}
             </Text>
           </View>
           <View className="items-end">
