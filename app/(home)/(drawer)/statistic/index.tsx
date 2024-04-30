@@ -1,9 +1,10 @@
 import { Stack } from "expo-router";
 import { ScrollView, View } from "react-native";
-import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-stats";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import Loading from "@/components/home/newfeed/loading";
+import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-stats";
+import StudyTime from "@/components/home/statistic/study-time/study-time";
 
 const Page = () => {
   const [show, setShow] = useState(false);
@@ -23,6 +24,7 @@ const Page = () => {
       <Stack.Screen />
       {show ? (
         <>
+          <StudyTime />
           <CalendarStats />
         </>
       ) : (

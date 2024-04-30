@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import StatsNumberList from "./stats-number-list";
 
 const CalendarStats = () => {
-  const { data, setData } = useCalendarStats();
+  const { data, setData, setRecords } = useCalendarStats();
   const setDate = useDateStats((state) => state.setDate);
   const [loading, setLoading] = useState(true);
 
@@ -25,10 +25,12 @@ const CalendarStats = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("study_records")
-      .select("created_at, time, duration, document(title)")
+      .select("id, created_at, time, duration, document(title)")
       .eq("user_id", userID);
 
     if (!error) {
+      setRecords(data);
+
       const markedDates = data.reduce<any>((acc, cur) => {
         let duration = 0;
         if (
@@ -60,7 +62,7 @@ const CalendarStats = () => {
 
   return (
     <View>
-      <H4 p={"$3"}>Calendar stats</H4>
+      <H4 p={"$3"}>Calendar Stats</H4>
       <StatsNumberList data={data} />
       <Calendar
         style={{
