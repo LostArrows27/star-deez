@@ -9,6 +9,7 @@ import {
   subMonths,
   formatDate,
 } from "date-fns";
+import DateTimePicker from "@/components/ui/date-picker";
 
 export default function MonthCalendarHorizontal({
   selectedDate,
@@ -26,8 +27,8 @@ export default function MonthCalendarHorizontal({
   };
 
   return (
-    <View className="flex-row w-full justify-between items-center bg-green-100 py-2 px-4 rounded-lg">
-      <View className="rounded-full w-fit overflow-hidden items-center justify-center">
+    <View className="flex-row items-center justify-between w-full px-4 py-2 bg-green-100 rounded-lg">
+      <View className="w-fit items-center justify-center overflow-hidden rounded-full">
         <StyledPressable
           style={{
             padding: 4,
@@ -38,8 +39,18 @@ export default function MonthCalendarHorizontal({
           <ChevronLeft />
         </StyledPressable>
       </View>
-      <Text className=" text-xl">{formatDate(selectedDate, "MMMM")}</Text>
-      <View className="rounded-full w-fit overflow-hidden items-center justify-center">
+      <DateTimePicker
+        type="date"
+        accentColor="green"
+        textColor="green"
+        onConfirm={setSelectedDate}
+        buttonTextColorIOS="green"
+      >
+        <View className="center">
+          <Text className=" text-xl">{formatDate(selectedDate, "MMMM")}</Text>
+        </View>
+      </DateTimePicker>
+      <View className="w-fit items-center justify-center overflow-hidden rounded-full">
         <StyledPressable
           style={{
             padding: 4,
