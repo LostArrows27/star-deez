@@ -61,7 +61,12 @@ const PostLists = (props: {
     useCallback(() => {
       // Actions to perform when the screen is focused
 
-      const queryFunc = queryPost(type, profile_id, props.listFollowing);
+      const queryFunc = queryPost(
+        type,
+        profile_id,
+        props.listFollowing,
+        userDetails?.id
+      );
 
       (async () => {
         if (!userDetails) return;
@@ -87,7 +92,12 @@ const PostLists = (props: {
   useEffect(() => {
     (async () => {
       if (!userDetails) return;
-      const queryFunc = queryPost(type, profile_id, props.listFollowing);
+      const queryFunc = queryPost(
+        type,
+        profile_id,
+        props.listFollowing,
+        userDetails.id
+      );
 
       const { data, error } = await queryFunc.limit(3);
 
@@ -105,7 +115,12 @@ const PostLists = (props: {
     if (loading) return;
 
     setLoading(true);
-    const queryFunc = queryPost(type, profile_id, props.listFollowing);
+    const queryFunc = queryPost(
+      type,
+      profile_id,
+      props.listFollowing,
+      userDetails.id
+    );
 
     const { data, error } = await queryFunc.range(
       posts.length,
@@ -123,7 +138,12 @@ const PostLists = (props: {
     if (!userDetails) return;
     setReload(true);
 
-    const queryFunc = queryPost(type, profile_id, props.listFollowing);
+    const queryFunc = queryPost(
+      type,
+      profile_id,
+      props.listFollowing,
+      userDetails.id
+    );
 
     const { data, error } = await queryFunc.limit(3);
 

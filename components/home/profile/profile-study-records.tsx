@@ -26,6 +26,7 @@ export default function ProfileStudyRecords() {
           <PostLists
             className=" h-fit w-full mt-20"
             type="profiles"
+            
             profile_id={id as string}
           />
         </View>
