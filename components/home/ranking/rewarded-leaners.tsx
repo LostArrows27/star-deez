@@ -37,7 +37,7 @@ export default function RewardedLearners({
         textAlign="center"
         color="$color8"
       >
-        {convertMinute(time, false, true)}
+        {convertMinute(time, true, false)}
       </Text>
     </View>
   );

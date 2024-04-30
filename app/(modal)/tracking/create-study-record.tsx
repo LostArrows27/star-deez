@@ -27,6 +27,8 @@ import DocumentPicker from "@/components/home/create-study-record/document-picke
 import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
 import { useCreateStudyRecord } from "@/hooks/modal/tracking/useCreateStudyRecord";
 import LearningAmountPicker from "@/components/home/create-study-record/learning-amount-picker";
+import combineTime from "@/utils/combine-time";
+
 const CreateStudyRecord = () => {
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +46,7 @@ const CreateStudyRecord = () => {
     setComment,
     reset,
   } = useCreateStudyRecord();
+
   const { image, preview, removeImages, pickImages } =
     useUploadStudyRecordImage();
   const { selectedDocument, setSelectedDocument } = useCategorizedDocuments();
@@ -77,6 +80,7 @@ const CreateStudyRecord = () => {
         url = publicUrl;
       }
     }
+
     const { data, error } = await supabase.from("study_records").insert([
       {
         id,
@@ -84,7 +88,7 @@ const CreateStudyRecord = () => {
         comment,
         duration,
         image: url,
-        time: date.toLocaleDateString() + " " + time.toLocaleTimeString(),
+        time: combineTime(date!, time!).toISOString(),
         user_id: userDetails?.id,
         begin_at: learning.from,
         end_at: learning.to,
