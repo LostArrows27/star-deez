@@ -1,5 +1,13 @@
-import { TouchableOpacity, View } from "react-native";
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { TextInput, TouchableOpacity, View } from "react-native";
+import React, {
+  memo,
+  Ref,
+  RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Avatar, Spinner, Text } from "tamagui";
 import CommentInput from "./comment-input";
 import StyledPressable from "@/components/styled-pressable";
@@ -13,6 +21,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { Reply } from "@tamagui/lucide-icons";
+import { useCommentControl } from "@/hooks/modal/study-record/useCommentControls";
 dayjs.extend(updateLocale);
 dayjs.extend(relativeTime);
 dayjs.updateLocale("en", {
@@ -61,6 +70,7 @@ function CommentItem({
   const [subComments, setSubComments] = useState<Comment[]>([]);
   const [countSubComments, setCountSubComments] = useState(0);
   const { userDetails } = useAuth();
+  const { setReplyComment, inputRef } = useCommentControl();
   const [loading, setLoading] = useState(false);
   const toggleNumberOfLines = () => {
     //To toggle the show text or hide it
@@ -151,7 +161,7 @@ function CommentItem({
         </Avatar>
         <View className="flex-1">
           <Text color={"$color9"} fontWeight={"700"}>
-            {profiles.first_name} {profiles.last_name}
+            {profiles.last_name} {profiles.first_name}
           </Text>
 
           <Text
@@ -177,16 +187,26 @@ function CommentItem({
             <Text color={"$gray9"}>{dayjs(created_at).fromNow(true)}</Text>
             <LikeComment comment_id={id} likes={likes[0].count} />
 
-            {!reply_comment_id && (
-              <StyledPressable onPress={() => setOpenReply((pre) => !pre)}>
-                <Text
-                  color={"$gray9"}
-                  fontWeight={openReply ? "800" : "normal"}
-                >
-                  {openReply ? "Close" : "Reply"}
-                </Text>
-              </StyledPressable>
-            )}
+            <StyledPressable
+              onPress={() => {
+                setReplyComment({
+                  id: reply_comment_id ? reply_comment_id : id,
+                  first_name: profiles.first_name,
+                  last_name: profiles.last_name,
+                  profile_id: profiles.id,
+                });
+
+                if (inputRef) {
+                  (
+                    inputRef as React.MutableRefObject<TextInput>
+                  ).current.focus();
+                }
+              }}
+            >
+              <Text color={"$gray9"} fontWeight={openReply ? "800" : "normal"}>
+                Reply
+              </Text>
+            </StyledPressable>
           </View>
           {!openReply && countSubComments > 0 && (
             <StyledPressable
@@ -216,7 +236,6 @@ function CommentItem({
                   <Spinner scale={1} size="large" color="$green10" />
                 </View>
               )}
-              <CommentInput reply_comment_id={id} profiles={profiles} />
             </View>
           )}
         </View>
