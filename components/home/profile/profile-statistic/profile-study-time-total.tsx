@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { Separator } from "tamagui";
 
-const StudyTimeTotal = ({ records }: { records: RecordProps[] }) => {
+const ProfileStudyTimeTotal = ({ records }: { records: RecordProps[] }) => {
   const totalStudyTime = useMemo(() => {
     return (
       records.reduce((acc, record) => {
@@ -44,4 +44,4 @@ const StudyTimeTotal = ({ records }: { records: RecordProps[] }) => {
   );
 };
 
-export default StudyTimeTotal;
+export default ProfileStudyTimeTotal;

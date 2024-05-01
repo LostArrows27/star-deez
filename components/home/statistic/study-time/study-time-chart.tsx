@@ -21,6 +21,7 @@ import StudyTimeTotal from "./study-time-total";
 import StyledPressable from "@/components/styled-pressable";
 import { router } from "expo-router";
 import StyledText from "@/components/styled-text";
+import { RecordProps } from "@/hooks/home/statistic/calendar-stats/useDateStats";
 
 type ChartData = {
   [key: string]: any;
@@ -28,9 +29,17 @@ type ChartData = {
   totalDuration: number;
 };
 
-const StudyTimeChart = ({ show }: { show: boolean }) => {
-  const { records, load } = useCalendarStats();
-
+const StudyTimeChart = ({
+  show,
+  records,
+  load,
+  isUser = true,
+}: {
+  show?: boolean;
+  records: RecordProps[];
+  load: boolean;
+  isUser?: boolean;
+}) => {
   const [data, setData] = useState<ChartData[]>([]);
 
   const [colors, setColors] = useState<string[]>([]);
@@ -119,12 +128,13 @@ const StudyTimeChart = ({ show }: { show: boolean }) => {
         </View>
       ) : (
         <View className="px-3">
-          <StudyTimeTotal />
+          <StudyTimeTotal records={records} />
           <View className="border-emerald-500 rounded-2xl py-2 border">
             {records.length > 0 ? (
               <>
                 <StyledPressable
                   onPress={() => {
+                    if (!isUser) return;
                     router.push({
                       pathname: "/study-time/day",
                     });
@@ -189,6 +199,7 @@ const StudyTimeChart = ({ show }: { show: boolean }) => {
             ) : (
               <StyledPressable
                 onPress={() => {
+                  if (!isUser) return;
                   router.push({
                     pathname: "/study-time/day",
                   });
@@ -218,7 +229,9 @@ const StudyTimeChart = ({ show }: { show: boolean }) => {
                   mx="$7"
                   textAlign="center"
                 >
-                  Look like you haven't recorded any thing this week
+                  {isUser
+                    ? "Look like you haven't recorded any thing this week"
+                    : "Look like this user hasn't recorded any thing this week"}
                 </StyledText>
               </StyledPressable>
             )}

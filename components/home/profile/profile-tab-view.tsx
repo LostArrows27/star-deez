@@ -1,17 +1,35 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Button, Theme } from "tamagui";
+import { Button } from "tamagui";
 import Swiper from "react-native-swiper";
-import Banner from "@/components/introduction/banner";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ProfileStudyRecords from "./profile-study-records";
-import { authRoute } from "@/constants/Route";
+import ProfileStatistic from "./profile-statistic/profile-statistic";
+import { Animated } from "react-native";
+import ProfileInformation from "./profile-information/profile-information";
 
 const ProfileTabView = () => {
   const swiperRef = useRef<any>();
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [heights, setHeights] = useState([0, 0, 0]);
+  const animatedHeight = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animatedHeight, {
+      toValue: heights[currentIndex],
+      duration: 0,
+      useNativeDriver: false,
+    }).start();
+  }, [currentIndex, heights]);
+
+  const handleLayout = (index: any) => (event: any) => {
+    const { height } = event.nativeEvent.layout;
+    const newHeights = [...heights];
+    newHeights[index] = height;
+    setHeights(newHeights);
+  };
 
   return (
     <View className="w-full">
@@ -93,33 +111,33 @@ const ProfileTabView = () => {
           />
         </Button>
       </View>
-      <Swiper
-        onIndexChanged={(index) => {
-          setCurrentIndex(index);
-        }}
-        ref={swiperRef as any}
-        loop={false}
-        dotStyle={{
-          display: "none",
-        }}
-        activeDotStyle={{
-          display: "none",
-        }}
-      >
-        {/* <Banner
-          heading="Turn Study into a Habit"
-          content="Let's record the time you spent studying today"
-          image={require("@/assets/images/introduction/first.jpg")}
-        /> */}
-        <View></View>
-        <ProfileStudyRecords />
-        {/* <Banner
-          heading="Check with Graphs"
-          content="See your effort at a glance and get motivated"
-          image={require("@/assets/images/introduction/third.jpg")}
-        /> */}
-        <View></View>
-      </Swiper>
+      <View style={{ flex: 1 }}>
+        <Animated.View style={{ height: animatedHeight, overflow: "hidden" }}>
+          <Swiper
+            onIndexChanged={(index) => {
+              setCurrentIndex(index);
+            }}
+            ref={swiperRef as any}
+            loop={false}
+            dotStyle={{
+              display: "none",
+            }}
+            activeDotStyle={{
+              display: "none",
+            }}
+          >
+            <View onLayout={handleLayout(0)}>
+              <ProfileStatistic />
+            </View>
+            <View onLayout={handleLayout(1)}>
+              <ProfileStudyRecords />
+            </View>
+            <View onLayout={handleLayout(2)}>
+              <ProfileInformation />
+            </View>
+          </Swiper>
+        </Animated.View>
+      </View>
     </View>
   );
 };

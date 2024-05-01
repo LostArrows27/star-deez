@@ -7,9 +7,12 @@ import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-s
 import StudyTimeChart from "@/components/home/statistic/study-time/study-time-chart";
 import DocumentPieChartStats from "@/components/home/statistic/document-stats/document-pie-chart-stats";
 import YearGraph from "@/components/home/statistic/year-graph/year-graph";
+import { useCalendarStats } from "@/hooks/home/statistic/calendar-stats/useCalendarStats";
 
 const Page = () => {
   const [show, setShow] = useState(false);
+
+  const { records, load } = useCalendarStats();
 
   useFocusEffect(
     useCallback(() => {
@@ -26,9 +29,9 @@ const Page = () => {
       <Stack.Screen />
       {show ? (
         <>
-          <StudyTimeChart show={show} />
-          <DocumentPieChartStats show={show} />
-          <YearGraph />
+          <StudyTimeChart load={load} records={records} show={show} />
+          <DocumentPieChartStats load={load} records={records} show={show} />
+          <YearGraph load={load} records={records} />
           <CalendarStats />
         </>
       ) : (

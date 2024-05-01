@@ -1,4 +1,3 @@
-import { useCalendarStats } from "@/hooks/home/statistic/calendar-stats/useCalendarStats";
 import { endOfMonth, isWithinInterval, parseISO, subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { Dimensions, View } from "react-native";
@@ -6,27 +5,21 @@ import { ContributionGraph } from "react-native-chart-kit";
 import { Image } from "expo-image";
 import { H3, H4, Separator, Spinner } from "tamagui";
 import StyledText from "@/components/styled-text";
+import { RecordProps } from "@/hooks/home/statistic/calendar-stats/useDateStats";
 
 const screenWidth = Dimensions.get("screen").width;
-// const commitsData = [
-//   { date: "2017-01-02", count: 1 },
-//   { date: "2017-01-03", count: 2 },
-//   { date: "2017-01-04", count: 3 },
-//   { date: "2017-01-05", count: 4 },
-//   { date: "2017-01-06", count: 5 },
-//   { date: "2017-01-30", count: 2 },
-//   { date: "2017-01-31", count: 3 },
-//   { date: "2017-03-01", count: 2 },
-//   { date: "2017-04-02", count: 4 },
-//   { date: "2017-03-05", count: 2 },
-//   { date: "2017-02-30", count: 4 },
-// ];
 
 const handleToolTip: any = {};
 
-const YearGraph = () => {
-  const { records, load } = useCalendarStats();
-
+const YearGraph = ({
+  records,
+  load,
+  isUser = true,
+}: {
+  records: RecordProps[];
+  load: boolean;
+  isUser?: boolean;
+}) => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -109,7 +102,9 @@ const YearGraph = () => {
                   mx="$7"
                   textAlign="center"
                 >
-                  We can't find any activity in the past 4 months
+                  {isUser
+                    ? "We can't find any activity in the past 4 months"
+                    : "This user hasn't recorded any activity in the past 4 months"}
                 </StyledText>
               </View>
             )}

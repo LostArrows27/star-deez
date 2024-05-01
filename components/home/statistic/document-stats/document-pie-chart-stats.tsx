@@ -11,12 +11,21 @@ import StyledPressable from "@/components/styled-pressable";
 import { router } from "expo-router";
 import { Image } from "expo-image";
 import StyledText from "@/components/styled-text";
+import { RecordProps } from "@/hooks/home/statistic/calendar-stats/useDateStats";
 
 const screenWidth = Dimensions.get("screen").width;
 
-const DocumentPieChartStats = ({ show }: { show: boolean }) => {
-  const { records, load } = useCalendarStats();
-
+const DocumentPieChartStats = ({
+  show,
+  records,
+  load,
+  isUser = true,
+}: {
+  show?: boolean;
+  records: RecordProps[];
+  load: boolean;
+  isUser?: boolean;
+}) => {
   const [data, setData] = useState<DocumentStatsProps[]>([]);
 
   useEffect(() => {
@@ -74,6 +83,7 @@ const DocumentPieChartStats = ({ show }: { show: boolean }) => {
         <View className="px-3 pt-3">
           <StyledPressable
             onPress={() => {
+              if (!isUser) return;
               router.push("/document-stats/day");
             }}
             className="border-emerald-500 rounded-2xl py-2 border"
@@ -133,7 +143,9 @@ const DocumentPieChartStats = ({ show }: { show: boolean }) => {
                   mx="$7"
                   textAlign="center"
                 >
-                  Look like you haven't recorded any document yet this week
+                  {isUser
+                    ? "Look like you haven't recorded any document yet this week"
+                    : "Look like this user hasn't recorded any document yet this week"}
                 </StyledText>
               </View>
             )}
