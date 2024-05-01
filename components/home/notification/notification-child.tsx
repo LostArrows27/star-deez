@@ -1,13 +1,11 @@
 import { View } from "react-native";
-import { NotificationData } from "./notification-list";
 import { cn } from "@/lib/utils";
 import { Avatar, Button, Text } from "tamagui";
 import { Entypo } from "@expo/vector-icons";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import StyledPressable from "@/components/styled-pressable";
 import { router } from "expo-router";
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState } from "react";
 import { useNotificationChildOption } from "@/hooks/home/notification/useNotificationChildOption";
 
 type ChildProps = {
@@ -69,7 +67,7 @@ const NotificationChild = (props: ChildProps) => {
           fontSize={"$2"}
           color={props.is_readed ? "$gray9Light" : "$gray2Light"}
         >
-          {formatDistanceToNow(new Date(props.created_at))} ago
+          {formatDistanceToNowStrict(new Date(props.created_at))} ago
         </Text>
       </View>
       <View className="center mr-1">
