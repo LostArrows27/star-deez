@@ -14,6 +14,8 @@ type CalendarStatsProps = {
   setData: (data: CalendarDataProps) => void;
   records: RecordProps[];
   setRecords: (records: RecordProps[]) => void;
+  load: boolean;
+  setLoad: (load: boolean) => void;
 };
 
 export const useCalendarStats = create<CalendarStatsProps>((set) => ({
@@ -21,4 +23,6 @@ export const useCalendarStats = create<CalendarStatsProps>((set) => ({
   setData: (data) => set({ data }),
   records: [],
   setRecords: (records) => set({ records }),
+  load: true,
+  setLoad: (load) => set({ load }),
 }));

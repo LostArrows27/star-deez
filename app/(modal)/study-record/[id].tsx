@@ -1,15 +1,13 @@
-import { View, Text, TouchableNativeFeedback } from "react-native";
+import { View, Text } from "react-native";
 import React, { useEffect } from "react";
 import { router, useGlobalSearchParams } from "expo-router";
 import ModalWrapper from "@/components/modal/modal-wrapper";
-import { Avatar, Button, Spinner } from "tamagui";
+import { Avatar, Spinner } from "tamagui";
 import { ScrollView } from "react-native-virtualized-view";
 import {
   MessageSquare,
-  MoreHorizontal,
   MoreVertical,
   Newspaper,
-  ThumbsUp,
   TimerReset,
 } from "@tamagui/lucide-icons";
 import { StudyRecord } from "@/types/supabase-util-types";
