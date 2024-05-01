@@ -6,6 +6,7 @@ import Loading from "@/components/home/newfeed/loading";
 import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-stats";
 import StudyTimeChart from "@/components/home/statistic/study-time/study-time-chart";
 import DocumentPieChartStats from "@/components/home/statistic/document-stats/document-pie-chart-stats";
+import YearGraph from "@/components/home/statistic/year-graph/year-graph";
 
 const Page = () => {
   const [show, setShow] = useState(false);
@@ -27,6 +28,7 @@ const Page = () => {
         <>
           <StudyTimeChart show={show} />
           <DocumentPieChartStats show={show} />
+          <YearGraph />
           <CalendarStats />
         </>
       ) : (

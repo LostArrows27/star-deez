@@ -140,7 +140,7 @@ const DocumentPieChartStats = ({ show }: { show: boolean }) => {
           </StyledPressable>
         </View>
       )}
-      <Separator mt="$6" mb="$4" />
+      <Separator mt="$6" />
     </View>
   );
 };
