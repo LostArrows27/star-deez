@@ -47,7 +47,6 @@ export default function LikeButton({
         return console.log(error);
       }
 
-
       //check if notification already exist
       const { data, error: error2 } = await supabase
         .from("notification")
@@ -66,7 +65,7 @@ export default function LikeButton({
       let content =
         count > 0
           ? `${userDetails.first_name} and ${count} others like your post`
-          : `${userDetails.first_name} likes your post`;
+          : `${userDetails.last_name} ${userDetails.first_name} likes your post`;
       if (data) {
         const { error: updateError } = await supabase
           .from("notification")

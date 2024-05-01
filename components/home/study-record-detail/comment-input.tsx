@@ -129,6 +129,7 @@ export default function CommentInput() {
       });
     }
 
+    //send noti to reply comment owner
     if (!replyComment?.id) {
       const newComment = comments;
       newComment.unshift(newCommentData as Comment);
@@ -159,8 +160,10 @@ export default function CommentInput() {
       }
       let content =
         count > 0
-          ? `${userDetails.first_name} and ${count} others reply to your comment`
-          : `${userDetails.first_name} reply to your comment`;
+          ? `${userDetails.first_name} and ${
+              count - 1
+            } others reply to your comment`
+          : `${userDetails.last_name} ${userDetails.first_name} reply to your comment`;
       if (data) {
         const { error: updateError } = await supabase
           .from("notification")
@@ -170,6 +173,13 @@ export default function CommentInput() {
             meta_data: {
               avatar: userDetails?.avatar,
             },
+            link_to:
+              "/study-record/" +
+              details.id +
+              "?fcID=" +
+              replyComment.id +
+              "&ccID=" +
+              newCommentData.id,
             is_readed: false,
             is_seen: false,
           })
@@ -197,8 +207,7 @@ export default function CommentInput() {
       }
     }
 
-    //send notification to the user
-
+    //send notification to mentions user
     const mentions = value.match(mentionRegEx);
     if (mentions) {
       //get all the id from the mentions
@@ -211,43 +220,89 @@ export default function CommentInput() {
         (id) =>
           id !== "" && id !== userDetails.id && id !== replyComment?.profile_id
       );
+
       const { data: notification, error: notiError } = await supabase
         .from("notification")
         .insert(
           (filteredIds as string[]).map((id) => ({
             receiver_id: id,
             sender_id: userDetails.id,
-            content: `${userDetails?.first_name} ${userDetails?.last_name} has mentioned you on a post`,
-            link_to: `/study-record/${details.id}`,
+            content: `${userDetails?.last_name} ${userDetails?.first_name} has mentioned you on a post`,
+            link_to:
+              `/study-record/${details.id}` +
+              (replyComment
+                ? `?fcID=${replyComment.id}&ccID=${newCommentData.id}`
+                : `?fcID=${newCommentData.id}`),
             meta_data: {
               avatar: userDetails?.avatar,
             },
           }))
         );
+
       if (notiError) {
-        return toast.show("Error!!", {
-          message: notiError.message,
-          native: false,
-        });
+        return console.log(notiError);
       }
     } else {
-      if (details.user_id !== userDetails.id) {
-        const { data: notification, error: notiError } = await supabase
+      //send notification to post owner
+      if (details.user_id !== userDetails.id && !replyComment) {
+        const { data, error: error2 } = await supabase
           .from("notification")
-          .insert({
-            receiver_id: details.user_id,
-            sender_id: userDetails.id,
-            content: `${userDetails?.first_name} ${userDetails?.last_name} has commented on your post`,
-            link_to: `/study-record/${details.id}`,
-            meta_data: {
-              avatar: userDetails?.avatar,
-            },
-          });
-        if (notiError) {
-          return toast.show("Error!!", {
-            message: notiError.message,
-            native: false,
-          });
+          .select("id,content")
+          .eq("receiver_id", details.profiles.id)
+          .like("link_to", "/study-record/" + details.id + "%")
+          .like("content", "%comment%")
+          .maybeSingle();
+
+        if (error2) {
+          console.log(error2);
+          return;
+        }
+        const { data: currentCount, error: error3 } = await supabase
+          .from("study_records")
+          .select("comments(count)")
+          .eq("id", details.id)
+          .single();
+
+        if (error3 || !currentCount) {
+          return;
+        }
+
+        let content =
+          currentCount.comments[0].count > 0
+            ? `${userDetails.first_name} and ${
+                currentCount.comments[0].count - 1
+              } others comment on your post`
+            : `${userDetails.last_name} ${userDetails.first_name} comments on your post`;
+        if (data) {
+          const { error: updateError } = await supabase
+            .from("notification")
+            .update({
+              content: content,
+              sender_id: userDetails.id,
+              meta_data: {
+                avatar: userDetails?.avatar,
+              },
+              link_to:
+                "/study-record/" + details.id + "?fcID=" + newCommentData.id,
+              is_readed: false,
+              is_seen: false,
+            })
+            .eq("id", data.id);
+        } else {
+          const { error: updateError } = await supabase
+            .from("notification")
+            .insert({
+              receiver_id: details.profiles.id,
+              sender_id: userDetails.id,
+              link_to:
+                "/study-record/" + details.id + "?fcID=" + newCommentData.id,
+              content: content,
+              meta_data: {
+                avatar: userDetails?.avatar,
+              },
+              is_readed: false,
+              is_seen: false,
+            });
         }
       }
     }
