@@ -18,6 +18,7 @@ export type PostItemProps = {
   profile_last_name: string;
   profile_first_name: string;
   profile_avatar: string;
+  profile_id: string;
   comment: string;
   image: string;
   scrolling: boolean;
@@ -124,7 +125,11 @@ const PostItem = (data: PostItemProps) => {
               {data.comments > 0 ? data.comments : "Comment"}
             </StyledText>
           </View>
-          <LikeButton likes={data.likes} study_record_id={data.id} />
+          <LikeButton
+            likes={data.likes}
+            study_record_id={data.id}
+            owner_id={data.profile_id}
+          />
         </View>
       </View>
     </TouchableNativeFeedback>
