@@ -18,19 +18,14 @@ import { supabase } from "@/lib/supabase";
 import useUserID from "@/hooks/auth/useUserID";
 import { Image } from "expo-image";
 import StyledText from "@/components/styled-text";
-
-type ChartData = {
-  [key: string]: any;
-  date: string;
-  totalDuration: number;
-};
+import { ChartData } from "@/types/home/stats-type";
 
 const DayChart = ({ selectedDate }: { selectedDate: Date }) => {
   const { records, setRecords } = useChartRecord();
 
   const id = useUserID();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState<ChartData[]>([]);
 
@@ -40,12 +35,12 @@ const DayChart = ({ selectedDate }: { selectedDate: Date }) => {
 
   useEffect(() => {
     const getRecordsByDate = async (date: Date) => {
-      if (loading) return;
       setLoading(true);
 
       const end = endOfDay(date);
-
+      end.setHours(23, 59, 59, 999);
       const start = subWeeks(end, 1);
+      start.setHours(0, 0, 0, 0);
 
       const { data: recordData, error } = await supabase
         .from("study_records")
@@ -53,8 +48,6 @@ const DayChart = ({ selectedDate }: { selectedDate: Date }) => {
         .eq("user_id", id!)
         .gte("time", start.toISOString())
         .lte("time", end.toISOString());
-
-      console.log(recordData, error);
 
       if (!error) {
         setRecords(recordData);
@@ -69,8 +62,11 @@ const DayChart = ({ selectedDate }: { selectedDate: Date }) => {
 
   useEffect(() => {
     if (!records || !selectedDate) return;
+
     const endOfCurrentWeek = new Date(selectedDate);
+    endOfCurrentWeek.setHours(23, 59, 59, 999);
     const startOfCurrentWeek = subWeeks(endOfCurrentWeek, 1);
+    startOfCurrentWeek.setHours(0, 0, 0, 0);
 
     const allKeys = new Set(
       records
@@ -204,7 +200,7 @@ const DayChart = ({ selectedDate }: { selectedDate: Date }) => {
                     height: 200,
                   }}
                   contentFit="cover"
-                  source={require("@/assets/images/notification/pusheen.gif")}
+                  source={require("@/assets/images/stats/pusheen_round.gif")}
                 />
                 <H3
                   color={"$color8"}

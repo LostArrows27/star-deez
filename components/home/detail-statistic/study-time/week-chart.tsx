@@ -1,142 +1,160 @@
-import { Image } from "expo-image";
-
 import { View } from "react-native";
-import { H3, H4, Separator } from "tamagui";
+import { H3 } from "tamagui";
 import { StackedBarChart, XAxis, YAxis, Grid } from "react-native-svg-charts";
-import { useCalendarStats } from "@/hooks/home/statistic/calendar-stats/useCalendarStats";
 import { useEffect, useState } from "react";
 import randomColor from "randomcolor";
 import {
-  startOfWeek,
-  endOfWeek,
   isWithinInterval,
   parseISO,
   format,
   addDays,
   subWeeks,
+  endOfDay,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  addMonths,
+  addWeeks,
+  endOfWeek,
+  startOfWeek,
 } from "date-fns";
 import { Text } from "react-native";
 import Loading from "../../newfeed/loading";
-import StudyTimeTotal from "./study-time-total";
-import StyledPressable from "@/components/styled-pressable";
-import { router } from "expo-router";
+import { supabase } from "@/lib/supabase";
+import useUserID from "@/hooks/auth/useUserID";
+import { Image } from "expo-image";
 import StyledText from "@/components/styled-text";
+import { ChartData } from "@/types/home/stats-type";
+import { RecordProps } from "@/hooks/home/statistic/calendar-stats/useDateStats";
+import convertWeekToDate from "@/utils/convert-week-format";
 
-type ChartData = {
-  [key: string]: any;
-  date: string;
-  totalDuration: number;
+type WeekChartProps = ChartData & {
+  time: string;
 };
 
-const StudyTimeChart = () => {
-  const { records } = useCalendarStats();
+const WeekChart = ({ selectedDate }: { selectedDate: Date }) => {
+  const [records, setRecords] = useState<RecordProps[]>([]);
+
+  const id = useUserID();
 
   const [loading, setLoading] = useState(true);
 
-  const [data, setData] = useState<ChartData[]>([]);
+  const [data, setData] = useState<WeekChartProps[]>([]);
 
   const [colors, setColors] = useState<string[]>([]);
 
   const [keys, setKeys] = useState<string[]>([]);
 
   useEffect(() => {
-    if (records) {
-      setLoading(false);
-    } else {
+    const getRecordsByWeek = async (date: Date) => {
       setLoading(true);
+
+      const end = endOfWeek(date);
+      end.setHours(23, 59, 59, 999);
+      const start = startOfWeek(subWeeks(end, 5));
+      start.setHours(0, 0, 0, 0);
+
+      const { data: recordData, error } = await supabase
+        .from("study_records")
+        .select("id, created_at, time, duration, document(title)")
+        .eq("user_id", id!)
+        .gte("time", start.toISOString())
+        .lte("time", end.toISOString());
+
+      if (!error) {
+        setRecords(recordData);
+      }
+      setLoading(false);
+    };
+
+    if (selectedDate) {
+      getRecordsByWeek(selectedDate);
     }
-  }, [records]);
+  }, [selectedDate, id, setRecords]);
 
   useEffect(() => {
-    if (records) {
-      const endOfCurrentWeek = new Date();
-      endOfCurrentWeek.setHours(23, 59, 59, 999);
-      const startOfCurrentWeek = subWeeks(endOfCurrentWeek, 1);
-      startOfCurrentWeek.setHours(0, 0, 0, 0);
+    if (!records || !selectedDate) return;
 
-      const filteredRecords = records.filter((record) =>
-        isWithinInterval(parseISO(record.time!), {
-          start: startOfCurrentWeek,
-          end: endOfCurrentWeek,
-        })
-      );
+    const startOfPeriod = startOfWeek(subWeeks(selectedDate, 5));
+    startOfPeriod.setHours(0, 0, 0, 0);
+    const endOfPeriod = endOfWeek(selectedDate);
+    endOfPeriod.setHours(23, 59, 59, 999);
 
-      const allKeys = new Set(
-        filteredRecords
-          .map((record) => record.document?.title)
-          .filter((title): title is string => !!title)
-      );
+    const allKeys = new Set(
+      records
+        .map((record) => record.document?.title)
+        .filter((title): title is string => !!title)
+    );
 
-      const groupedByDate = filteredRecords.reduce(
-        (acc: Record<string, ChartData>, record) => {
-          const dateStr = format(parseISO(record.time!), "yyyy-MM-dd");
-          if (!acc[dateStr]) {
-            acc[dateStr] = { date: dateStr, totalDuration: 0 };
-            allKeys.forEach((key) => {
-              acc[dateStr][key] = 0;
-            });
-          }
-          acc[dateStr].totalDuration += record.duration;
-          const key = record.document?.title;
-          if (key) {
-            acc[dateStr][key] += record.duration;
-          }
-          return acc;
-        },
-        {}
-      );
+    const filteredRecords = records.filter((record) =>
+      isWithinInterval(parseISO(record?.time!), {
+        start: startOfPeriod,
+        end: endOfPeriod,
+      })
+    );
 
-      const chartData = [];
-      const uniqueKeys = Array.from(allKeys);
-      const colorPalette = uniqueKeys.map((_, index) =>
-        randomColor({
-          luminosity: index % 2 === 0 ? "light" : "dark",
-        })
-      );
-
-      for (
-        let d = startOfCurrentWeek;
-        d <= endOfCurrentWeek;
-        d = addDays(d, 1)
-      ) {
-        const formattedDate = format(d, "yyyy-MM-dd");
-        if (groupedByDate[formattedDate]) {
-          chartData.push(groupedByDate[formattedDate]);
-        } else {
-          chartData.push({
-            date: formattedDate,
+    const groupedByWeek = filteredRecords.reduce(
+      (acc: Record<string, ChartData>, record) => {
+        const weekStr = format(parseISO(record?.time!), "yyyy-ww");
+        if (!acc[weekStr]) {
+          acc[weekStr] = {
+            date: weekStr,
             totalDuration: 0,
-            ...Object.fromEntries(uniqueKeys.map((key) => [key, 0])),
+          };
+          allKeys.forEach((key) => {
+            acc[weekStr][key] = 0;
           });
         }
-      }
+        acc[weekStr].totalDuration += record.duration;
+        const key = record.document?.title;
+        if (key) {
+          acc[weekStr][key] += record.duration;
+        }
+        return acc;
+      },
+      {}
+    );
 
-      setData(chartData);
-      setKeys(uniqueKeys);
-      setColors(colorPalette);
+    const chartData = [];
+    const uniqueKeys = Array.from(allKeys);
+    const colorPalette = uniqueKeys.map((_, index) =>
+      randomColor({
+        luminosity: index % 2 === 0 ? "light" : "dark",
+      })
+    );
+    for (
+      let d = new Date(startOfPeriod);
+      d <= endOfPeriod;
+      d = addWeeks(d, 1)
+    ) {
+      const weekStr = format(d, "yyyy-ww");
+      if (groupedByWeek[weekStr]) {
+        chartData.push(groupedByWeek[weekStr]);
+      } else {
+        chartData.push({
+          date: weekStr,
+          time: d.toISOString(),
+          totalDuration: 0,
+          ...Object.fromEntries(uniqueKeys.map((key) => [key, 0])),
+        });
+      }
     }
-  }, [records]);
+
+    setData(chartData as any);
+    setKeys(uniqueKeys);
+    setColors(colorPalette);
+  }, [selectedDate, records]);
 
   return (
     <View className="w-full">
-      <H4 p={"$3"}>Study Time</H4>
-
       {loading ? (
         <Loading />
       ) : (
-        <View className="px-3">
-          <StudyTimeTotal />
+        <View className="px-2">
           <View className="border-emerald-500 rounded-2xl py-2 border">
             {records.length > 0 ? (
               <>
-                <StyledPressable
-                  onPress={() => {
-                    router.push({
-                      pathname: "/study-time/day",
-                    });
-                  }}
-                  className="w-full px-3 h-[250px]"
-                >
+                <View className="w-full px-3 h-[250px]">
                   <View className="h-[250px] flex-1 w-full flex-row items-start">
                     <YAxis
                       numberOfTicks={6}
@@ -173,13 +191,13 @@ const StudyTimeChart = () => {
                       style={{ marginHorizontal: 0, flex: 1 }}
                       data={data}
                       formatLabel={(value, index) => {
-                        return format(parseISO(data[index].date), "dd/MM");
+                        return convertWeekToDate(data[index].date);
                       }}
                       contentInset={{ left: 20, right: 20 }}
                       svg={{ fontSize: 10, fill: "black", fontFamily: "Inter" }}
                     />
                   </View>
-                </StyledPressable>
+                </View>
                 <View className="gap-4 px-[44px] mt-5">
                   {keys.map((value, index) => (
                     <View key={index} className="flex-row gap-6 py-2">
@@ -193,14 +211,7 @@ const StudyTimeChart = () => {
                 </View>
               </>
             ) : (
-              <StyledPressable
-                onPress={() => {
-                  router.push({
-                    pathname: "/study-time/day",
-                  });
-                }}
-                className="center w-full gap-4 p-3"
-              >
+              <View className="center w-full gap-4 p-3">
                 <Image
                   autoplay
                   style={{
@@ -224,16 +235,15 @@ const StudyTimeChart = () => {
                   mx="$7"
                   textAlign="center"
                 >
-                  Look like you haven't recorded any thing this week
+                  Look like you haven't recorded any thing on these 6 months
                 </StyledText>
-              </StyledPressable>
+              </View>
             )}
           </View>
         </View>
       )}
-      <Separator mt="$6" />
     </View>
   );
 };
 
-export default StudyTimeChart;
+export default WeekChart;

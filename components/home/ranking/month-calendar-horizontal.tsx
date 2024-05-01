@@ -14,9 +14,11 @@ import DateTimePicker from "@/components/ui/date-picker";
 export default function MonthCalendarHorizontal({
   selectedDate,
   setSelectedDate,
+  rangeMode,
 }: {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+  rangeMode?: boolean;
 }) {
   const handleSelectPreviousWeek = () => {
     setSelectedDate((prev) => subMonths(prev, 1));
@@ -47,7 +49,11 @@ export default function MonthCalendarHorizontal({
         buttonTextColorIOS="green"
       >
         <View className="center">
-          <Text className=" text-xl">{formatDate(selectedDate, "MMMM")}</Text>
+          <Text className=" text-xl">
+            {rangeMode &&
+              formatDate(subMonths(selectedDate, 5), "MMM yyyy") + " - "}{" "}
+            {formatDate(selectedDate, "MMM yyyy")}
+          </Text>
         </View>
       </DateTimePicker>
       <View className="w-fit items-center justify-center overflow-hidden rounded-full">

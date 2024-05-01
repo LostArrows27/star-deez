@@ -14,9 +14,11 @@ import DateTimePicker from "@/components/ui/date-picker";
 export default function WeekCalendarHorizontals({
   selectedDate,
   setSelectedDate,
+  rangeMode,
 }: {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+  rangeMode?: boolean;
 }) {
   const firstDay = useCallback(() => {
     return startOfWeek(selectedDate, { weekStartsOn: 1 });
@@ -56,8 +58,23 @@ export default function WeekCalendarHorizontals({
       >
         <View className="center">
           <Text className=" text-xl">
-            {formatDate(firstDay(), "MMM dd")} -{" "}
-            {formatDate(lastDay(), "MMM dd")}
+            {rangeMode
+              ? formatDate(
+                  startOfWeek(subWeeks(selectedDate, 5), {
+                    weekStartsOn: 1,
+                  }),
+                  "MMM dd"
+                ) +
+                " - " +
+                formatDate(
+                  startOfWeek(selectedDate, {
+                    weekStartsOn: 1,
+                  }),
+                  "MMM dd"
+                )
+              : formatDate(firstDay(), "MMM dd") +
+                " - " +
+                formatDate(lastDay(), "MMM dd")}
           </Text>
         </View>
       </DateTimePicker>

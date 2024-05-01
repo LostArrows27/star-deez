@@ -44,7 +44,8 @@ export default function DateCalendarHorizontal({
       >
         <View className="center">
           <Text className=" text-xl">
-            {rangeMode && formatDate(subWeeks(selectedDate, 1), "MMM dd")} -{" "}
+            {rangeMode &&
+              formatDate(subWeeks(selectedDate, 1), "MMM dd") + " - "}
             {formatDate(selectedDate, "MMM dd")}
           </Text>
         </View>
