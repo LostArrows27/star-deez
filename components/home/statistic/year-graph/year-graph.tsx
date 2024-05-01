@@ -64,7 +64,7 @@ const YearGraph = () => {
       ) : (
         <View className="px-3 pt-3">
           <View className="border-emerald-500 parents rounded-2xl flex-row py-6 overflow-hidden border">
-            {records.length === 0 ? (
+            {records.length > 0 ? (
               <ContributionGraph
                 showMonthLabels={true}
                 values={data}
