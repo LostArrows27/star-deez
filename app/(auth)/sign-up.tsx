@@ -11,6 +11,7 @@ import { Link, router } from "expo-router";
 import { useAlertError } from "@/hooks/useAlertError";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
+import { AntDesign } from "@expo/vector-icons";
 
 type tSignUpSchema = z.infer<typeof SignUpSchema>;
 const SignUpScreen = () => {
@@ -175,13 +176,7 @@ const SignUpScreen = () => {
           width={"100%"}
           marginBottom="$8"
           icon={
-            <Image
-              source={{
-                uri: require("@/assets/images/icons/google.png"),
-                width: 24,
-                height: 24,
-              }}
-            />
+            <AntDesign name="google" size={24} color="hsl(151, 49.3%, 46.5%)" />
           }
         >
           Continue with Google

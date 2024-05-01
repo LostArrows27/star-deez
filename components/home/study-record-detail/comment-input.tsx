@@ -34,10 +34,12 @@ export default function CommentInput() {
 
   useEffect(() => {
     if (!replyComment) return;
-    setValue(
-      `@[${replyComment.last_name} ${replyComment.first_name}](${replyComment.profile_id}) `
-    );
-  }, [replyComment]);
+    if (replyComment.profile_id !== userDetails?.id) {
+      setValue(
+        `@[${replyComment.last_name} ${replyComment.first_name}](${replyComment.profile_id}) `
+      );
+    }
+  }, [replyComment, userDetails?.id]);
   useEffect(() => {
     (async () => {
       if (!userDetails?.id || !details) return;
@@ -110,7 +112,7 @@ export default function CommentInput() {
 
     setValue("");
 
-    const { data, error } = await supabase
+    const { data: newCommentData, error } = await supabase
       .from("comments")
       .insert({
         content: value,
@@ -127,14 +129,85 @@ export default function CommentInput() {
       });
     }
 
+    //send noti to reply comment owner
     if (!replyComment?.id) {
       const newComment = comments;
-      newComment.unshift(data as Comment);
+      newComment.unshift(newCommentData as Comment);
       setComments(newComment);
+    } else if (replyComment.id !== userDetails?.id) {
+      const { data, error: error2 } = await supabase
+        .from("notification")
+        .select("id,content")
+        .eq("receiver_id", replyComment.profile_id)
+        .like(
+          "link_to",
+          "/study-record/" + details.id + "?fcID=" + replyComment.id + "%"
+        )
+        .like("content", "%reply%")
+        .maybeSingle();
+
+      if (error2) {
+        console.log(error2);
+        return;
+      }
+      const { count, error: error3 } = await supabase
+        .from("comments")
+        .select("id", { count: "exact" })
+        .eq("reply_comment_id", replyComment.id);
+
+      if (error3 || !count) {
+        return;
+      }
+      let content =
+        count > 0
+          ? `${userDetails.first_name} and ${
+              count - 1
+            } others reply to your comment`
+          : `${userDetails.last_name} ${userDetails.first_name} reply to your comment`;
+      if (data) {
+        const { error: updateError } = await supabase
+          .from("notification")
+          .update({
+            content: content,
+            sender_id: userDetails.id,
+            meta_data: {
+              avatar: userDetails?.avatar,
+            },
+            link_to:
+              "/study-record/" +
+              details.id +
+              "?fcID=" +
+              replyComment.id +
+              "&ccID=" +
+              newCommentData.id,
+            is_readed: false,
+            is_seen: false,
+          })
+          .eq("id", data.id);
+      } else {
+        const { error: updateError } = await supabase
+          .from("notification")
+          .insert({
+            receiver_id: replyComment.profile_id,
+            sender_id: userDetails.id,
+            link_to:
+              "/study-record/" +
+              details.id +
+              "?fcID=" +
+              replyComment.id +
+              "&ccID=" +
+              newCommentData.id,
+            content: content,
+            meta_data: {
+              avatar: userDetails?.avatar,
+            },
+            is_readed: false,
+            is_seen: false,
+          });
+      }
     }
 
-    //send notification to the user
-
+    //send notification to mentions user
     const mentions = value.match(mentionRegEx);
     if (mentions) {
       //get all the id from the mentions
@@ -143,44 +216,93 @@ export default function CommentInput() {
         return id ? id[4] : "";
       });
       //filter out the id empty
-      const filteredIds = ids.filter((id) => id !== "");
+      const filteredIds = ids.filter(
+        (id) =>
+          id !== "" && id !== userDetails.id && id !== replyComment?.profile_id
+      );
+
       const { data: notification, error: notiError } = await supabase
         .from("notification")
         .insert(
           (filteredIds as string[]).map((id) => ({
             receiver_id: id,
             sender_id: userDetails.id,
-            content: `${userDetails?.first_name} ${userDetails?.last_name} has mentioned you on a post`,
-            link_to: `/study-record/${details.id}`,
+            content: `${userDetails?.last_name} ${userDetails?.first_name} has mentioned you on a post`,
+            link_to:
+              `/study-record/${details.id}` +
+              (replyComment
+                ? `?fcID=${replyComment.id}&ccID=${newCommentData.id}`
+                : `?fcID=${newCommentData.id}`),
             meta_data: {
               avatar: userDetails?.avatar,
             },
           }))
         );
+
       if (notiError) {
-        return toast.show("Error!!", {
-          message: notiError.message,
-          native: false,
-        });
+        return console.log(notiError);
       }
     } else {
-      if (details.user_id !== userDetails.id) {
-        const { data: notification, error: notiError } = await supabase
+      //send notification to post owner
+      if (details.user_id !== userDetails.id && !replyComment) {
+        const { data, error: error2 } = await supabase
           .from("notification")
-          .insert({
-            receiver_id: details.user_id,
-            sender_id: userDetails.id,
-            content: `${userDetails?.first_name} ${userDetails?.last_name} has commented on your post`,
-            link_to: `/study-record/${details.id}`,
-            meta_data: {
-              avatar: userDetails?.avatar,
-            },
-          });
-        if (notiError) {
-          return toast.show("Error!!", {
-            message: notiError.message,
-            native: false,
-          });
+          .select("id,content")
+          .eq("receiver_id", details.profiles.id)
+          .like("link_to", "/study-record/" + details.id + "%")
+          .like("content", "%comment%")
+          .maybeSingle();
+
+        if (error2) {
+          console.log(error2);
+          return;
+        }
+        const { data: currentCount, error: error3 } = await supabase
+          .from("study_records")
+          .select("comments(count)")
+          .eq("id", details.id)
+          .single();
+
+        if (error3 || !currentCount) {
+          return;
+        }
+
+        let content =
+          currentCount.comments[0].count > 0
+            ? `${userDetails.first_name} and ${
+                currentCount.comments[0].count - 1
+              } others comment on your post`
+            : `${userDetails.last_name} ${userDetails.first_name} comments on your post`;
+        if (data) {
+          const { error: updateError } = await supabase
+            .from("notification")
+            .update({
+              content: content,
+              sender_id: userDetails.id,
+              meta_data: {
+                avatar: userDetails?.avatar,
+              },
+              link_to:
+                "/study-record/" + details.id + "?fcID=" + newCommentData.id,
+              is_readed: false,
+              is_seen: false,
+            })
+            .eq("id", data.id);
+        } else {
+          const { error: updateError } = await supabase
+            .from("notification")
+            .insert({
+              receiver_id: details.profiles.id,
+              sender_id: userDetails.id,
+              link_to:
+                "/study-record/" + details.id + "?fcID=" + newCommentData.id,
+              content: content,
+              meta_data: {
+                avatar: userDetails?.avatar,
+              },
+              is_readed: false,
+              is_seen: false,
+            });
         }
       }
     }
@@ -192,7 +314,9 @@ export default function CommentInput() {
           <Text className="text-gray-500">
             Replying to{" "}
             <Text className="text-black">
-              {replyComment.last_name + " " + replyComment.first_name}
+              {replyComment.profile_id === userDetails?.id
+                ? "Yourself"
+                : replyComment.last_name + " " + replyComment.first_name}
             </Text>
           </Text>
           <StyledPressable

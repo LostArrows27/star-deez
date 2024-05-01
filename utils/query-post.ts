@@ -29,7 +29,6 @@ const queryPost = (
           .order("created_at", { ascending: false })
         }
         else {
-       
            if(id === current_user_id)
             {
               return  supabase
