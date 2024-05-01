@@ -3,3 +3,11 @@ export type ChartData = {
   date: string;
   totalDuration: number;
 };
+
+export type DocumentStatsProps = {
+  name: string;
+  duration: number;
+  color: string;
+  legnedFontColor: string;
+  legendFontSize: number;
+};

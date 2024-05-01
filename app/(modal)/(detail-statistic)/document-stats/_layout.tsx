@@ -10,7 +10,7 @@ const TabRankingLayout = () => {
       <Stack.Screen
         options={{
           headerShown: true,
-          title: "Detail statistic",
+          title: "Document statistics",
           headerTransparent: false,
           contentStyle: {
             backgroundColor: "white",

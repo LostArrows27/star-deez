@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import Loading from "@/components/home/newfeed/loading";
 import CalendarStats from "@/components/home/statistic/calendar-stats/calendar-stats";
 import StudyTimeChart from "@/components/home/statistic/study-time/study-time-chart";
+import DocumentPieChartStats from "@/components/home/statistic/document-stats/document-pie-chart-stats";
 
 const Page = () => {
   const [show, setShow] = useState(false);
@@ -24,7 +25,8 @@ const Page = () => {
       <Stack.Screen />
       {show ? (
         <>
-          <StudyTimeChart show = {show} />
+          <StudyTimeChart show={show} />
+          <DocumentPieChartStats show={show} />
           <CalendarStats />
         </>
       ) : (

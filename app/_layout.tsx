@@ -92,6 +92,10 @@ function RootLayoutNav() {
                       name="(modal)/(detail-statistic)/study-time"
                       options={{ headerShown: false }}
                     />
+                    <Stack.Screen
+                      name="(modal)/(detail-statistic)/document-stats"
+                      options={{ headerShown: false }}
+                    />
                   </Stack>
                 )}
               </SafeAreaView>

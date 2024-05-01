@@ -64,7 +64,9 @@ const CalendarStats = () => {
 
   return (
     <View>
-      <H4 p={"$3"}>Calendar Stats</H4>
+      <H4 p={"$3"} pt={0}>
+        Calendar Stats
+      </H4>
       <StatsNumberList data={data} />
       <Calendar
         style={{
