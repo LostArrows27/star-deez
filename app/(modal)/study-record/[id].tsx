@@ -64,7 +64,7 @@ export default function StudyRecordDetails() {
               height: "100%",
             }}
           >
-            <View className="border-emerald-200 w-full pb-3 border-b">
+            <View className="border-green-500 w-full pb-3 border-b">
               <View className="flex-row justify-between w-full">
                 <View className="flex-row items-start gap-5">
                   <Avatar
