@@ -82,43 +82,37 @@ const DateStats = () => {
       <StyledText textTransform="uppercase">
         TOTAL TIME : {formatTime(totalTime)}
       </StyledText>
-      {loading ? (
-        <View className="center w-full py-2">
-          <Spinner color={primaryColor} size="large" />
-        </View>
-      ) : (
-        <>
-          <FlatList
-            className="mt-3"
-            initialNumToRender={2}
-            scrollEnabled={false}
-            contentContainerStyle={{
-              gap: 20,
-            }}
-            horizontal={false}
-            data={recordData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-          />
-          <Button
-            mt={10}
-            borderColor={"$color5"}
-            borderWidth={"$1"}
-            onPress={() => {
-              router.push({
-                pathname: `/tracking/create-study-record`,
-                params: {
-                  learning_date: date,
-                },
-              });
-            }}
-            icon={<Plus size={"$1.5"} />}
-            w="100%"
-          >
-            Add record to this day
-          </Button>
-        </>
-      )}
+      <>
+        <FlatList
+          className="mt-3"
+          initialNumToRender={2}
+          scrollEnabled={false}
+          contentContainerStyle={{
+            gap: 20,
+          }}
+          horizontal={false}
+          data={recordData}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
+        <Button
+          mt={10}
+          borderColor={"$color5"}
+          borderWidth={"$1"}
+          onPress={() => {
+            router.push({
+              pathname: `/tracking/create-study-record`,
+              params: {
+                learning_date: date,
+              },
+            });
+          }}
+          icon={<Plus size={"$1.5"} />}
+          w="100%"
+        >
+          Add record to this day
+        </Button>
+      </>
     </View>
   );
 };

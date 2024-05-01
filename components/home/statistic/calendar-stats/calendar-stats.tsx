@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import StatsNumberList from "./stats-number-list";
 
 const CalendarStats = () => {
-  const { data, setData, setRecords } = useCalendarStats();
+  const { data, setData, setRecords, load, setLoad } = useCalendarStats();
   const setDate = useDateStats((state) => state.setDate);
   const [loading, setLoading] = useState(true);
 
@@ -23,6 +23,7 @@ const CalendarStats = () => {
 
   const loadData = useCallback(async (userID: string) => {
     setLoading(true);
+    setLoad(true);
     const { data, error } = await supabase
       .from("study_records")
       .select("id, created_at, time, duration, document(title)")
@@ -54,6 +55,7 @@ const CalendarStats = () => {
       setData(markedDates);
     }
     setLoading(false);
+    setLoad(false);
   }, []);
 
   useGetInitData(async (user) => {
@@ -62,7 +64,9 @@ const CalendarStats = () => {
 
   return (
     <View>
-      <H4 p={"$3"}>Calendar Stats</H4>
+      <H4 p={"$3"} pt={0}>
+        Calendar Stats
+      </H4>
       <StatsNumberList data={data} />
       <Calendar
         style={{

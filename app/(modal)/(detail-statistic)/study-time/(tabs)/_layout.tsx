@@ -27,7 +27,6 @@ export default function HomeLayout() {
           borderColor: "hsl(151, 49.3%, 46.5%)",
           backgroundColor: "hsl(151, 49.3%, 46.5%)",
         },
-
         tabBarPressColor: "rgba(0, 0, 0, 0.1)",
         tabBarLabelStyle: {
           fontSize: 16,
