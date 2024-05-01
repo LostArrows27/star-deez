@@ -24,7 +24,7 @@ const Page = () => {
       <Stack.Screen />
       {show ? (
         <>
-          <StudyTimeChart />
+          <StudyTimeChart show = {show} />
           <CalendarStats />
         </>
       ) : (

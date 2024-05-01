@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 
 import { View } from "react-native";
-import { H3, H4, Separator } from "tamagui";
+import { H3, H4, Separator, Spinner } from "tamagui";
 import { StackedBarChart, XAxis, YAxis, Grid } from "react-native-svg-charts";
 import { useCalendarStats } from "@/hooks/home/statistic/calendar-stats/useCalendarStats";
 import { useEffect, useState } from "react";
@@ -28,24 +28,14 @@ type ChartData = {
   totalDuration: number;
 };
 
-const StudyTimeChart = () => {
-  const { records } = useCalendarStats();
-
-  const [loading, setLoading] = useState(true);
+const StudyTimeChart = ({ show }: { show: boolean }) => {
+  const { records, load } = useCalendarStats();
 
   const [data, setData] = useState<ChartData[]>([]);
 
   const [colors, setColors] = useState<string[]>([]);
 
   const [keys, setKeys] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (records) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
-  }, [records]);
 
   useEffect(() => {
     if (records) {
@@ -121,8 +111,12 @@ const StudyTimeChart = () => {
     <View className="w-full">
       <H4 p={"$3"}>Study Time</H4>
 
-      {loading ? (
-        <Loading />
+      {load ? (
+        <View className="items-center w-full bg-white">
+          <View className=" items-center justify-center">
+            <Spinner scale={1} size="large" color="$green10" />
+          </View>
+        </View>
       ) : (
         <View className="px-3">
           <StudyTimeTotal />

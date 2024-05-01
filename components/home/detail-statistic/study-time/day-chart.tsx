@@ -62,7 +62,6 @@ const DayChart = ({ selectedDate }: { selectedDate: Date }) => {
 
   useEffect(() => {
     if (!records || !selectedDate) return;
-
     const endOfCurrentWeek = new Date(selectedDate);
     endOfCurrentWeek.setHours(23, 59, 59, 999);
     const startOfCurrentWeek = subWeeks(endOfCurrentWeek, 1);
