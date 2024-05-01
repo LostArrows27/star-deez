@@ -7,11 +7,22 @@ import { supabase } from "@/lib/supabase";
 import { Comment } from "@/types/supabase-util-types";
 import { useCommentControl } from "@/hooks/modal/study-record/useCommentControls";
 import { Image } from "expo-image";
+import StyledPressable from "@/components/styled-pressable";
 
-function CommentSection() {
+function CommentSection({
+  fatherCommentId,
+  childCommentId,
+}: {
+  fatherCommentId?: string;
+  childCommentId?: string;
+}) {
   const [loading, setLoading] = useState(false);
   const [fetchMore, setFetchMore] = useState(false);
+  const [openNotifiedComment, setOpenNotifiedComment] = useState(() => {
+    return fatherCommentId ? true : false;
+  });
   // const [scrolling, setScrolling] = useState(false);
+  const [comment, setComment] = useState<Comment>();
   const [initialLoading, setInitialLoading] = useState(true);
   const { data: details } = useStudyRecordDetails();
   const { comments, setComments } = useCommentControl();
@@ -41,25 +52,68 @@ function CommentSection() {
   useEffect(() => {
     //fetch all comments
     if (!details) return;
-    (async () => {
-      const { data, error } = await supabase
-        .from("comments")
-        .select("*, likes(count), profiles(id,avatar,first_name,last_name)")
-        .eq("study_record_id", details.id)
-        .is("reply_comment_id", null)
-        .order("created_at", { ascending: false })
-        .limit(5);
+    if (openNotifiedComment && fatherCommentId) {
+      (async () => {
+        const { data, error } = await supabase
+          .from("comments")
+          .select("*, likes(count), profiles(id,avatar,first_name,last_name)")
+          .eq("id", fatherCommentId)
+          .single();
 
-      if (error || !data) return console.log(error);
+        if (error || !data) return console.log(error);
+        setComment(data as Comment);
+        // setComments(data as Comment[]);
+        // setInitialLoading(false);
+      })();
+    } else {
+      (async () => {
+        const { data, error } = await supabase
+          .from("comments")
+          .select("*, likes(count), profiles(id,avatar,first_name,last_name)")
+          .eq("study_record_id", details.id)
+          .is("reply_comment_id", null)
+          .order("created_at", { ascending: false })
+          .limit(5);
 
-      setComments(data as Comment[]);
-      setInitialLoading(false);
-    })();
-  }, []);
+        if (error || !data) return console.log(error);
+
+        setComments(data as Comment[]);
+        setInitialLoading(false);
+      })();
+    }
+  }, [openNotifiedComment]);
 
   return (
     <View h={comments.length > 0 ? "fit" : "$20"} flex={1} mt="$3">
-      {!initialLoading ? (
+      {openNotifiedComment ? (
+        comment && (
+          <>
+            <StyledPressable
+              style={{
+                alignItems: "center",
+                padding: 5,
+                marginBottom: 10,
+                backgroundColor: "#f5f5f5",
+              }}
+              onPress={() => {
+                setOpenNotifiedComment(false);
+              }}
+            >
+              <Text fontWeight={"bold"} className="">
+                View all comment
+              </Text>
+            </StyledPressable>
+            <CommentItem
+              {...comment}
+              highLightId={
+                childCommentId
+                  ? childCommentId
+                  :  fatherCommentId
+              }
+            />
+          </>
+        )
+      ) : !initialLoading ? (
         <FlatList
           className=" h-full gap-4"
           initialNumToRender={1}

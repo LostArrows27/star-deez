@@ -22,7 +22,8 @@ import CommentSection from "@/components/home/study-record-detail/comment-sectio
 import { useStudyRecordDetails } from "@/hooks/modal/study-record/useStudyRecordDetails";
 
 export default function StudyRecordDetails() {
-  const { id } = useGlobalSearchParams();
+  const { id, fcID, ccID, flog } = useGlobalSearchParams();
+  
   const { data, setData } = useStudyRecordDetails();
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
@@ -156,11 +157,15 @@ export default function StudyRecordDetails() {
                 <LikeButton
                   likes={data.likes[0].count}
                   study_record_id={data.id}
+                  owner_id={data.profiles.id}
                 />
               </View>
             </View>
 
-            <CommentSection />
+            <CommentSection
+              fatherCommentId={fcID as string | undefined}
+              childCommentId={ccID as string | undefined}
+            />
           </ScrollView>
           <CommentInput />
         </>

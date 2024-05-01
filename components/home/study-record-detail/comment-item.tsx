@@ -22,6 +22,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { Reply } from "@tamagui/lucide-icons";
 import { useCommentControl } from "@/hooks/modal/study-record/useCommentControls";
+import { cn } from "@/lib/utils";
 dayjs.extend(updateLocale);
 dayjs.extend(relativeTime);
 dayjs.updateLocale("en", {
@@ -52,6 +53,7 @@ function CommentItem({
   user_id,
   likes,
   profiles,
+  highLightId,
 }: {
   content: string;
   created_at: string;
@@ -63,6 +65,7 @@ function CommentItem({
   user_id: string;
   profiles: Profile;
   likes: { count: number }[];
+  highLightId?: string;
 }) {
   const [textShown, setTextShown] = useState(false); //To show ur remaining Text
   const [lengthMore, setLengthMore] = useState(false); //to show the "Read more & Less Line"
@@ -92,6 +95,9 @@ function CommentItem({
         setCountSubComments(count);
       }
     })();
+    if (highLightId && highLightId !== id) {
+      setOpenReply(true);
+    }
   }, []);
   useEffect(() => {
     if (openReply) {
@@ -139,7 +145,13 @@ function CommentItem({
     },
   });
   return (
-    <View className=" w-full">
+    <View className={cn(" w-full ")}>
+      {highLightId === id && (
+        <>
+          <View className="absolute top-0 right-0 -left-20 bottom-0 bg-[#f5f5f5] "></View>
+          <View className="absolute top-0  bottom-0 right-0 w-[2px] bg-green-500"></View>
+        </>
+      )}
       <View className="flex-row items-start">
         <Avatar
           style={{
@@ -183,9 +195,13 @@ function CommentItem({
             </TouchableOpacity>
           )}
 
-          <View className="flex-row gap-4">
+          <View className="flex-row gap-4 ">
             <Text color={"$gray9"}>{dayjs(created_at).fromNow(true)}</Text>
-            <LikeComment comment_id={id} likes={likes[0].count} />
+            <LikeComment
+              comment_id={id}
+              likes={likes[0].count}
+              owner_id={user_id}
+            />
 
             <StyledPressable
               onPress={() => {
@@ -225,11 +241,17 @@ function CommentItem({
             </StyledPressable>
           )}
           {openReply && (
-            <View className="gap-4 mt-4">
+            <View className="gap-4 my-4">
               {!loading ? (
                 subComments.length > 0 &&
                 subComments.map((item) => (
-                  <CommentItem key={item.id} {...item} />
+                  <CommentItem
+                    key={item.id}
+                    {...item}
+                    highLightId={
+                      highLightId === item.id ? highLightId : undefined
+                    }
+                  />
                 ))
               ) : (
                 <View className=" items-center justify-center p-2">

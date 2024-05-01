@@ -75,19 +75,19 @@ export default function RankingDay() {
       if (!userDetails?.id) return;
       setLoading(true);
 
-      const queryDate = formatDateForQuery(selectedDate);
-
       let startDate = new Date(selectedDate);
-      startDate.setHours(0, 0, 0, 0);
+      let startDateString =
+        startDate.toISOString().split("T")[0] + "T00:00:00.000Z";
 
       let endDate = new Date(selectedDate);
-      endDate.setHours(23, 59, 59, 999);
+      let endDateString =
+        endDate.toISOString().split("T")[0] + "T23:59:59.999Z";
 
       const { data, error } = await supabase
         .from("study_records")
-        .select("duration, profiles(first_name, last_name, avatar,id),id")
-        .gte("time", startDate.toISOString()) // Start of the day in UTC
-        .lt("time", endDate.toISOString());
+        .select("duration,time, profiles(first_name, last_name, avatar,id),id")
+        .gte("time", startDateString) // Start of the day in UTC
+        .lt("time", endDateString);
 
       if (error || !data) return console.log(error);
 

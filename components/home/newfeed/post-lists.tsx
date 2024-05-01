@@ -34,6 +34,7 @@ const renderItem = ({
     begin_at={item.begin_at}
     scrolling={scrolling}
     end_at={item.end_at}
+    profile_id={item.profiles.id}
     comments={item.comments[0].count}
     created_at={item.created_at}
     likes={item.likes[0].count}
