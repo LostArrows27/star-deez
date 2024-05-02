@@ -201,6 +201,9 @@ function CommentItem({
               comment_id={id}
               likes={likes[0].count}
               owner_id={user_id}
+              father_comment_id={
+                reply_comment_id ? reply_comment_id : undefined
+              }
             />
 
             <StyledPressable
