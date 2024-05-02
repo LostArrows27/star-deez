@@ -2,6 +2,8 @@ import { Database } from "./supabase-types";
 
 export type StudyingStatus = Database["public"]["Enums"]["document_status"];
 
+export type AcademicStatus = Database["public"]["Enums"]["academic_status"];
+
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export type Gender = Database["public"]["Enums"]["gender"];

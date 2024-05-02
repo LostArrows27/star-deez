@@ -283,9 +283,10 @@ export type Database = {
       }
       profiles: {
         Row: {
+          academics: Database["public"]["Enums"]["academic_status"] | null
           avatar: string
           bio: string | null
-          college: string | null
+          country: string | null
           cover: string | null
           created_at: string
           dob: string
@@ -293,17 +294,16 @@ export type Database = {
           first_name: string
           full_name: string | null
           gender: Database["public"]["Enums"]["gender"]
-          high_school: string | null
           id: string
           job: string | null
           last_name: string
-          phone: string | null
-          role: string | null
+          school: string | null
         }
         Insert: {
+          academics?: Database["public"]["Enums"]["academic_status"] | null
           avatar: string
           bio?: string | null
-          college?: string | null
+          country?: string | null
           cover?: string | null
           created_at?: string
           dob: string
@@ -311,17 +311,16 @@ export type Database = {
           first_name: string
           full_name?: string | null
           gender?: Database["public"]["Enums"]["gender"]
-          high_school?: string | null
           id: string
           job?: string | null
           last_name: string
-          phone?: string | null
-          role?: string | null
+          school?: string | null
         }
         Update: {
+          academics?: Database["public"]["Enums"]["academic_status"] | null
           avatar?: string
           bio?: string | null
-          college?: string | null
+          country?: string | null
           cover?: string | null
           created_at?: string
           dob?: string
@@ -329,12 +328,10 @@ export type Database = {
           first_name?: string
           full_name?: string | null
           gender?: Database["public"]["Enums"]["gender"]
-          high_school?: string | null
           id?: string
           job?: string | null
           last_name?: string
-          phone?: string | null
-          role?: string | null
+          school?: string | null
         }
         Relationships: [
           {
@@ -471,9 +468,10 @@ export type Database = {
           search_term: string
         }
         Returns: {
+          academics: Database["public"]["Enums"]["academic_status"] | null
           avatar: string
           bio: string | null
-          college: string | null
+          country: string | null
           cover: string | null
           created_at: string
           dob: string
@@ -481,16 +479,21 @@ export type Database = {
           first_name: string
           full_name: string | null
           gender: Database["public"]["Enums"]["gender"]
-          high_school: string | null
           id: string
           job: string | null
           last_name: string
-          phone: string | null
-          role: string | null
+          school: string | null
         }[]
       }
     }
     Enums: {
+      academic_status:
+        | "Pre-highschool"
+        | "Highschool"
+        | "Pre-university"
+        | "University/college"
+        | "Graduate/post-doc"
+        | "I'm not a student"
       document_status: "learning" | "standby" | "finished"
       gender: "male" | "female" | "other"
     }

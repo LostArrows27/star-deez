@@ -1,5 +1,6 @@
 import { Check, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import { useMemo, useState } from "react";
+import { ScrollView, View } from "react-native";
 import type { FontSizeTokens, SelectProps } from "tamagui";
 import {
   Adapt,
@@ -18,19 +19,29 @@ export function SelectTama(
     val: string;
     placeholder?: string;
     label?: string;
+    outline?: boolean;
+    className?: string;
+    normal?: boolean;
   }
 ) {
   return (
     <Select
       value={props.val}
-      onValueChange={props.setVal}
+      onValueChange={(value) => {
+        props.setVal(value);
+      }}
       disablePreventBodyScroll
       {...props}
     >
-      <Select.Trigger width={"100%"} iconAfter={ChevronDown}>
+      <Select.Trigger
+        backgroundColor={props?.outline ? "$colorTransparent" : "$green2Light"}
+        focusStyle={{ borderColor: props.outline ? " $color9" : "" }}
+        width={"100%"}
+        iconAfter={ChevronDown}
+      >
         <Select.Value
           placeholder={props.placeholder ? props.placeholder : "Gender"}
-          color={"$color10"}
+          color={!props?.outline ? "$color10" : "black"}
         />
       </Select.Trigger>
 
@@ -85,24 +96,28 @@ export function SelectTama(
           <Select.Group>
             <Select.Label>{props.label ? props.label : "Gender"}</Select.Label>
             {/* for longer lists memoizing these is useful */}
-            {useMemo(
-              () =>
-                props.items.map((item, i) => {
-                  return (
-                    <Select.Item
-                      index={i}
-                      key={item.value}
-                      value={item.value.toLowerCase()}
-                    >
-                      <Select.ItemText>{item.label}</Select.ItemText>
-                      <Select.ItemIndicator marginLeft="auto">
-                        <Check size={16} />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                  );
-                }),
-              [props.items]
-            )}
+            <ScrollView className={props.className}>
+              {useMemo(
+                () =>
+                  props.items.map((item, i) => {
+                    return (
+                      <Select.Item
+                        index={i}
+                        key={item.value}
+                        value={
+                          props.normal ? item.label : item.value.toLowerCase()
+                        }
+                      >
+                        <Select.ItemText>{item.label}</Select.ItemText>
+                        <Select.ItemIndicator marginLeft="auto">
+                          <Check size={16} />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    );
+                  }),
+                [props.items]
+              )}
+            </ScrollView>
           </Select.Group>
           {/* Native gets an extra icon */}
           {props.native && (
