@@ -12,6 +12,8 @@ import { View, Text } from "react-native";
 import { Button } from "tamagui";
 import HeaderStatistic from "./header-statistic";
 import FollowStatusButton from "./follow-status-button";
+import { router } from "expo-router";
+import convertFlag from "@/utils/convert-flag-code";
 
 const ProfileHeader = () => {
   const { profile } = useProfileData();
@@ -20,7 +22,6 @@ const ProfileHeader = () => {
 
   return (
     <View className="center relative pb-8">
-      {/* TODO: add profile cover */}
       <Image
         style={{
           width: "100%",
@@ -28,7 +29,9 @@ const ProfileHeader = () => {
         }}
         contentFit="cover"
         contentPosition={"bottom"}
-        source={require("@/assets/images/profile/cover.jpg")}
+        source={
+          userDetails?.cover || require("@/assets/images/profile/cover.jpg")
+        }
       />
       <View className="absolute h-[120px] top-0 bg-black/40 z-[4] w-full"></View>
       <View className="absolute top-[80px] z-50">
@@ -59,7 +62,19 @@ const ProfileHeader = () => {
               height={"$4"}
               borderColor={"$green6Light"}
               backgroundColor={"white"}
-              icon={<MessageSquareText scale={1.3} color={"$green7Light"} />}
+              icon={
+                !profile?.country ? (
+                  <MessageSquareText scale={1.3} color={"$green7Light"} />
+                ) : (
+                  <Image
+                    style={{
+                      width: 32 / 1.5,
+                      height: 24 / 1.5,
+                    }}
+                    source={convertFlag(profile.country.split("~")[0], 64, 48)}
+                  />
+                )
+              }
             ></Button>
             <FollowStatusButton />
             <Button
@@ -77,6 +92,9 @@ const ProfileHeader = () => {
             themeInverse
             pressStyle={{
               backgroundColor: "$green8Light",
+            }}
+            onPress={() => {
+              router.push("/edit-profile/");
             }}
             backgroundColor={"$green9Light"}
             borderRadius={"$9"}

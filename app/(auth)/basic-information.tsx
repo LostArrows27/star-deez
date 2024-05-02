@@ -165,6 +165,7 @@ const BasicInformation = () => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <SelectTama
+                outline={false}
                 setVal={onChange}
                 val={value}
                 items={[

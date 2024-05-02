@@ -89,7 +89,7 @@ const PickCategory = () => {
               <ActivityIndicator size={"large"} color={"green"} />
             </View>
           ) : (
-            <View>
+            <View className="pb-20 mb-16">
               <CreateCategory
                 userDetails={userDetails}
                 setUnits={setCategories}
@@ -98,6 +98,8 @@ const PickCategory = () => {
                 className="h-full"
                 showsVerticalScrollIndicator={false}
                 data={categories}
+                initialNumToRender={6}
+                scrollEnabled={categories.length > 5}
                 keyExtractor={(item) => item.id}
                 renderItem={(data) => (
                   <Button

@@ -11,8 +11,8 @@ import DocumentItem from "../tracking/document-item";
 export default function DocumentPicker() {
   const [open, setOpen] = useState(false);
   const { categorizedDocument, selectedDocument, colors, setSelectedDocument } =
-    useCategorizedDocuments();  
-  
+    useCategorizedDocuments();
+
   return (
     <Dialog
       modal
@@ -71,14 +71,14 @@ export default function DocumentPicker() {
 
           <ScrollView
             showsVerticalScrollIndicator={false}
-            className="gap-y-5 flex-col relative  "
+            className="gap-y-5  relative flex-col"
           >
             <Text
               onPress={() => {
                 setSelectedDocument(null);
                 setOpen(false);
               }}
-              className="capitalize my-4 text-emerald-500 text-center font-semibold text-xl"
+              className="text-emerald-500 my-4 text-xl font-semibold text-center capitalize"
             >
               WITHOUT TEXTBOOK
             </Text>

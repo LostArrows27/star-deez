@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Button } from "tamagui";
+import { Button, H4, Separator } from "tamagui";
 import Swiper from "react-native-swiper";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -130,6 +130,10 @@ const ProfileTabView = () => {
               <ProfileStatistic />
             </View>
             <View onLayout={handleLayout(1)}>
+              <H4 px={"$4"} pb={"$5"} pt={"$2"}>
+                Study records
+              </H4>
+              <Separator mb={"$4"} />
               <ProfileStudyRecords />
             </View>
             <View onLayout={handleLayout(2)}>

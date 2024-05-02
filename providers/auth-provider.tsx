@@ -11,6 +11,7 @@ type AuthData = {
   user: User | null;
   userDetails: Profile | null;
   setUserDetails: React.Dispatch<React.SetStateAction<Profile | null>>;
+  refetch: () => void;
 };
 
 export const AuthContext = createContext<AuthData>({
@@ -19,6 +20,7 @@ export const AuthContext = createContext<AuthData>({
   user: null,
   userDetails: null,
   setUserDetails: () => {},
+  refetch: () => {},
 });
 
 const AuthProvider = ({
@@ -31,12 +33,30 @@ const AuthProvider = ({
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [refetch, setRefetch] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [userDetails, setUserDetails] = useState<Profile | null>(null);
   const getUserDetails = (id: string) =>
     supabase.from("profiles").select("*").eq("id", id).maybeSingle();
 
   const pathname = usePathname();
+
+  //  refetch when needed
+  useEffect(() => {
+    const fetch = async () => {
+      if (!session) return;
+      setLoading(true);
+      const { data: userData, error } = await getUserDetails(session?.user.id);
+      setLoading(false);
+      if (error || !userData) {
+        setUserDetails(null);
+      } else {
+        setUserDetails(userData);
+      }
+    };
+
+    fetch();
+  }, [refetch]);
 
   // middleware custome
   useEffect(() => {
@@ -94,7 +114,14 @@ const AuthProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{ session, loading, user, userDetails, setUserDetails }}
+      value={{
+        session,
+        loading,
+        user,
+        userDetails,
+        setUserDetails,
+        refetch: () => setRefetch(!refetch),
+      }}
     >
       {children}
     </AuthContext.Provider>
