@@ -1,3 +1,5 @@
+import { useCreateDocument } from "@/hooks/modal/tracking/useCreateDocument";
+import { useUploadDocumentImage } from "@/hooks/modal/tracking/useUploadDocumentImage";
 import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
 import { DocumentFull } from "@/types/supabase-util-types";
 import { BookUser, Edit3, Trash2 } from "@tamagui/lucide-icons";
@@ -17,6 +19,28 @@ const DocumentItem = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { setSelectedDocument } = useCategorizedDocuments();
+  const {
+    setDescription,
+    setTitle,
+    setStatus,
+    setUnit,
+    setCategory,
+    setEditDocumentID,
+  } = useCreateDocument();
+
+
+  const { setPreview } = useUploadDocumentImage();
+  const handleEdit = () => {
+    setOpen(false);
+    router.push("/(modal)/tracking/create-document");
+    setEditDocumentID(document.id);
+    setTitle(document.title);
+    setStatus(document.status);
+    setDescription(document.description);
+    setUnit(document.unit);
+    setCategory(document.category);
+    setPreview(document.cover);
+  };
   return (
     <Popover
       open={open}
@@ -146,6 +170,7 @@ const DocumentItem = ({
               justifyContent="flex-start"
               icon={<Edit3 color={"green"} />}
               chromeless
+              onPress={handleEdit}
             >
               Edit
             </Button>

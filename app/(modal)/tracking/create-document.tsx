@@ -6,7 +6,7 @@ import ModalWrapper from "@/components/modal/modal-wrapper";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useCreateDocument } from "@/hooks/modal/tracking/useCreateDocument";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { Button, Input, TextArea } from "tamagui";
 import { toSlug } from "@/utils/convert-to-slug";
@@ -28,6 +28,7 @@ const CartScreen = () => {
     setDescription,
     setTitle,
     reset,
+    editDocumentID,
   } = useCreateDocument();
 
   const [loading, setLoading] = useState(false);
@@ -47,14 +48,21 @@ const CartScreen = () => {
     category.id &&
     status;
 
+  useEffect(() => {
+    return () => {
+      reset();
+      removeImages();
+    };
+  }, []);
+
   const handleCreateDocument = async () => {
     if (loading || !canSubmit || !userDetails) return;
 
     setLoading(true);
-    const id = uuid();
+    const id = editDocumentID ? editDocumentID : uuid();
     const fileName = `${userDetails?.id}/${id}/${toSlug(title)}`;
 
-    let url: any = undefined;
+    let url: any = preview && !image ? preview : undefined;
 
     if (image && !image?.canceled) {
       const { data, error } = await supabase.storage
@@ -78,7 +86,7 @@ const CartScreen = () => {
       }
     }
 
-    const { data, error } = await supabase.from("document").insert([
+    const { data, error } = await supabase.from("document").upsert(
       {
         id,
         title,
@@ -89,16 +97,22 @@ const CartScreen = () => {
         user_id: userDetails?.id,
         cover: url,
       },
-    ]);
+      { onConflict: "id" }
+    );
 
     if (error) {
       console.log("error", error);
-      toast.show("Error creating document. ", { preset: "error" });
+      toast.show(
+        `Error ${editDocumentID ? "updating" : "creating"} document. `,
+        { preset: "error" }
+      );
     } else {
       reset();
       removeImages();
       toast.show("Success!!", {
-        message: "Document created successfully!",
+        message: `Document ${
+          editDocumentID ? "updated" : "created"
+        } successfully!`,
         native: false,
       });
       router.replace("/tracking/");
@@ -155,7 +169,7 @@ const CartScreen = () => {
         disabled={!canSubmit}
         backgroundColor={canSubmit ? "$green9Light" : "$gray10Dark"}
       >
-        Create Document
+        {editDocumentID ? "Update Document" : "Create Document"}
       </Button>
     </ModalWrapper>
   );

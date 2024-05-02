@@ -47,52 +47,54 @@ export default function LikeButton({
         return console.log(error);
       }
 
-      //check if notification already exist
-      const { data, error: error2 } = await supabase
-        .from("notification")
-        .select("id,content")
-        .eq("receiver_id", owner_id)
-        .eq("link_to", "/study-record/" + study_record_id)
-        .like("content", "%like%")
-        .maybeSingle();
-
-      if (error2) {
-        console.log(error2);
-        return;
-      }
-
-      //decide whether to update or insert
-      let content =
-        count > 0
-          ? `${userDetails.first_name} and ${count} others like your post`
-          : `${userDetails.last_name} ${userDetails.first_name} likes your post`;
-      if (data) {
-        const { error: updateError } = await supabase
+      if (userDetails.id !== owner_id) {
+        //check if notification already exist
+        const { data, error: error2 } = await supabase
           .from("notification")
-          .update({
-            content: content,
-            sender_id: userDetails.id,
-            meta_data: {
-              avatar: userDetails?.avatar,
-            },
-            is_readed: false,
-            is_seen: false,
-          })
-          .eq("id", data.id);
-      } else {
-        const { error: updateError } = await supabase
-          .from("notification")
-          .insert({
-            receiver_id: owner_id,
-            sender_id: userDetails.id,
-            link_to: "/study-record/" + study_record_id,
-            content: content,
-            meta_data: {
-              avatar: userDetails?.avatar,
-            },
-            is_readed: false,
-            is_seen: false,
-          });
+          .select("id,content")
+          .eq("receiver_id", owner_id)
+          .eq("link_to", "/study-record/" + study_record_id)
+          .like("content", "%like%")
+          .maybeSingle();
+
+        if (error2) {
+          console.log(error2);
+          return;
+        }
+
+        //decide whether to update or insert
+        let content =
+          count > 0
+            ? `${userDetails.first_name} and ${count} others like your post`
+            : `${userDetails.last_name} ${userDetails.first_name} likes your post`;
+        if (data) {
+          const { error: updateError } = await supabase
+            .from("notification")
+            .update({
+              content: content,
+              sender_id: userDetails.id,
+              meta_data: {
+                avatar: userDetails?.avatar,
+              },
+              is_readed: false,
+              is_seen: false,
+            })
+            .eq("id", data.id);
+        } else {
+          const { error: updateError } = await supabase
+            .from("notification")
+            .insert({
+              receiver_id: owner_id,
+              sender_id: userDetails.id,
+              link_to: "/study-record/" + study_record_id,
+              content: content,
+              meta_data: {
+                avatar: userDetails?.avatar,
+              },
+              is_readed: false,
+              is_seen: false,
+            });
+        }
       }
     } else {
       setCount(count - 1);
