@@ -11,23 +11,27 @@ export type CategoryType = UnitRow;
 
 type DocumentType = {
   status?: Status;
-  setStatus: (status: Status) => void;
   unit?: UnitRow;
-  setUnit: (unit: UnitRow) => void;
-  category?: CategoryType;
-  setCategory: (category: CategoryType) => void;
   title: string;
-  setTitle: (title: string) => void;
+  category?: CategoryType;
   description: string;
+  editDocumentID ?: string;
+  setStatus: (status: Status) => void;
+  setUnit: (unit: UnitRow) => void;
+  setCategory: (category: CategoryType) => void;
+  setTitle: (title: string) => void;
   setDescription: (description: string) => void;
+  setEditDocumentID: (id: string | undefined) => void;
   reset: () => void;
 };
 
 export const useCreateDocument = create<DocumentType>((set) => ({
   title: "",
   description: "",
+  editDocumentID: "",
   setStatus: (status) => set({ status }),
   setUnit: (unit) => set({ unit }),
+  setEditDocumentID: (id) => set({ editDocumentID: id }),
   setCategory: (category) => set({ category }),
   setTitle: (title) => set({ title }),
   setDescription: (description) => set({ description }),
@@ -37,6 +41,7 @@ export const useCreateDocument = create<DocumentType>((set) => ({
       description: "",
       status: undefined,
       unit: undefined,
+      editDocumentID: undefined,
       category: undefined,
     }),
 }));
