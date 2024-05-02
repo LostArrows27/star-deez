@@ -88,13 +88,15 @@ const PickUnit = () => {
               <ActivityIndicator size={"large"} color={"green"} />
             </View>
           ) : (
-            <View>
+            <View className="pb-20 mb-16">
               <CreateUnit userDetails={userDetails} setUnits={setUnits} />
               <FlatList
                 className="h-full"
                 showsVerticalScrollIndicator={false}
                 data={units}
+                scrollEnabled={true}
                 keyExtractor={(item) => item.id}
+                initialNumToRender={7}
                 renderItem={(data) => (
                   <Button
                     key={data.index}
