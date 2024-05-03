@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React, { useEffect } from "react";
 import { router, useGlobalSearchParams } from "expo-router";
 import ModalWrapper from "@/components/modal/modal-wrapper";
-import { Avatar, Spinner } from "tamagui";
+import { Adapt, Avatar, Button, Popover, Separator, Spinner } from "tamagui";
 import { ScrollView } from "react-native-virtualized-view";
 import {
   MessageSquare,
@@ -20,12 +20,22 @@ import CommentInput from "@/components/home/study-record-detail/comment-input";
 import LikeButton from "@/components/home/newfeed/like-button";
 import CommentSection from "@/components/home/study-record-detail/comment-section";
 import { useStudyRecordDetails } from "@/hooks/modal/study-record/useStudyRecordDetails";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useToastController } from "@tamagui/toast";
+import StyledPressable from "@/components/styled-pressable";
+import Animated, {
+  SlideInDown,
+  SlideInUp,
+  SlideOutDown,
+} from "react-native-reanimated";
+import { FadeIn, FadeOut } from "react-native-reanimated";
 
 export default function StudyRecordDetails() {
   const { id, fcID, ccID, flog } = useGlobalSearchParams();
-  
+  const [isOpen, setIsOpen] = React.useState(false);
   const { data, setData } = useStudyRecordDetails();
   const [loading, setLoading] = React.useState(true);
+  const { userDetails } = useAuth();
   useEffect(() => {
     (async () => {
       if (!id) return;
@@ -41,15 +51,44 @@ export default function StudyRecordDetails() {
       setLoading(false);
     })();
   }, []);
+  const toast = useToastController();
+  const handleDeletePost = async () => {
+    if (!data) return console.log("No data");
+    const { error } = await supabase
+      .from("study_records")
+      .delete()
+      .eq("id", data.id);
+    if (error) {
+      console.log("error", error);
+    }
+    setIsOpen(false);
 
+    toast.show("Success!!", {
+      message: `Deleted successfully`,
+      native: false,
+    });
+    router.push("/(home)/(drawer)/newfeed/(tabs)/following");
+  };
   return (
     <ModalWrapper
       className="flex-1 p-5 px-6 bg-white"
       options={{
         headerShown: true,
+
         headerTitle: "Study Record",
         animation: "slide_from_bottom",
-        headerRight: () => <MoreVertical />,
+        headerRight: () => (
+          <StyledPressable
+            onBlur={() => {
+              setIsOpen(false);
+            }}
+            onPress={() => {
+              setIsOpen(!isOpen);
+            }}
+          >
+            <MoreVertical size={24} />
+          </StyledPressable>
+        ),
       }}
     >
       {loading || !data ? (
@@ -63,6 +102,9 @@ export default function StudyRecordDetails() {
             showsVerticalScrollIndicator={false}
             style={{
               height: "100%",
+            }}
+            onTouchStart={() => {
+              if (isOpen) setIsOpen(false);
             }}
           >
             <View className="border-green-500 w-full pb-3 border-b">
@@ -169,6 +211,34 @@ export default function StudyRecordDetails() {
           </ScrollView>
           <CommentInput />
         </>
+      )}
+      {isOpen && (
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          onTouchStart={() => {
+            setIsOpen(false);
+          }}
+          className="absolute bottom-0 justify-end right-0 left-0 top-0 bg-black/30"
+        >
+          <Animated.View
+            entering={SlideInDown}
+            exiting={SlideOutDown}
+            className=" h-fit p-4 bg-white"
+          >
+            <Text className=" text-lg font-semibold mb-2">Options</Text>
+            <Separator />
+            {userDetails?.id === data?.profiles.id && (
+              <Button mt={"$3"} onPress={handleDeletePost}>
+                <Text>Delete Post</Text>
+              </Button>
+            )}
+
+            <Button mt={"$3"}>
+              <Text>Report Post</Text>
+            </Button>
+          </Animated.View>
+        </Animated.View>
       )}
     </ModalWrapper>
   );

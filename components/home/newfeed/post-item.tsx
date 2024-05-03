@@ -4,14 +4,27 @@ import {
   MoreHorizontal,
   Newspaper,
 } from "@tamagui/lucide-icons";
+import {
+  Adapt,
+  Input,
+  Label,
+  Popover,
+  Separator,
+  XStack,
+  YStack,
+} from "tamagui";
 import { View, Text, TouchableNativeFeedback } from "react-native";
 import { Avatar, Button, Image } from "tamagui";
 import { formatDate } from "date-fns";
 import convertMinute from "@/utils/convert-minute";
 import StyledText from "@/components/styled-text";
 import { router } from "expo-router";
-import { memo } from "react";
+import { memo, useState } from "react";
 import LikeButton from "./like-button";
+import StyledPressable from "@/components/styled-pressable";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { supabase } from "@/lib/supabase";
+import { useToastController } from "@tamagui/toast";
 
 export type PostItemProps = {
   id: string;
@@ -21,7 +34,7 @@ export type PostItemProps = {
   profile_id: string;
   comment: string;
   image: string;
-  scrolling: boolean;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
   document_title: string;
   document_unit_name: string;
   document_cover: string;
@@ -34,13 +47,28 @@ export type PostItemProps = {
 };
 
 const PostItem = (data: PostItemProps) => {
+  const { userDetails } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const toast = useToastController();
+  const handleDeletePost = async () => {
+    const { error } = await supabase
+      .from("study_records")
+      .delete()
+      .eq("id", data.id);
+    if (error) {
+      console.log("error", error);
+    }
+    setIsOpen(false);
+    data.setReload((prev) => !prev);
+    toast.show("Success!!", {
+      message: `Deleted successfully`,
+      native: false,
+    });
+  };
+
   return (
     <TouchableNativeFeedback
-      background={
-        !data.scrolling
-          ? TouchableNativeFeedback.Ripple("#d7d7d7", false)
-          : TouchableNativeFeedback.Ripple("transparent", false)
-      }
+      background={TouchableNativeFeedback.Ripple("#d7d7d7", false)}
       onPress={() => {
         router.push(`/(modal)/study-record/${data.id}`);
       }}
@@ -58,7 +86,70 @@ const PostItem = (data: PostItemProps) => {
             </Text>
           </View>
           <View className="items-end">
-            <Button h={"$2"} w={2} scaleIcon={1.5} icon={MoreHorizontal} />
+            <Popover
+              open={isOpen}
+              onOpenChange={(open) => {
+                if (open) {
+                  setIsOpen(true);
+                } else {
+                  setIsOpen(false);
+                }
+              }}
+            >
+              <Popover.Trigger asChild>
+                <Button h={"$2"} w={2} scaleIcon={1.5} icon={MoreHorizontal} />
+              </Popover.Trigger>
+              <Adapt when="sm" platform="touch">
+                <Popover.Sheet snapPointsMode="fit" modal dismissOnSnapToBottom>
+                  <Popover.Sheet.Frame padding="$4">
+                    <Adapt.Contents />
+                  </Popover.Sheet.Frame>
+                  <Popover.Sheet.Overlay
+                    animation="lazy"
+                    enterStyle={{ opacity: 0 }}
+                    exitStyle={{ opacity: 0 }}
+                  />
+                </Popover.Sheet>
+              </Adapt>
+              <Popover.Content
+                borderWidth={1}
+                borderColor="$borderColor"
+                // enterStyle={{ y: -10, opacity: 0 }}
+                // exitStyle={{ y: -10, opacity: 0 }}
+                elevate
+                top={30}
+                right={10}
+                padding={8}
+                paddingBottom={6}
+                animation={[
+                  "quick",
+                  {
+                    opacity: {
+                      overshootClamping: true,
+                    },
+                  },
+                ]}
+              >
+                <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
+
+                <View>
+                  <Text className=" text-lg font-semibold mb-2">Options</Text>
+                  <Separator />
+                  {userDetails?.id === data.profile_id && (
+                    <Button mt={"$3"} onPress={handleDeletePost}>
+                      <Text>Delete Post</Text>
+                    </Button>
+                  )}
+
+                  <Button mt={"$3"}>
+                    <Text>Report Post</Text>
+                  </Button>
+                </View>
+              </Popover.Content>
+
+              {/* optionally change to sheet when small screen */}
+            </Popover>
+
             <View className=" mt-3">
               <StyledText fontSize={"$2"} color={"$gray10"}>
                 {formatDate(data.created_at, "dd/MM/yyyy HH:mm")}
