@@ -1,22 +1,15 @@
 const combineTime = (date: Date, time: Date) => {
-  const locale = date.toLocaleDateString();
-
-  const [month, day, year] = locale.split("/").map(Number);
+  const combinedDateTime = new Date(date);
 
   const hours = time.getHours();
   const minutes = time.getMinutes();
   const seconds = time.getSeconds();
   const milliseconds = time.getMilliseconds();
 
-  const combinedDateTime = new Date(
-    year,
-    month - 1,
-    day,
-    hours,
-    minutes,
-    seconds,
-    milliseconds
-  );
+  combinedDateTime.setHours(hours);
+  combinedDateTime.setMinutes(minutes);
+  combinedDateTime.setSeconds(seconds);
+  combinedDateTime.setMilliseconds(milliseconds);
 
   return combinedDateTime;
 };
