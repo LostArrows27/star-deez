@@ -15,10 +15,10 @@ const MemoizedPostItem = memo(PostItem);
 
 const renderItem = ({
   item,
-  scrolling,
+  setReload,
 }: {
   item: StudyRecord;
-  scrolling: boolean;
+  setReload:React.Dispatch<React.SetStateAction<boolean>>,
 }) => (
   <MemoizedPostItem
     id={item.id}
@@ -27,12 +27,13 @@ const renderItem = ({
     profile_first_name={item.profiles.first_name!}
     comment={item.comment!}
     image={item.image!}
+    setReload={setReload}
     document_title={item.document.title}
     document_unit_name={item.document.unit.name}
     document_cover={item.document.cover!}
     duration={item.duration}
     begin_at={item.begin_at}
-    scrolling={scrolling}
+ 
     end_at={item.end_at}
     profile_id={item.profiles.id}
     comments={item.comments[0].count}
@@ -52,7 +53,7 @@ const PostLists = (props: {
   const [posts, setPosts] = useState<StudyRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [scrolling, setScrolling] = useState(false);
+
   const [initialLoad, setInitialLoad] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   // const [following, setFollowing] = useState<string[]>([]);
@@ -166,8 +167,6 @@ const PostLists = (props: {
           className="h-full"
           initialNumToRender={3}
           scrollEnabled={posts.length > 1}
-          onScrollBeginDrag={() => setScrolling(true)}
-          onScrollEndDrag={() => setScrolling(false)}
           showsVerticalScrollIndicator={false}
           onEndReached={loadMorePosts}
           refreshControl={
@@ -182,7 +181,7 @@ const PostLists = (props: {
           updateCellsBatchingPeriod={30}
           removeClippedSubviews={true}
           keyExtractor={(item) => item.id}
-          renderItem={(item) => renderItem({ ...item, scrolling })}
+          renderItem={(item) => renderItem({ ...item, setReload})}
           ListFooterComponent={() => {
             return (
               <>

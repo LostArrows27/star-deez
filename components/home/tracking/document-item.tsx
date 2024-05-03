@@ -1,8 +1,10 @@
 import { useCreateDocument } from "@/hooks/modal/tracking/useCreateDocument";
 import { useUploadDocumentImage } from "@/hooks/modal/tracking/useUploadDocumentImage";
 import { useCategorizedDocuments } from "@/hooks/useCategorizedDocuments";
+import { supabase } from "@/lib/supabase";
 import { DocumentFull } from "@/types/supabase-util-types";
 import { BookUser, Edit3, Trash2 } from "@tamagui/lucide-icons";
+import { useToastController } from "@tamagui/toast";
 import { router } from "expo-router";
 import { useState } from "react";
 import { View, Text, TouchableNativeFeedback, ScrollView } from "react-native";
@@ -18,7 +20,8 @@ const DocumentItem = ({
   onCloseSelections?: () => void;
 }) => {
   const [open, setOpen] = useState(false);
-  const { setSelectedDocument } = useCategorizedDocuments();
+  const { setSelectedDocument, categorizedDocument, setCategorizeDocument } =
+    useCategorizedDocuments();
   const {
     setDescription,
     setTitle,
@@ -27,7 +30,7 @@ const DocumentItem = ({
     setCategory,
     setEditDocumentID,
   } = useCreateDocument();
-
+  const toast = useToastController();
 
   const { setPreview } = useUploadDocumentImage();
   const handleEdit = () => {
@@ -40,6 +43,29 @@ const DocumentItem = ({
     setUnit(document.unit);
     setCategory(document.category);
     setPreview(document.cover);
+  };
+
+  const handleDelete = async () => {
+    setOpen(false);
+    const newCategorizedDocument = categorizedDocument.map((item) => {
+      item.documents = item.documents.filter((doc) => doc.id !== document.id);
+      return item;
+    });
+
+    setCategorizeDocument(newCategorizedDocument);
+    const { data, error } = await supabase
+      .from("document")
+      .delete()
+      .eq("id", document.id);
+    if (error) {
+      console.error(error);
+    }
+
+    toast.show("Success!!", {
+      message: `Deleted successfully`,
+      native: false,
+    });
+    setSelectedDocument(null);
   };
   return (
     <Popover
@@ -199,6 +225,7 @@ const DocumentItem = ({
               justifyContent="flex-start"
               icon={<Trash2 color={"red"} />}
               chromeless
+              onPress={handleDelete}
             >
               Delete
             </Button>
