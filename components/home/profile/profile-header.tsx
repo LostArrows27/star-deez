@@ -29,9 +29,7 @@ const ProfileHeader = () => {
         }}
         contentFit="cover"
         contentPosition={"bottom"}
-        source={
-          userDetails?.cover || require("@/assets/images/profile/cover.jpg")
-        }
+        source={profile?.cover || require("@/assets/images/profile/cover.jpg")}
       />
       <View className="absolute h-[120px] top-0 bg-black/40 z-[4] w-full"></View>
       <View className="absolute top-[80px] z-50">
