@@ -121,42 +121,44 @@ const CartScreen = () => {
 
   return (
     <ModalWrapper
-      className="flex-1 p-4 px-6 pt-12 bg-white"
+      className=" justify-between flex-1 p-4 px-6 pt-12 bg-white"
       options={{
         headerShown: true,
         headerTitle: "Upload your document",
         animation: "slide_from_bottom",
       }}
     >
-      <View className="center gap-y-10 w-full">
-        <UploadDocumentImage />
-        <Input
-          onChangeText={setTitle}
-          value={title}
-          height={"$5"}
-          fontSize={"$5"}
-          placeholder="Document title..."
-          width={"100%"}
-          mb={-10}
-          fontWeight={"$15"}
-        />
-        <TextArea
-          onChangeText={setDescription}
-          value={description}
-          height={"$10"}
-          textAlignVertical="top"
-          fontSize={"$5"}
-          placeholder="Document description..."
-          width={"100%"}
-        />
-      </View>
-      <View className="gap-4 mt-6">
-        <PickStatus />
-        <PickUnit />
-        <PickCategory />
+      <View>
+        <View className="center gap-y-10 w-full">
+          <UploadDocumentImage />
+          <Input
+            onChangeText={setTitle}
+            value={title}
+            height={"$5"}
+            fontSize={"$5"}
+            placeholder="Document title..."
+            width={"100%"}
+            mb={-10}
+            fontWeight={"$15"}
+          />
+          <TextArea
+            onChangeText={setDescription}
+            value={description}
+            height={"$10"}
+            textAlignVertical="top"
+            fontSize={"$5"}
+            placeholder="Document description..."
+            width={"100%"}
+          />
+        </View>
+        <View className="gap-4 mt-6">
+          <PickStatus />
+          <PickUnit />
+          <PickCategory />
+        </View>
       </View>
       <Button
-        mt={40}
+        mb={20}
         iconAfter={
           loading ? <ActivityIndicator size="small" color="#fff" /> : undefined
         }

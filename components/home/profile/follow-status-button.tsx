@@ -51,7 +51,7 @@ const FollowStatusButton = () => {
           .eq("sender_id", id)
           .eq(
             "content",
-            `${userDetails?.first_name} ${userDetails?.last_name} has followed you`
+            `${userDetails?.last_name} ${userDetails?.first_name} has followed you`
           );
 
         if (checkError) {
@@ -72,7 +72,7 @@ const FollowStatusButton = () => {
           .insert({
             receiver_id: params!.id as string,
             sender_id: id,
-            content: `${userDetails?.first_name} ${userDetails?.last_name} has followed you`,
+            content: `${userDetails?.last_name} ${userDetails?.first_name} has followed you`,
             link_to: `/profile/${id}`,
             meta_data: {
               avatar: userDetails?.avatar,

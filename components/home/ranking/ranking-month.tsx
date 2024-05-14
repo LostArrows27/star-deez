@@ -100,7 +100,7 @@ export default function RankingMonth() {
               data[i].duration;
           } else {
             orderedRanked[(data[i].profiles as Profile).id] = {
-              name: `${data[i].profiles?.first_name} ${data[i].profiles?.last_name}`,
+              name: `${data[i].profiles?.last_name} ${data[i].profiles?.first_name}`,
               avatar: data[i].profiles?.avatar + "",
               time: data[i].duration,
             };
