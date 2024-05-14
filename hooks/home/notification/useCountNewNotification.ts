@@ -2,6 +2,7 @@ import { useAuth } from "@/hooks/auth/useAuth";
 import { useGetInitData } from "@/hooks/useGetInitData";
 import { useRealTime } from "@/hooks/useRealTime";
 import { supabase } from "@/lib/supabase";
+import { Notification } from "@/types/supabase-util-types";
 import { useState } from "react";
 
 export const useCountNewNotification = () => {
@@ -30,6 +31,17 @@ export const useCountNewNotification = () => {
     },
     onDelete: async (payload) => {
       setCount((prev) => prev - 1);
+    },
+    onUpdate: async (payload) => {
+      let newData = payload.new as Notification;
+
+      if (newData) {
+        if (newData.is_seen) {
+          setCount((prev) => prev - 1);
+        } else {
+          setCount((prev) => prev + 1);
+        }
+      }
     },
   });
 

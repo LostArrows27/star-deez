@@ -30,10 +30,17 @@ export const DrawerContainer = (props: any) => {
           height={60}
           borderRadius={9999}
         />
-        <View className="">
-          <Text className="mb-1 text-2xl font-bold">
-            {userDetails?.first_name + " " + userDetails?.last_name}
-          </Text>
+        <View className="flex-1 pr-2">
+          <View
+            style={{
+              flexGrow: 1,
+              flex: 1,
+            }}
+          >
+            <Text className=" mb-1 text-2xl font-bold">
+              {userDetails?.last_name + " " + userDetails?.first_name}
+            </Text>
+          </View>
         </View>
       </View>
       <Separator borderColor={"$gray5Light"} marginVertical={15} />

@@ -45,8 +45,8 @@ const ProfileHeader = () => {
           source={profile?.avatar}
         />
       </View>
-      <Text className="text-emerald-500 mt-[56px] pt-6 pb-3 text-3xl font-semibold text-center">
-        {profile?.first_name} {profile?.last_name}
+      <Text className="text-emerald-500 mt-[56px] pt-6 pb-3 px-3 text-3xl font-semibold text-center">
+        {profile?.last_name} {profile?.first_name}
       </Text>
       <StyledText color={"$gray9Light"} textAlign="center" lineHeight={"$7"}>
         {profile?.bio ? profile?.bio : "Nah, I'd have bio 🤓"}

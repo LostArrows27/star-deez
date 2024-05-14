@@ -86,6 +86,7 @@ const InformationForm = () => {
 
         <SelectTama
           outline
+          label="Academic status"
           normal
           placeholder="Select academic status"
           setVal={setAcademic as any}
