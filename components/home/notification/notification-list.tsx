@@ -58,7 +58,14 @@ const NotificationList = ({ tab }: { tab: string }) => {
     table: "notification",
     filter: "receiver_id=eq." + id!,
     onInsert: async (payload) => {
-      setNotifications((prev) => [payload.new as NotificationData, ...prev]);
+      setNotifications((prev) => [
+        {
+          ...payload.new,
+          is_readed: false,
+          is_seen: false,
+        } as NotificationData,
+        ...prev,
+      ]);
     },
     onDelete: async (payload) => {
       setNotifications((prev) =>
@@ -77,13 +84,13 @@ const NotificationList = ({ tab }: { tab: string }) => {
   });
 
   return (
-    <ScrollView className=" w-full" showsVerticalScrollIndicator={false}>
+    <View className=" w-full">
       {loading ? (
         <View className="pt-36">
           <Loading />
         </View>
       ) : filterNotifcation.length > 0 ? (
-        <View className="mt-8">
+        <View className="pb-20 mt-8">
           <NotificationOptionModal />
           <FlatList
             className="h-full"
@@ -120,7 +127,7 @@ const NotificationList = ({ tab }: { tab: string }) => {
           </StyledText>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 };
 

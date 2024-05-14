@@ -46,6 +46,11 @@ const StudyTimeChart = ({
 
   const [keys, setKeys] = useState<string[]>([]);
 
+  const display =
+    data.reduce((acc, item) => {
+      return acc + item.totalDuration;
+    }, 0) > 0;
+
   useEffect(() => {
     if (records) {
       const endOfCurrentWeek = new Date();
@@ -130,7 +135,7 @@ const StudyTimeChart = ({
         <View className="px-3">
           <StudyTimeTotal records={records} />
           <View className="border-emerald-500 rounded-2xl py-2 border">
-            {records.length > 0 ? (
+            {display ? (
               <>
                 <StyledPressable
                   onPress={() => {

@@ -82,7 +82,7 @@ const UserPage = () => {
           headerTitle: loading
             ? ""
             : profile
-            ? profile?.first_name + " " + profile?.last_name
+            ? profile?.last_name + " " + profile?.first_name
             : "Not Found",
         }}
       />
@@ -93,7 +93,7 @@ const UserPage = () => {
       ) : profile ? (
         <ScrollView
           nestedScrollEnabled={true}
-            showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           className="flex-1"
         >
           <ProfileHeader />
