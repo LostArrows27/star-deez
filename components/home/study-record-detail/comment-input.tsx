@@ -134,7 +134,7 @@ export default function CommentInput() {
       const newComment = comments;
       newComment.unshift(newCommentData as Comment);
       setComments(newComment);
-    } else if (replyComment.id !== userDetails?.id) {
+    } else if (replyComment.profile_id !== userDetails?.id) {
       const { data, error: error2 } = await supabase
         .from("notification")
         .select("id,content")
@@ -159,7 +159,7 @@ export default function CommentInput() {
         return;
       }
       let content =
-        count > 0
+        count-1 > 0
           ? `${userDetails.first_name} and ${
               count - 1
             } others reply to your comment`
@@ -268,7 +268,7 @@ export default function CommentInput() {
         }
 
         let content =
-          currentCount.comments[0].count > 0
+          currentCount.comments[0].count- 1 > 0
             ? `${userDetails.first_name} and ${
                 currentCount.comments[0].count - 1
               } others comment on your post`
